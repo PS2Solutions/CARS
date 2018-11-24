@@ -1,0 +1,5 @@
+{
+  "Connection_URL": "jdbc:mysql://127.0.0.1:3307/test",
+  "DBUser": "Admin",
+  "DBPassword": "Admin@2018"
+}
