@@ -67,8 +67,8 @@ public class Helper {
             Logger.getLogger(Helper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    public static void showErrorDialog(String title, String message) {
-        JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
+    
+    public static String getPropertyValue(String key){
+       return  java.util.ResourceBundle.getBundle("appResources/Strings").getString(key);
     }
 }

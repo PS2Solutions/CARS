@@ -8,8 +8,9 @@ package cars;
 import org.json.JSONException;
 import org.json.JSONObject;
 import utils.Constants;
+import utils.DialogHelper;
 import utils.Helper;
-import views.MainScreen;
+import views.LoginScreen;
 
 /**
  *
@@ -22,8 +23,8 @@ public class CARS {
      */
     public static void main(String[] args) {
         if (setupDBCredentials()) {
-            MainScreen mainScreen = new MainScreen();
-            mainScreen.show();
+            LoginScreen loginScreen = new LoginScreen();
+            loginScreen.show();
         }
     }
 
@@ -42,7 +43,7 @@ public class CARS {
             dbConnectionResponse = true;
         } catch (JSONException ex) {
             Helper.logError(CARS.class.getName(), ex);
-            utils.Helper.showErrorDialog("Title", "Credentials missing.");
+            DialogHelper.showErrorMessage("Title", "Credentials missing.");
         }
         return dbConnectionResponse;
     }
