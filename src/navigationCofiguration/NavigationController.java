@@ -8,7 +8,7 @@ package navigationCofiguration;
 import java.util.Vector;
 import javax.swing.JFrame;
 import utils.KeyValuePair;
-import views.MainScreen;
+import views.DashboardScreen;
 
 /**
  *
@@ -18,11 +18,10 @@ public class NavigationController {
     public static void navigateToScreen(String key,JFrame baseScreen,Vector<KeyValuePair> params){
         switch(key){
             case NavigationConstants.DASHBOARD:
-                MainScreen mainScreen =new MainScreen();
-                mainScreen.setVisible(true);
+                DashboardScreen dashboardScreen =new DashboardScreen();
+                dashboardScreen.setVisible(true);
                 baseScreen.setVisible(false);
                 break;
-                
-        }
+            }
     }
 }
