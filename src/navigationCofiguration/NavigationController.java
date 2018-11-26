@@ -9,6 +9,7 @@ import java.util.Vector;
 import javax.swing.JFrame;
 import utils.KeyValuePair;
 import views.DashboardScreen;
+import views.LaborScreen;
 
 /**
  *
@@ -18,8 +19,13 @@ public class NavigationController {
     public static void navigateToScreen(String key,JFrame baseScreen,Vector<KeyValuePair> params){
         switch(key){
             case NavigationConstants.DASHBOARD:
-                DashboardScreen dashboardScreen =new DashboardScreen();
+                DashboardScreen dashboardScreen = new DashboardScreen();
                 dashboardScreen.setVisible(true);
+                baseScreen.setVisible(false);
+                break;
+            case NavigationConstants.LABOR:
+                LaborScreen laborScreen = new LaborScreen();
+                laborScreen.setVisible(true);
                 baseScreen.setVisible(false);
                 break;
             }

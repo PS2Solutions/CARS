@@ -5,16 +5,19 @@
  */
 package utils;
 
-import cars.CARS;
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
 import org.json.JSONException;
 
 /**
@@ -70,5 +73,18 @@ public class Helper {
     
     public static String getPropertyValue(String key){
        return  java.util.ResourceBundle.getBundle("appResources/Strings").getString(key);
+    }
+    public static JDatePickerImpl getDatePicker(){
+        JDatePickerImpl datePicker;
+        UtilDateModel model = new UtilDateModel();
+//        LocalDate now = LocalDate.now();
+//	model.setDate(now.getYear(), now.getMonthValue(), now.getDayOfMonth()); 
+        Properties p = new Properties();
+        p.put("text.today", "Today");
+        p.put("text.month", "Month");
+        p.put("text.year", "Year");
+        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
+        datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+        return datePicker;                
     }
 }

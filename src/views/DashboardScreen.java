@@ -5,14 +5,12 @@
  */
 package views;
 
-import dataclasses.ContractDashboardReportDto;
 import dataclasses.ReportContentDto;
-import java.awt.Component;
-import java.util.Vector;
 import javax.swing.JFrame;
 import javax.swing.JTable;
+import navigationCofiguration.NavigationConstants;
+import navigationCofiguration.NavigationController;
 import services.impl.DashboardServiceImpl;
-import services.interfaces.DashboardService;
 
 /**
  *
@@ -44,9 +42,8 @@ public class DashboardScreen extends javax.swing.JFrame {
         btnCustomer = new javax.swing.JButton();
         btnMaterial = new javax.swing.JButton();
         btnLabor = new javax.swing.JButton();
-        jPTransaction = new javax.swing.JPanel();
-        btnLaborCharge = new javax.swing.JButton();
         btnContract = new javax.swing.JButton();
+        btnLaborCharge = new javax.swing.JButton();
         jPSettings = new javax.swing.JPanel();
         btnExit = new javax.swing.JButton();
         btnSettings = new javax.swing.JButton();
@@ -64,6 +61,7 @@ public class DashboardScreen extends javax.swing.JFrame {
         btnQuotation.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/archive.png"))); // NOI18N
         btnQuotation.setText(bundle.getString("Quotation_Menu_Caption")); // NOI18N
         btnQuotation.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnQuotation.setPreferredSize(new java.awt.Dimension(100, 100));
         btnQuotation.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
         btnCustomer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/customer.png"))); // NOI18N
@@ -80,60 +78,62 @@ public class DashboardScreen extends javax.swing.JFrame {
         btnLabor.setText(bundle.getString("Labor_Menu_Caption")); // NOI18N
         btnLabor.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnLabor.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-
-        javax.swing.GroupLayout jPMasterLayout = new javax.swing.GroupLayout(jPMaster);
-        jPMaster.setLayout(jPMasterLayout);
-        jPMasterLayout.setHorizontalGroup(
-            jPMasterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPMasterLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnCustomer)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnMaterial)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnLabor)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnQuotation)
-                .addContainerGap(812, Short.MAX_VALUE))
-        );
-        jPMasterLayout.setVerticalGroup(
-            jPMasterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnCustomer, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
-            .addComponent(btnMaterial, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnLabor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnQuotation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab(bundle.getString("MasterTabCaption"), jPMaster); // NOI18N
-
-        btnLaborCharge.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/wage.png"))); // NOI18N
-        btnLaborCharge.setText(bundle.getString("Labor_Charge_Menu_Caption")); // NOI18N
-        btnLaborCharge.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnLaborCharge.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnLabor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLaborActionPerformed(evt);
+            }
+        });
 
         btnContract.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/contract.png"))); // NOI18N
         btnContract.setText(bundle.getString("Contract_Menu_Caption")); // NOI18N
         btnContract.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnContract.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
-        javax.swing.GroupLayout jPTransactionLayout = new javax.swing.GroupLayout(jPTransaction);
-        jPTransaction.setLayout(jPTransactionLayout);
-        jPTransactionLayout.setHorizontalGroup(
-            jPTransactionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPTransactionLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnContract)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnLaborCharge)
-                .addContainerGap(1026, Short.MAX_VALUE))
+        btnLaborCharge.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/wage.png"))); // NOI18N
+        btnLaborCharge.setText(bundle.getString("Labor_Charge_Menu_Caption")); // NOI18N
+        btnLaborCharge.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnLaborCharge.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnLaborCharge.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLaborChargeActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPMasterLayout = new javax.swing.GroupLayout(jPMaster);
+        jPMaster.setLayout(jPMasterLayout);
+        jPMasterLayout.setHorizontalGroup(
+            jPMasterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPMasterLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(btnCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnLabor, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnQuotation, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(64, 64, 64)
+                .addComponent(btnContract, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addComponent(btnLaborCharge, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(551, Short.MAX_VALUE))
         );
-        jPTransactionLayout.setVerticalGroup(
-            jPTransactionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnContract, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
-            .addComponent(btnLaborCharge, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        jPMasterLayout.setVerticalGroup(
+            jPMasterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPMasterLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(jPMasterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnLaborCharge, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(btnContract, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(btnCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(jPMasterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(btnMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnLabor, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnQuotation, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 14, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab(bundle.getString("TransactionTabCaption"), jPTransaction); // NOI18N
+        jTabbedPane1.addTab(bundle.getString("MasterTabCaption"), jPMaster); // NOI18N
 
         btnExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/exit.png"))); // NOI18N
         btnExit.setText(bundle.getString("Exit_Menu_Caption")); // NOI18N
@@ -156,15 +156,19 @@ public class DashboardScreen extends javax.swing.JFrame {
             jPSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPSettingsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnSettings, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnExit)
-                .addContainerGap(1034, Short.MAX_VALUE))
+                .addComponent(btnSettings, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(1045, Short.MAX_VALUE))
         );
         jPSettingsLayout.setVerticalGroup(
             jPSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnSettings, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
-            .addComponent(btnExit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPSettingsLayout.createSequentialGroup()
+                .addContainerGap(12, Short.MAX_VALUE)
+                .addGroup(jPSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnExit)
+                    .addComponent(btnSettings))
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab(bundle.getString("SettingsTabCaption"), jPSettings); // NOI18N
@@ -189,8 +193,8 @@ public class DashboardScreen extends javax.swing.JFrame {
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPContractReport, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
-                    .addComponent(jPLaborReport))
+                    .addComponent(jPLaborReport, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
+                    .addComponent(jPContractReport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -200,6 +204,14 @@ public class DashboardScreen extends javax.swing.JFrame {
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
         System.exit(0);
     }//GEN-LAST:event_btnExitActionPerformed
+
+    private void btnLaborChargeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLaborChargeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnLaborChargeActionPerformed
+
+    private void btnLaborActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLaborActionPerformed
+        NavigationController.navigateToScreen(NavigationConstants.LABOR, this, null);
+    }//GEN-LAST:event_btnLaborActionPerformed
 
     /**
      * @param args the command line arguments
@@ -250,7 +262,6 @@ public class DashboardScreen extends javax.swing.JFrame {
     private javax.swing.JScrollPane jPLaborReport;
     private javax.swing.JPanel jPMaster;
     private javax.swing.JPanel jPSettings;
-    private javax.swing.JPanel jPTransaction;
     private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
 
