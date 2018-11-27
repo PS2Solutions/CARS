@@ -8,12 +8,17 @@ package views;
 import dataclasses.DesignationDto;
 import dataclasses.LaborDto;
 import dataclasses.ReportContentDto;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JTable;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import navigationCofiguration.NavigationConstants;
 import navigationCofiguration.NavigationController;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -22,6 +27,7 @@ import services.impl.DesignationServiceImpl;
 import services.impl.LaborServiceImpl;
 import services.interfaces.DesignationService;
 import services.interfaces.LaborService;
+import utils.DialogHelper;
 import utils.Helper;
 
 /**
@@ -38,6 +44,7 @@ public class LaborScreen extends javax.swing.JFrame {
         initCalender();
         setDesignation();
         setLaborReport();
+        selectedLaborId = 0;
     }
 
     /**
@@ -58,7 +65,6 @@ public class LaborScreen extends javax.swing.JFrame {
         btnUpload = new javax.swing.JButton();
         jPLaborDeails = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         txtEmployeeId = new javax.swing.JTextField();
         txtName = new javax.swing.JTextField();
         cmbDesignation = new javax.swing.JComboBox<>();
@@ -79,7 +85,14 @@ public class LaborScreen extends javax.swing.JFrame {
         lblResignDate = new javax.swing.JLabel();
         jPResignDate = new javax.swing.JScrollPane();
         chkStatus = new javax.swing.JCheckBox();
+        jLabel2 = new javax.swing.JLabel();
         jPLaborList = new javax.swing.JScrollPane();
+        jPanel2 = new javax.swing.JPanel();
+        txtEmpIdSearch = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        txtEmpNameSearch = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
         jFrame1.getContentPane().setLayout(jFrame1Layout);
@@ -133,6 +146,11 @@ public class LaborScreen extends javax.swing.JFrame {
         btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/save.png"))); // NOI18N
         btnSave.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         btnSave.setFocusPainted(false);
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         btnUpload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/upload.png"))); // NOI18N
         btnUpload.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -168,10 +186,7 @@ public class LaborScreen extends javax.swing.JFrame {
         jPLaborDeails.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel1.setText("Employee ID");
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel2.setText("Name");
+        jLabel1.setText("Employee ID*");
 
         txtEmployeeId.setColumns(10);
         txtEmployeeId.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -185,7 +200,7 @@ public class LaborScreen extends javax.swing.JFrame {
         jLabel3.setText("Designation");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel4.setText("Joining Date");
+        jLabel4.setText("Joining Date*");
 
         txtIdProofNumber.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txtIdProofNumber.addActionListener(new java.awt.event.ActionListener() {
@@ -198,13 +213,13 @@ public class LaborScreen extends javax.swing.JFrame {
         cmbIdProof.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Voters Id", "Aadhaar", "Pan Card", "License", "Passport" }));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel5.setText("Id Proof");
+        jLabel5.setText("Id Proof*");
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel6.setText("Address 1");
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel7.setText("Contact Number");
+        jLabel7.setText("Contact Number*");
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel8.setText("Daily wage");
@@ -223,12 +238,15 @@ public class LaborScreen extends javax.swing.JFrame {
 
         chkStatus.setText("Active");
 
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel2.setText("Name*");
+
         javax.swing.GroupLayout jPLaborDeailsLayout = new javax.swing.GroupLayout(jPLaborDeails);
         jPLaborDeails.setLayout(jPLaborDeailsLayout);
         jPLaborDeailsLayout.setHorizontalGroup(
             jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                .addGap(54, 54, 54)
+                .addGap(51, 51, 51)
                 .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPLaborDeailsLayout.createSequentialGroup()
                         .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -249,7 +267,7 @@ public class LaborScreen extends javax.swing.JFrame {
                                 .addComponent(txtAddress1, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(txtAddress2, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(txtDailyWage, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txtContactNumber, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE))
+                                .addComponent(txtContactNumber, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(chkStatus)))
                     .addGroup(jPLaborDeailsLayout.createSequentialGroup()
                         .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -260,11 +278,10 @@ public class LaborScreen extends javax.swing.JFrame {
                             .addGroup(jPLaborDeailsLayout.createSequentialGroup()
                                 .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel2)
-                                            .addComponent(jLabel1))
+                                        .addComponent(jLabel1)
                                         .addGap(1, 1, 1))
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING))
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING))
                                 .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPLaborDeailsLayout.createSequentialGroup()
                                         .addGap(56, 56, 56)
@@ -272,25 +289,21 @@ public class LaborScreen extends javax.swing.JFrame {
                                     .addComponent(txtName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtEmployeeId, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(35, 35, 35))
+                .addGap(38, 38, 38))
         );
         jPLaborDeailsLayout.setVerticalGroup(
             jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPLaborDeailsLayout.createSequentialGroup()
+                .addGap(31, 31, 31)
                 .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                        .addGap(72, 72, 72)
+                        .addGap(16, 16, 16)
                         .addComponent(jLabel1))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPLaborDeailsLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(txtEmployeeId, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(jLabel2))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPLaborDeailsLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(txtEmployeeId, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(14, 14, 14)
+                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addGap(18, 18, 18)
                 .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cmbDesignation, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -331,10 +344,63 @@ public class LaborScreen extends javax.swing.JFrame {
                         .addComponent(lblResignDate)))
                 .addGap(18, 18, 18)
                 .addComponent(chkStatus)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         jPLaborList.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        txtEmpIdSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtEmpIdSearchActionPerformed(evt);
+            }
+        });
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel10.setText("Employee ID");
+
+        jLabel11.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel11.setText("Employee ID");
+
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButton1.setText("Search");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addComponent(jLabel10)
+                .addGap(18, 18, 18)
+                .addComponent(txtEmpIdSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel11)
+                .addGap(18, 18, 18)
+                .addComponent(txtEmpNameSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(29, 29, 29))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtEmpIdSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtEmpNameSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel11)
+                        .addComponent(jButton1)))
+                .addContainerGap(15, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -342,22 +408,27 @@ public class LaborScreen extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPLaborList, javax.swing.GroupLayout.DEFAULT_SIZE, 823, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPLaborList))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPLaborDeails, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jPLaborDeails, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPLaborDeails, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPLaborList))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPLaborList))
+                    .addComponent(jPLaborDeails, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -371,14 +442,49 @@ public class LaborScreen extends javax.swing.JFrame {
 
     private void btnAddNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNewActionPerformed
         clearFields();
-        jPResignDate.setVisible(false);
-        lblResignDate.setVisible(false);
-        jPResignDate.setVisible(false);
+        resignDatePicker.getComponents()[1].setEnabled(false);
+        txtEmployeeId.setEditable(true);
     }//GEN-LAST:event_btnAddNewActionPerformed
 
     private void btnHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeActionPerformed
         NavigationController.navigateToScreen(NavigationConstants.DASHBOARD, this, null);
     }//GEN-LAST:event_btnHomeActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        if (validateFields()) {
+            LaborService laborService = new LaborServiceImpl();
+            LaborDto laborDto = getEnteredData();
+            String response = laborService.saveLabor(laborDto);
+            if (response.equalsIgnoreCase(Helper.getPropertyValue("Success"))) {
+                DialogHelper.showInfoMessage(Helper.getPropertyValue("Success"),
+                        Helper.getPropertyValue("SuccessMessage"));
+                setLaborReport();
+            } else {
+                DialogHelper.showErrorMessage("Error", response);
+            }
+        } else {
+            DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("EmptyFields"));
+        }
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void txtEmpIdSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmpIdSearchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEmpIdSearchActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String employeeId = txtEmpIdSearch.getText().trim();
+        String name = txtEmpNameSearch.getText().trim();
+        if (employeeId.length() > 0 || name.length() > 0) {
+            LaborService laborService = new LaborServiceImpl();
+            laborDtos = laborService.getLabor(employeeId, name);
+            if (laborDtos.size() > 0) {
+                ReportContentDto contentDto = laborService.getLaborDetails(laborDtos);
+                configureTable(contentDto);
+            } else {
+
+            }
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -423,9 +529,12 @@ public class LaborScreen extends javax.swing.JFrame {
     private javax.swing.JCheckBox chkStatus;
     private javax.swing.JComboBox<String> cmbDesignation;
     private javax.swing.JComboBox<String> cmbIdProof;
+    private javax.swing.JButton jButton1;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -439,11 +548,14 @@ public class LaborScreen extends javax.swing.JFrame {
     private javax.swing.JScrollPane jPLaborList;
     private javax.swing.JScrollPane jPResignDate;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel lblResignDate;
     private javax.swing.JTextField txtAddress1;
     private javax.swing.JTextField txtAddress2;
     private javax.swing.JFormattedTextField txtContactNumber;
     private javax.swing.JFormattedTextField txtDailyWage;
+    private javax.swing.JTextField txtEmpIdSearch;
+    private javax.swing.JTextField txtEmpNameSearch;
     private javax.swing.JTextField txtEmployeeId;
     private javax.swing.JTextField txtIdProofNumber;
     private javax.swing.JTextField txtName;
@@ -452,6 +564,8 @@ public class LaborScreen extends javax.swing.JFrame {
     JDatePickerImpl resignDatePicker;
     Vector<DesignationDto> designationDtos;
     List<LaborDto> laborDtos;
+    int selectedLaborId;
+    JTable tblContract;
 
     private void initCalender() {
         joinDatePicker = Helper.getDatePicker();
@@ -472,14 +586,53 @@ public class LaborScreen extends javax.swing.JFrame {
     private void setLaborReport() {
         LaborService laborService = new LaborServiceImpl();
         laborDtos = laborService.getLabor();
-        ReportContentDto contentDto = laborService.getLaborDetails(laborDtos);
-        JTable tblContract = new JTable(contentDto.getRowData(), contentDto.getColumnNames());
+        if (laborDtos.size() > 0) {
+            ReportContentDto contentDto = laborService.getLaborDetails(laborDtos);
+            configureTable(contentDto);
+        }
+    }
+
+    private void configureTable(ReportContentDto contentDto) {
+
+        tblContract = new JTable(contentDto.getRowData(), contentDto.getColumnNames());
+        tblContract.setRowSelectionAllowed(true);
+        tblContract.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int row = tblContract.rowAtPoint(evt.getPoint());
+                selectedLaborId = laborDtos.get(row).getId();
+                populateSelectedDetails(laborDtos.get(row));
+            }
+        });
         jPLaborList.add(tblContract);
         jPLaborList.setViewportView(tblContract);
         jPLaborList.setVisible(true);
     }
 
+    private void populateSelectedDetails(LaborDto laborDto) {
+        resignDatePicker.getComponents()[1].setEnabled(true);       
+        txtEmployeeId.setEditable(false);
+        txtIdProofNumber.setText(laborDto.getIdentityNumber());
+        txtName.setText(laborDto.getName());
+        txtEmployeeId.setText(laborDto.getLaborId());
+        txtContactNumber.setText(laborDto.getPhoneNumber());
+        txtDailyWage.setText("" + laborDto.getWage());
+        txtAddress1.setText(laborDto.getAddress1());
+        txtAddress2.setText(laborDto.getAddress2());
+        joinDatePicker.getJFormattedTextField().setText(laborDto.getJoinDate());
+        resignDatePicker.getJFormattedTextField().setText(laborDto.getResignDate());
+        for (DesignationDto designationDto : designationDtos) {
+            if (designationDto.getDesignation().equalsIgnoreCase(laborDto.getDesignation())) {
+                cmbDesignation.setSelectedIndex(designationDtos.indexOf(designationDto));
+                break;
+            }
+        }
+        cmbIdProof.setSelectedIndex(getIdProofIndex(laborDto.getIdentityType()));
+        chkStatus.setSelected(laborDto.isIsActive());
+    }
+
     private void clearFields() {
+        selectedLaborId = 0;
         txtIdProofNumber.setText("");
         txtName.setText("");
         txtEmployeeId.setText("");
@@ -491,6 +644,61 @@ public class LaborScreen extends javax.swing.JFrame {
         cmbDesignation.setSelectedIndex(0);
         cmbIdProof.setSelectedIndex(0);
         chkStatus.setSelected(false);
-       
+
+    }
+
+    private LaborDto getEnteredData() {
+        LaborDto laborDto = new LaborDto();
+        laborDto.setId(selectedLaborId);
+        laborDto.setLaborId(txtEmployeeId.getText().trim());
+        laborDto.setName(txtName.getText().trim());
+        laborDto.setPhoneNumber(txtContactNumber.getText().trim());
+        laborDto.setAddress1(txtAddress1.getText().trim());
+        laborDto.setAddress2(txtAddress2.getText().trim());
+        laborDto.setIdentityType(cmbIdProof.getSelectedItem().toString());
+        laborDto.setIdentityNumber(txtIdProofNumber.getText().trim());
+        laborDto.setIsActive(chkStatus.isSelected());
+        laborDto.setJoinDate(joinDatePicker.getJFormattedTextField().getText());
+        laborDto.setResignDate(resignDatePicker.getJFormattedTextField().getText());
+        try {
+            laborDto.setWage(Double.parseDouble(txtDailyWage.getText().trim()));
+        } catch (Exception ex) {
+            laborDto.setWage(0);
+        }
+        String designation = designationDtos.get(cmbDesignation.getSelectedIndex()).getDesignation();
+        laborDto.setDesignation(designation);
+        return laborDto;
+    }
+
+    private boolean validateFields() {
+        if (txtEmployeeId.getText().trim().length() == 0 || txtName.getText().trim().length() == 0
+                || txtIdProofNumber.getText().trim().length() == 0
+                || txtContactNumber.getText().trim().length() == 0
+                || joinDatePicker.getJFormattedTextField().getText().trim().length() == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    private int getIdProofIndex(String identityType) {
+        int index = 0;
+        switch (identityType) {
+            case "Voters Id":
+                index = 0;
+                break;
+            case "Aadhaar":
+                index = 1;
+                break;
+            case "Pan Card":
+                index = 2;
+                break;
+            case "License":
+                index = 3;
+                break;
+            case "Passport":
+                index = 4;
+                break;
+        }
+        return index;
     }
 }

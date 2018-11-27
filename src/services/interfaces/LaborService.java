@@ -16,4 +16,6 @@ import java.util.List;
 public interface LaborService {
     List<LaborDto> getLabor();
     ReportContentDto getLaborDetails( List<LaborDto> laborDtos );
+    String saveLabor(LaborDto laborDto);
+    List<LaborDto> getLabor(String empolyeeId, String name);
 }

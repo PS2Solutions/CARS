@@ -22,6 +22,7 @@ public class LaborDto {
     String joinDate;
     String resignDate;
     boolean isActive;
+    String designation;
 
     public int getId() {
         return id;
@@ -117,6 +118,14 @@ public class LaborDto {
 
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
+    }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
     }
     
     
