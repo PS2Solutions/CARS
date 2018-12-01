@@ -7,17 +7,23 @@ package navigationCofiguration;
 
 import java.util.Vector;
 import javax.swing.JFrame;
+import utils.Arguments;
 import utils.KeyValuePair;
 import views.DashboardScreen;
 import views.LaborScreen;
 import views.QuotationScreen;
+import views.RegistrationScreen;
 
 /**
  *
  * @author shinu.k
  */
-public class NavigationController {
-    public static void navigateToScreen(String key,JFrame baseScreen,Vector<KeyValuePair> params){
+public class NavigationController {    
+    public static void navigateToScreen(String key, JFrame baseScreen){
+        navigateToScreen(key, baseScreen, null);
+    }
+    
+    public static void navigateToScreen(String key, JFrame baseScreen, Arguments arguments){
         switch(key){
             case NavigationConstants.DASHBOARD:
                 DashboardScreen dashboardScreen = new DashboardScreen();
@@ -34,6 +40,10 @@ public class NavigationController {
                 quotationScreen.setVisible(true);
                 baseScreen.setVisible(false);
                 break;
+            case NavigationConstants.REGISTER:
+                RegistrationScreen registrationScreen = new RegistrationScreen(arguments);
+                registrationScreen.setVisible(true);
+                baseScreen.setVisible(false);
             }
     }
 }

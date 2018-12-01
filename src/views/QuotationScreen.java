@@ -655,15 +655,25 @@ public class QuotationScreen extends javax.swing.JFrame {
     private void setEnteredValues() {
         quotationMaster.setAddress1(txtAddress1.getText().trim());
         quotationMaster.setAddress2(txtAddress2.getText().trim());
-        quotationMaster.setAmount(txtAmount.getText().trim());
-        quotationMaster.setCustomerId(txtAddress1.getText().trim());
-        quotationMaster.setCustomerName(txt.getText().trim());
-        quotationMaster.setLaborCharge(txtLaborCharge.getText().trim());
+        try {
+            quotationMaster.setAmount(Double.parseDouble(txtAmount.getText().trim()));
+        } catch (Exception ex) {
+             quotationMaster.setAmount(0);
+        }
+        
+        quotationMaster.setCustomerId(customersDtos.get(cmbCustomer.getSelectedIndex()).getCustomerId());
+        quotationMaster.setCustomerName(cmbCustomer.getSelectedItem().toString().trim());
+        try {
+            quotationMaster.setLaborCharge(Double.parseDouble(txtLaborCharge.getText().trim()));
+        } catch (Exception ex) {
+             quotationMaster.setLaborCharge(0);
+        }
         quotationMaster.setReferenceNo(txtQuoteReference.getText().trim());
         quotationMaster.setStatus(txtStatus.getText().trim());
         quotationMaster.setTitle(txtQuoteTitle.getText().trim());
         quotationMaster.setType(cmbType.getSelectedItem().toString().trim());
-        quotationMaster.setTypeId(WIDTH);
+        QuotationTypeDto quotationTypeDto = quotationTypeDtos.get(cmbType.getSelectedIndex());
+        quotationMaster.setTypeId(quotationTypeDto.getTypeId());
         
 
     }

@@ -448,7 +448,7 @@ public class LaborScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAddNewActionPerformed
 
     private void btnHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeActionPerformed
-        NavigationController.navigateToScreen(NavigationConstants.DASHBOARD, this, null);
+        NavigationController.navigateToScreen(NavigationConstants.DASHBOARD, this);
     }//GEN-LAST:event_btnHomeActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed

@@ -6,12 +6,15 @@
 package views;
 
 import dataclasses.LoginDto;
+import java.util.Vector;
 import javax.swing.JFrame;
 import navigationCofiguration.NavigationConstants;
 import navigationCofiguration.NavigationController;
 import services.impl.LoginServiceImpl;
+import utils.Arguments;
 import utils.DialogHelper;
 import utils.Helper;
+import utils.KeyValuePair;
 
 /**
  *
@@ -172,7 +175,10 @@ public class LoginScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void lblRegisterActionListener(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRegisterActionListener
-           NavigationController.navigateToScreen(NavigationConstants.REGISTER, LoginScreen.this, null);
+        Arguments args = new Arguments();
+        args.put("Base", NavigationConstants.LOG_IN);
+        
+        NavigationController.navigateToScreen(NavigationConstants.REGISTER, LoginScreen.this, args);
     }//GEN-LAST:event_lblRegisterActionListener
 
     /**

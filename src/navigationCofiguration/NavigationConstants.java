@@ -14,4 +14,5 @@ public class NavigationConstants {
     public final static String REGISTER = "REGISTERATION_SCREEN";
     public final static String LABOR = "LABOR_SCREEN";
     public final static String QUOTATION = "QUOTATION_SCREEN";
+    public final static String LOG_IN = "LOG_IN";
 }

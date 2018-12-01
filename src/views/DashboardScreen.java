@@ -6,11 +6,16 @@
 package views;
 
 import dataclasses.ReportContentDto;
+import java.util.Vector;
 import javax.swing.JFrame;
 import javax.swing.JTable;
 import navigationCofiguration.NavigationConstants;
 import navigationCofiguration.NavigationController;
 import services.impl.DashboardServiceImpl;
+import services.impl.RegistrationServiceImpl;
+import services.interfaces.RegistrationService;
+import utils.Arguments;
+import utils.KeyValuePair;
 
 /**
  *
@@ -73,6 +78,11 @@ public class DashboardScreen extends javax.swing.JFrame {
         btnCustomer.setText(bundle.getString("Customer_Menu_Caption")); // NOI18N
         btnCustomer.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnCustomer.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCustomerActionPerformed(evt);
+            }
+        });
 
         btnMaterial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/material.png"))); // NOI18N
         btnMaterial.setText(bundle.getString("Material_Menu_Caption")); // NOI18N
@@ -154,6 +164,11 @@ public class DashboardScreen extends javax.swing.JFrame {
         btnSettings.setText(bundle.getString("SettingsTabCaption")); // NOI18N
         btnSettings.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnSettings.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnSettings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSettingsActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPSettingsLayout = new javax.swing.GroupLayout(jPSettings);
         jPSettings.setLayout(jPSettingsLayout);
@@ -215,12 +230,27 @@ public class DashboardScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLaborChargeActionPerformed
 
     private void btnLaborActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLaborActionPerformed
-        NavigationController.navigateToScreen(NavigationConstants.LABOR, this, null);
+        NavigationController.navigateToScreen(NavigationConstants.LABOR, this);
     }//GEN-LAST:event_btnLaborActionPerformed
 
     private void btnQuotationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuotationActionPerformed
        NavigationController.navigateToScreen(NavigationConstants.QUOTATION, this, null);
     }//GEN-LAST:event_btnQuotationActionPerformed
+
+    private void btnCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCustomerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCustomerActionPerformed
+
+    private void btnSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSettingsActionPerformed
+       RegistrationService registrationService = new RegistrationServiceImpl();
+       
+       Arguments args = new Arguments();
+       args.put("Base", NavigationConstants.DASHBOARD);
+       args.put("Data", registrationService.getRegistrationDetails());
+       
+       NavigationController.navigateToScreen(NavigationConstants.REGISTER, this, args);
+    }//GEN-LAST:event_btnSettingsActionPerformed
+
 
     /**
      * @param args the command line arguments
