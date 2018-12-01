@@ -63,6 +63,11 @@ public class DashboardScreen extends javax.swing.JFrame {
         btnQuotation.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnQuotation.setPreferredSize(new java.awt.Dimension(100, 100));
         btnQuotation.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnQuotation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnQuotationActionPerformed(evt);
+            }
+        });
 
         btnCustomer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/customer.png"))); // NOI18N
         btnCustomer.setText(bundle.getString("Customer_Menu_Caption")); // NOI18N
@@ -212,6 +217,10 @@ public class DashboardScreen extends javax.swing.JFrame {
     private void btnLaborActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLaborActionPerformed
         NavigationController.navigateToScreen(NavigationConstants.LABOR, this, null);
     }//GEN-LAST:event_btnLaborActionPerformed
+
+    private void btnQuotationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuotationActionPerformed
+       NavigationController.navigateToScreen(NavigationConstants.QUOTATION, this, null);
+    }//GEN-LAST:event_btnQuotationActionPerformed
 
     /**
      * @param args the command line arguments

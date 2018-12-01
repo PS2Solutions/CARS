@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import utils.KeyValuePair;
 import views.DashboardScreen;
 import views.LaborScreen;
+import views.QuotationScreen;
 
 /**
  *
@@ -26,6 +27,11 @@ public class NavigationController {
             case NavigationConstants.LABOR:
                 LaborScreen laborScreen = new LaborScreen();
                 laborScreen.setVisible(true);
+                baseScreen.setVisible(false);
+                break;
+            case NavigationConstants.QUOTATION:
+                QuotationScreen quotationScreen = new QuotationScreen();
+                quotationScreen.setVisible(true);
                 baseScreen.setVisible(false);
                 break;
             }

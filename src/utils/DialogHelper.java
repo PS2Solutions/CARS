@@ -5,6 +5,7 @@
  */
 package utils;
 
+import java.awt.Component;
 import javax.swing.JOptionPane;
 
 /**
@@ -17,5 +18,8 @@ public class DialogHelper {
      }
      public static void showInfoMessage(String title, String message) {
         JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
+     }
+     public static String showInputDialog(Component parentComponent, String title, String message){
+          return JOptionPane.showInputDialog(parentComponent, message, title,0);
      }
 }
