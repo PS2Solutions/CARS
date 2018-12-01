@@ -22,10 +22,10 @@ public class CARS {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        if (setupDBCredentials()) {
+        //if (setupDBCredentials()) {
             LoginScreen loginScreen = new LoginScreen();
             loginScreen.show();
-        }
+       // }
     }
 
     /**
