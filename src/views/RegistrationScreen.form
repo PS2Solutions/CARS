@@ -54,7 +54,7 @@
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
               <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="119" max="32767" attributes="0"/>
+              <EmptySpace pref="118" max="32767" attributes="0"/>
               <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -98,7 +98,7 @@
                               <Component id="txtTin" alignment="0" min="-2" pref="227" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
-                          <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                          <Component id="uploadLogoBtn" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -155,7 +155,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="txtEmail" alignment="3" pref="31" max="32767" attributes="0"/>
                       <Component id="txtTin" alignment="3" pref="31" max="32767" attributes="0"/>
-                      <Component id="jButton1" alignment="3" max="32767" attributes="0"/>
+                      <Component id="uploadLogoBtn" alignment="3" max="32767" attributes="0"/>
                       <Component id="txtMobile" alignment="3" pref="31" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
@@ -245,7 +245,7 @@
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton1">
+        <Component class="javax.swing.JButton" name="uploadLogoBtn">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/appResources/upload_logo.png"/>
@@ -253,6 +253,9 @@
             <Property name="text" type="java.lang.String" value="Company logo"/>
             <Property name="horizontalTextPosition" type="int" value="2"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="uploadLogoBtnActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="txtMobile">
           <Properties>
@@ -289,17 +292,19 @@
                   </Group>
                   <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jLabel9" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtPassword" alignment="0" min="-2" pref="230" max="-2" attributes="0"/>
+                      <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtPassword" min="-2" pref="230" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="194" max="-2" attributes="0"/>
+                          <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <Component id="txtConfirmPassword" min="-2" pref="230" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="75" max="-2" attributes="0"/>
-                  <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="178" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -319,7 +324,7 @@
                       <Component id="txtPassword" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
                       <Component id="txtConfirmPassword" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="33" max="32767" attributes="0"/>
+                  <EmptySpace pref="37" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -343,8 +348,6 @@
             <Property name="text" type="java.lang.String" value="Password"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtPassword">
-        </Component>
         <Component class="javax.swing.JLabel" name="jLabel10">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel11">
@@ -355,7 +358,9 @@
             <Property name="text" type="java.lang.String" value="Confirm password"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtConfirmPassword">
+        <Component class="javax.swing.JPasswordField" name="txtPassword">
+        </Component>
+        <Component class="javax.swing.JPasswordField" name="txtConfirmPassword">
         </Component>
       </SubComponents>
     </Container>

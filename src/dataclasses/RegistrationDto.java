@@ -21,24 +21,9 @@ public class RegistrationDto {
     String userName;
     String password;
 
-    public RegistrationDto(String Name, String companyName, String companyReg, String gst, String email, String phoneNumber, String tin, String companyLogo, String userName, String password) {
-        this.Name = Name;
-        this.companyName = companyName;
-        this.companyReg = companyReg;
-        this.gst = gst;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.tin = tin;
-        this.companyLogo = companyLogo;
-        this.userName = userName;
-        this.password = password;
-    }
-
     public RegistrationDto() {
     }
     
-    
-
     public void setName(String Name) {
         this.Name = Name;
     }
@@ -79,8 +64,6 @@ public class RegistrationDto {
         this.password = password;
     }
     
-    
-
     public String getName() {
         return Name;
     }
@@ -120,6 +103,4 @@ public class RegistrationDto {
     public String getPassword() {
         return password;
     }
-    
-    
 }

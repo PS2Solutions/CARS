@@ -16,7 +16,7 @@ public class RegistrationServiceImpl implements RegistrationService{
 
     @Override
     public String saveRegistrationDetails(RegistrationDto registrationDto) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "Success";
     }
 
     @Override
@@ -31,6 +31,7 @@ public class RegistrationServiceImpl implements RegistrationService{
         dto.setTin("Tin");
         dto.setUserName("Test");
         dto.setPassword("Test");
+        dto.setCompanyLogo("C:\\cars\\small.jpg");
         
         return dto;
     }

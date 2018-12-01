@@ -6,7 +6,6 @@
 package views;
 
 import dataclasses.RegistrationDto;
-import java.util.Vector;
 import java.util.regex.Pattern;
 import javax.swing.JFrame;
 import navigationCofiguration.NavigationConstants;
@@ -15,14 +14,18 @@ import services.impl.RegistrationServiceImpl;
 import services.interfaces.RegistrationService;
 import utils.Arguments;
 import utils.DialogHelper;
+import utils.FileHandler;
 import utils.Helper;
-import utils.KeyValuePair;
 
 /**
  *
  * @author sreenath
  */
 public class RegistrationScreen extends javax.swing.JFrame {
+
+    private String logoPath = null;
+    private boolean isEdit = false;
+    private String currentPassword;
 
     /**
      * Creates new form RegistrationScreen
@@ -31,24 +34,18 @@ public class RegistrationScreen extends javax.swing.JFrame {
         initComponents();
     }
 
-    public RegistrationScreen(Vector<KeyValuePair> params) {
-        this();
-        
-        setUsernameEnabled(params.get(0).getValue().equals(NavigationConstants.LOG_IN));
-    }
-    
     public RegistrationScreen(Arguments args) {
         this();
-        
-        if(args.get("Base") != null) {
-            setUsernameEnabled(args.get("Base").equals(NavigationConstants.LOG_IN));
+
+        if (args.get("Base") != null) {
+            isEdit = args.get("Base").equals(NavigationConstants.DASHBOARD);
         }
-        
-        if(args.get("Data") != null) {
+
+        if (args.get("Data") != null) {
             RegistrationDto dto = (RegistrationDto) args.get("Data");
             setRegistrationData(dto);
         }
-        
+        setUsernameEnabled(!isEdit);
     }
 
     /**
@@ -74,16 +71,16 @@ public class RegistrationScreen extends javax.swing.JFrame {
         txtTin = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        uploadLogoBtn = new javax.swing.JButton();
         txtMobile = new javax.swing.JFormattedTextField();
         jPanel2 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         txtUserName = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        txtPassword = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        txtConfirmPassword = new javax.swing.JTextField();
+        txtPassword = new javax.swing.JPasswordField();
+        txtConfirmPassword = new javax.swing.JPasswordField();
         jPanel4 = new javax.swing.JPanel();
         btnBack = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
@@ -132,9 +129,14 @@ public class RegistrationScreen extends javax.swing.JFrame {
         jLabel7.setText("TIN #");
         jLabel7.setToolTipText("");
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/upload_logo.png"))); // NOI18N
-        jButton1.setText("Company logo");
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        uploadLogoBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/upload_logo.png"))); // NOI18N
+        uploadLogoBtn.setText("Company logo");
+        uploadLogoBtn.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        uploadLogoBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                uploadLogoBtnActionPerformed(evt);
+            }
+        });
 
         txtMobile.setColumns(10);
         try {
@@ -165,7 +167,7 @@ public class RegistrationScreen extends javax.swing.JFrame {
                             .addComponent(jLabel7)
                             .addComponent(txtTin, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(40, 40, 40)
-                        .addComponent(jButton1))
+                        .addComponent(uploadLogoBtn))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -209,7 +211,7 @@ public class RegistrationScreen extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
                     .addComponent(txtTin, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(uploadLogoBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtMobile, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
                 .addGap(36, 36, 36))
         );
@@ -240,11 +242,12 @@ public class RegistrationScreen extends javax.swing.JFrame {
                     .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(42, 42, 42)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel11)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addGap(194, 194, 194)
+                        .addComponent(jLabel10))
                     .addComponent(txtConfirmPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(75, 75, 75)
-                .addComponent(jLabel10)
-                .addContainerGap(178, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -260,7 +263,7 @@ public class RegistrationScreen extends javax.swing.JFrame {
                     .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtConfirmPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         jPanel4.setBackground(new java.awt.Color(204, 204, 255));
@@ -328,7 +331,7 @@ public class RegistrationScreen extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(38, 38, 38)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 119, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 118, Short.MAX_VALUE)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -345,20 +348,14 @@ public class RegistrationScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_txtEmailActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-       
+
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        if (!validateFields()) {
-           DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("EmptyFields"));
-        } else if(!samePassword()) {
-            DialogHelper.showErrorMessage("Validation", Helper.getPropertyValue("PasswordMessage"));
-        } else if(!isValidEmail()) {
-             DialogHelper.showErrorMessage("Validation", Helper.getPropertyValue("InvalidEmail"));
-        } else {
+        if (validateFields()) {
             RegistrationService registrationService = new RegistrationServiceImpl();
             String response = registrationService.saveRegistrationDetails(getEnteredData());
-            
+
             if (response.equalsIgnoreCase(Helper.getPropertyValue("Success"))) {
                 DialogHelper.showInfoMessage(Helper.getPropertyValue("Success"),
                         Helper.getPropertyValue("SuccessMessage"));
@@ -369,39 +366,63 @@ public class RegistrationScreen extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSaveActionPerformed
 
+    private void uploadLogoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadLogoBtnActionPerformed
+        logoPath = FileHandler.getCopiedFilePath();
+    }//GEN-LAST:event_uploadLogoBtnActionPerformed
+
     private boolean validateFields() {
+        boolean fieldsAreValid = true;
+
+        if (isFieldsEmpty()) {
+            DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("EmptyFields"));
+            fieldsAreValid = false;
+        } else if (!isSamePassword()) {
+            DialogHelper.showErrorMessage("Validation", Helper.getPropertyValue("PasswordMessage"));
+            fieldsAreValid = false;
+        } else if (!isValidEmail()) {
+            DialogHelper.showErrorMessage("Validation", Helper.getPropertyValue("InvalidEmail"));
+            fieldsAreValid = false;
+        } else if (logoPath == null) {
+            DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("ChooseLogo"));
+            fieldsAreValid = false;
+        }
+
+        return fieldsAreValid;
+    }
+
+    private boolean isFieldsEmpty() {
         if (txtName.getText().trim().length() == 0 || txtCompanyName.getText().trim().length() == 0
                 || txtCompanyReg.getText().trim().length() == 0
-                || txtConfirmPassword.getText().trim().length() == 0
                 || txtEmail.getText().trim().length() == 0
                 || txtGst.getText().trim().length() == 0
                 || txtMobile.getText().trim().length() == 0
-                || txtPassword.getText().trim().length() == 0
                 || txtTin.getText().trim().length() == 0
                 || txtUserName.getText().trim().length() == 0) {
+            return true;
+        } else if (!isEdit && (txtConfirmPassword.getText().trim().length() == 0 || txtPassword.getText().trim().length() == 0)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isValidEmail() {
+        String email = txtEmail.getText().trim();
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."
+                + "[a-zA-Z0-9_+&*-]+)*@"
+                + "(?:[a-zA-Z0-9-]+\\.)+[a-z"
+                + "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (email == null) {
             return false;
         }
-        return true;
+        return pat.matcher(email).matches();
     }
-    
-    private boolean isValidEmail() 
-    { 
-        String email = txtEmail.getText().trim();
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+ 
-                            "[a-zA-Z0-9_+&*-]+)*@" + 
-                            "(?:[a-zA-Z0-9-]+\\.)+[a-z" + 
-                            "A-Z]{2,7}$"; 
-                              
-        Pattern pat = Pattern.compile(emailRegex); 
-        if (email == null) 
-            return false; 
-        return pat.matcher(email).matches(); 
-    } 
-    
-    private boolean samePassword() {
+
+    private boolean isSamePassword() {
         return (txtPassword.getText().trim().equals(txtConfirmPassword.getText().trim()));
     }
-    
+
     private RegistrationDto getEnteredData() {
         RegistrationDto dto = new RegistrationDto();
         dto.setName(txtName.getText().trim());
@@ -412,11 +433,13 @@ public class RegistrationScreen extends javax.swing.JFrame {
         dto.setPhoneNumber(txtMobile.getText().trim());
         dto.setTin(txtTin.getText().trim());
         dto.setUserName(txtUserName.getText().trim());
-        dto.setPassword(txtPassword.getText().trim());
-        
+        String password = isEdit && txtPassword.getText().trim().isEmpty() ? currentPassword : txtPassword.getText().trim();
+        dto.setPassword(password);
+        dto.setCompanyLogo(logoPath);
+
         return dto;
     }
-    
+
     private void setRegistrationData(RegistrationDto dto) {
         txtName.setText(dto.getName());
         txtCompanyName.setText(dto.getCompanyName());
@@ -426,13 +449,14 @@ public class RegistrationScreen extends javax.swing.JFrame {
         txtMobile.setText(dto.getPhoneNumber());
         txtTin.setText(dto.getTin());
         txtUserName.setText(dto.getUserName());
-        txtPassword.setText(dto.getPassword());
-        
+        logoPath = dto.getCompanyLogo();
+        currentPassword = dto.getPassword();
     }
-    
+
     private void setUsernameEnabled(boolean enabled) {
         txtUserName.setEnabled(enabled);
     }
+
     /**
      * @param args the command line arguments
      */
@@ -471,7 +495,6 @@ public class RegistrationScreen extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnSave;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -488,13 +511,14 @@ public class RegistrationScreen extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JTextField txtCompanyName;
     private javax.swing.JTextField txtCompanyReg;
-    private javax.swing.JTextField txtConfirmPassword;
+    private javax.swing.JPasswordField txtConfirmPassword;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtGst;
     private javax.swing.JFormattedTextField txtMobile;
     private javax.swing.JTextField txtName;
-    private javax.swing.JTextField txtPassword;
+    private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtTin;
     private javax.swing.JTextField txtUserName;
+    private javax.swing.JButton uploadLogoBtn;
     // End of variables declaration//GEN-END:variables
 }
