@@ -20,6 +20,6 @@ public class DialogHelper {
         JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
      }
      public static String showInputDialog(Component parentComponent, String title, String message){
-          return JOptionPane.showInputDialog(parentComponent, message, title,0);
+          return JOptionPane.showInputDialog(parentComponent, message, title,1);
      }
 }

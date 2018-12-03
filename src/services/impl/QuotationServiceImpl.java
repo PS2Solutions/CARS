@@ -34,22 +34,45 @@ public class QuotationServiceImpl implements QuotationService{
 
     @Override
     public Vector<CustomersDto> getCustomers() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Vector<CustomersDto> cds =new Vector<>();
+        for(int i= 0; i<2;i++){
+            CustomersDto cd =new CustomersDto();
+            cd.setCustomerId(i+1);
+            cd.setCustomerName("Test"+i);
+            cds.add(cd);
+        }
+        return cds;
     }
 
     @Override
     public Vector<QuotationTypeDto> getQuotationType() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         Vector<QuotationTypeDto> cds =new Vector<>();
+        for(int i= 0; i<2;i++){
+            QuotationTypeDto cd =new QuotationTypeDto();
+            cd.setTypeId(i+1);
+            cd.setType("Test"+i);
+            cds.add(cd);
+        }
+        return cds;
     }
 
     @Override
     public Vector<String> getCustomers(Vector<CustomersDto> customersDtos) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Vector<String> designations = new Vector<>();
+        for (int i = 0; i < customersDtos.size(); i++) {
+            designations.add(customersDtos.get(i).getCustomerName());
+        }
+        return designations;
     }
 
     @Override
     public Vector<String> getQuotationType(Vector<QuotationTypeDto> quotationTypeDtos) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        Vector<String> designations = new Vector<>();
+        for (int i = 0; i < quotationTypeDtos.size(); i++) {
+            designations.add(quotationTypeDtos.get(i).getType());
+        }
+        return designations;
     }
 
     @Override
