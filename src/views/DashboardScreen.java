@@ -234,11 +234,11 @@ public class DashboardScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLaborActionPerformed
 
     private void btnQuotationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuotationActionPerformed
-       NavigationController.navigateToScreen(NavigationConstants.QUOTATION, this, null);
+       NavigationController.navigateToScreen(NavigationConstants.QUOTATION, this);
     }//GEN-LAST:event_btnQuotationActionPerformed
 
     private void btnCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCustomerActionPerformed
-        // TODO add your handling code here:
+        NavigationController.navigateToScreen(NavigationConstants.CUSTOMER, this);
     }//GEN-LAST:event_btnCustomerActionPerformed
 
     private void btnSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSettingsActionPerformed

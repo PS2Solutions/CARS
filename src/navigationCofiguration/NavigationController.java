@@ -9,6 +9,7 @@ import java.util.Vector;
 import javax.swing.JFrame;
 import utils.Arguments;
 import utils.KeyValuePair;
+import views.CustomerScreen;
 import views.DashboardScreen;
 import views.LaborScreen;
 import views.QuotationScreen;
@@ -44,6 +45,12 @@ public class NavigationController {
                 RegistrationScreen registrationScreen = new RegistrationScreen(arguments);
                 registrationScreen.setVisible(true);
                 baseScreen.setVisible(false);
+                break;
+            case NavigationConstants.CUSTOMER:
+                CustomerScreen customerScreen = new CustomerScreen();
+                customerScreen.setVisible(true);
+                baseScreen.setVisible(false);
+                break;
             }
     }
 }
