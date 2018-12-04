@@ -21,10 +21,10 @@ public class MaterialDto {
     String  category;
     int categoryId;
     String brand;
-    String status;
+    boolean status;
     String lastEdit;
     String imagePath;
-    String warrentyPeriod;
+    long warrentyPeriod;
     boolean warrentyEligibility;
 
     public int getId() {
@@ -107,11 +107,11 @@ public class MaterialDto {
         this.brand = brand;
     }
 
-    public String getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 
@@ -131,11 +131,11 @@ public class MaterialDto {
         this.imagePath = imagePath;
     }
 
-    public String getWarrentyPeriod() {
+    public long getWarrentyPeriod() {
         return warrentyPeriod;
     }
 
-    public void setWarrentyPeriod(String warrentyPeriod) {
+    public void setWarrentyPeriod(long warrentyPeriod) {
         this.warrentyPeriod = warrentyPeriod;
     }
 

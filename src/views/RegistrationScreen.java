@@ -379,13 +379,13 @@ public class RegistrationScreen extends javax.swing.JFrame {
         } else if (!isSamePassword()) {
             DialogHelper.showErrorMessage("Validation", Helper.getPropertyValue("PasswordMessage"));
             fieldsAreValid = false;
-        } else if (!isValidEmail()) {
+        } else if (!Helper.isValidEmail(txtEmail.getText())) {
             DialogHelper.showErrorMessage("Validation", Helper.getPropertyValue("InvalidEmail"));
             fieldsAreValid = false;
         } else if (logoPath == null) {
             DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("ChooseLogo"));
             fieldsAreValid = false;
-        }
+        } 
 
         return fieldsAreValid;
     }
@@ -403,20 +403,6 @@ public class RegistrationScreen extends javax.swing.JFrame {
             return true;
         }
         return false;
-    }
-
-    private boolean isValidEmail() {
-        String email = txtEmail.getText().trim();
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."
-                + "[a-zA-Z0-9_+&*-]+)*@"
-                + "(?:[a-zA-Z0-9-]+\\.)+[a-z"
-                + "A-Z]{2,7}$";
-
-        Pattern pat = Pattern.compile(emailRegex);
-        if (email == null) {
-            return false;
-        }
-        return pat.matcher(email).matches();
     }
 
     private boolean isSamePassword() {

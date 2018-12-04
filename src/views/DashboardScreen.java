@@ -89,6 +89,11 @@ public class DashboardScreen extends javax.swing.JFrame {
         btnMaterial.setText(bundle.getString("Material_Menu_Caption")); // NOI18N
         btnMaterial.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnMaterial.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnMaterial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMaterialActionPerformed(evt);
+            }
+        });
 
         btnLabor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/labor.png"))); // NOI18N
         btnLabor.setText(bundle.getString("Labor_Menu_Caption")); // NOI18N
@@ -248,11 +253,11 @@ public class DashboardScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLaborActionPerformed
 
     private void btnQuotationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuotationActionPerformed
-       NavigationController.navigateToScreen(NavigationConstants.QUOTATION, this, null);
+       NavigationController.navigateToScreen(NavigationConstants.QUOTATION, this);
     }//GEN-LAST:event_btnQuotationActionPerformed
 
     private void btnCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCustomerActionPerformed
-        // TODO add your handling code here:
+        NavigationController.navigateToScreen(NavigationConstants.CUSTOMER, this);
     }//GEN-LAST:event_btnCustomerActionPerformed
 
     private void btnSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSettingsActionPerformed
@@ -269,6 +274,9 @@ public class DashboardScreen extends javax.swing.JFrame {
         NavigationController.navigateToScreen(NavigationConstants.REPORT, this);
     }//GEN-LAST:event_btnReportActionPerformed
 
+    private void btnMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMaterialActionPerformed
+        NavigationController.navigateToScreen(NavigationConstants.MATERIAL, this);
+    }//GEN-LAST:event_btnMaterialActionPerformed
 
     /**
      * @param args the command line arguments
