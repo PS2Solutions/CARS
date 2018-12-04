@@ -67,6 +67,8 @@ public class ReportScreen extends javax.swing.JFrame {
         jSPReportPanel = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("appResources/Strings"); // NOI18N
+        setTitle(bundle.getString("Report_Screen")); // NOI18N
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setPreferredSize(new java.awt.Dimension(1245, 709));
 
