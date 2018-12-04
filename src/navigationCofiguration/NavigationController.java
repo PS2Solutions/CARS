@@ -12,6 +12,7 @@ import utils.KeyValuePair;
 import views.CustomerScreen;
 import views.DashboardScreen;
 import views.LaborScreen;
+import views.MaterialScreen;
 import views.QuotationScreen;
 import views.RegistrationScreen;
 
@@ -49,6 +50,11 @@ public class NavigationController {
             case NavigationConstants.CUSTOMER:
                 CustomerScreen customerScreen = new CustomerScreen();
                 customerScreen.setVisible(true);
+                baseScreen.setVisible(false);
+                break;
+            case NavigationConstants.MATERIAL:
+                MaterialScreen materialScreen = new MaterialScreen();
+                materialScreen.setVisible(true);
                 baseScreen.setVisible(false);
                 break;
             }

@@ -88,6 +88,11 @@ public class DashboardScreen extends javax.swing.JFrame {
         btnMaterial.setText(bundle.getString("Material_Menu_Caption")); // NOI18N
         btnMaterial.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnMaterial.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnMaterial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMaterialActionPerformed(evt);
+            }
+        });
 
         btnLabor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/labor.png"))); // NOI18N
         btnLabor.setText(bundle.getString("Labor_Menu_Caption")); // NOI18N
@@ -250,6 +255,10 @@ public class DashboardScreen extends javax.swing.JFrame {
        
        NavigationController.navigateToScreen(NavigationConstants.REGISTER, this, args);
     }//GEN-LAST:event_btnSettingsActionPerformed
+
+    private void btnMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMaterialActionPerformed
+        NavigationController.navigateToScreen(NavigationConstants.MATERIAL, this);
+    }//GEN-LAST:event_btnMaterialActionPerformed
 
 
     /**
