@@ -5,14 +5,13 @@
  */
 package navigationCofiguration;
 
-import java.util.Vector;
 import javax.swing.JFrame;
 import utils.Arguments;
-import utils.KeyValuePair;
 import views.DashboardScreen;
 import views.LaborScreen;
 import views.QuotationScreen;
 import views.RegistrationScreen;
+import views.ReportScreen;
 
 /**
  *
@@ -43,6 +42,10 @@ public class NavigationController {
             case NavigationConstants.REGISTER:
                 RegistrationScreen registrationScreen = new RegistrationScreen(arguments);
                 registrationScreen.setVisible(true);
+                baseScreen.setVisible(false);
+            case NavigationConstants.REPORT:
+                ReportScreen reportScreen = new ReportScreen();
+                reportScreen.setVisible(true);
                 baseScreen.setVisible(false);
             }
     }

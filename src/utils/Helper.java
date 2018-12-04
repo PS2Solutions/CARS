@@ -10,11 +10,14 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTable;
+import javax.swing.table.TableModel;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
@@ -70,11 +73,12 @@ public class Helper {
             Logger.getLogger(Helper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public static String getPropertyValue(String key){
-       return  java.util.ResourceBundle.getBundle("appResources/Strings").getString(key);
+
+    public static String getPropertyValue(String key) {
+        return java.util.ResourceBundle.getBundle("appResources/Strings").getString(key);
     }
-    public static JDatePickerImpl getDatePicker(){
+
+    public static JDatePickerImpl getDatePicker() {
         JDatePickerImpl datePicker;
         UtilDateModel model = new UtilDateModel();
 //        LocalDate now = LocalDate.now();
@@ -85,6 +89,38 @@ public class Helper {
         p.put("text.year", "Year");
         JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
         datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
-        return datePicker;                
+        return datePicker;
+    }
+
+    /**
+     * To export data to excel file.
+     *
+     * @param table
+     * @param file
+     * @throws IOException
+     */
+    public static boolean exportTableToExcel(JTable table, File file) throws IOException {
+        boolean isExcelExported = false;
+        FileWriter out = null;
+        try {
+            TableModel model = table.getModel();
+            out = new FileWriter(file);
+            for (int i = 0; i < model.getColumnCount(); i++) {
+                out.write(model.getColumnName(i) + "\t");
+            }
+            out.write("\n");
+            for (int i = 0; i < model.getRowCount(); i++) {
+                for (int j = 0; j < model.getColumnCount(); j++) {
+                    out.write(model.getValueAt(i, j).toString() + "\t");
+                }
+                out.write("\n");
+            }
+            isExcelExported = true;
+        } catch (Exception e) {
+            isExcelExported = false;
+        } finally {
+            out.close();
+        }
+        return isExcelExported;
     }
 }
