@@ -93,37 +93,6 @@ public class Helper {
         return datePicker;
     }
 
-    /**
-     * To export data to excel file.
-     *
-     * @param table
-     * @param file
-     * @throws IOException
-     */
-    public static boolean exportTableToExcel(JTable table, File file) throws IOException {
-        boolean isExcelExported = false;
-        FileWriter out = null;
-        try {
-            TableModel model = table.getModel();
-            out = new FileWriter(file);
-            for (int i = 0; i < model.getColumnCount(); i++) {
-                out.write(model.getColumnName(i) + "\t");
-            }
-            out.write("\n");
-            for (int i = 0; i < model.getRowCount(); i++) {
-                for (int j = 0; j < model.getColumnCount(); j++) {
-                    out.write(model.getValueAt(i, j).toString() + "\t");
-                }
-                out.write("\n");
-            }
-            isExcelExported = true;
-        } catch (Exception e) {
-            isExcelExported = false;
-        } finally {
-            out.close();
-        }
-        return isExcelExported;
-    }
     
     public static boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."

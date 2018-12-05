@@ -14,5 +14,5 @@ public class Constants {
     public static String connURL = "";
     public static String dbUser = "";
     public static String dbPass = "";
-    public static final String EXCEL_EXPORT_PATH = "c:/cars/";
+    
 }

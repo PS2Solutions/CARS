@@ -23,6 +23,7 @@ import services.impl.ReportServiceImpl;
 import services.interfaces.ReportService;
 import utils.Constants;
 import utils.DialogHelper;
+import utils.FileHandler;
 import utils.Helper;
 
 /**
@@ -31,7 +32,7 @@ import utils.Helper;
  */
 public class ReportScreen extends javax.swing.JFrame {
 
-    private int lastSelectedIndex;
+    private int lastSelectedIndex = 0;
     private String reportName;
 
     /**
@@ -228,7 +229,7 @@ public class ReportScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_cmbReportActionPerformed
 
     private void btnGetReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGetReportActionPerformed
-        ReportsDto reportsDto = availableReports.get(cmbReport.getSelectedIndex());
+        ReportsDto reportsDto = availableReports.get(lastSelectedIndex);
         if (reportsDto.isIsDateFilterAvailable() && (startPicker.getJFormattedTextField().getText().trim().length() == 0
                 || endDatePicker.getJFormattedTextField().getText().trim().length() == 0)) {
             DialogHelper.showInfoMessage("Warning", Helper.getPropertyValue("ReportValidation"));
@@ -242,8 +243,7 @@ public class ReportScreen extends javax.swing.JFrame {
 
     private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportActionPerformed
         try {
-            File file = new File(Constants.EXCEL_EXPORT_PATH + reportName + ".xls");
-            boolean response = Helper.exportTableToExcel(tblReport, file);
+            boolean response = FileHandler.exportTableToExcel(tblReport, reportName + ".xls");
             if(response) {
                  DialogHelper.showInfoMessage("Response", "Report exported");
             } else {
@@ -343,7 +343,7 @@ public class ReportScreen extends javax.swing.JFrame {
     private void refreshScreen() {
         startPicker.getJFormattedTextField().setText("");
         endDatePicker.getJFormattedTextField().setText("");
-        jSPReportPanel.removeAll();
+        jSPReportPanel.getViewport().removeAll();
         ConfigureDateFields(availableReports.get(cmbReport.getSelectedIndex()).isIsDateFilterAvailable());
     }
 
