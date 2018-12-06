@@ -46,6 +46,7 @@ public class NavigationController {
                 RegistrationScreen registrationScreen = new RegistrationScreen(arguments);
                 registrationScreen.setVisible(true);
                 baseScreen.setVisible(false);
+                break;
             case NavigationConstants.REPORT:
                 ReportScreen reportScreen = new ReportScreen();
                 reportScreen.setVisible(true);

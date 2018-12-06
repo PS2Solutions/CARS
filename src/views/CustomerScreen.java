@@ -7,6 +7,8 @@ package views;
 
 import dataclasses.CustomerDto;
 import dataclasses.ReportContentDto;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JTable;
@@ -15,6 +17,8 @@ import navigationCofiguration.NavigationController;
 import services.impl.CustomerServiceImpl;
 import services.interfaces.CustomerService;
 import utils.DialogHelper;
+import utils.ExcelUploadFileHelper;
+import utils.FileHandler;
 import utils.Helper;
 
 /**
@@ -122,6 +126,11 @@ public class CustomerScreen extends javax.swing.JFrame {
         btnUpload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/upload.png"))); // NOI18N
         btnUpload.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         btnUpload.setFocusPainted(false);
+        btnUpload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUploadActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -301,6 +310,14 @@ public class CustomerScreen extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadActionPerformed
+        List<String> extensions = new ArrayList<>();
+        extensions.add("xlsx");
+        extensions.add("xls");
+        File file = FileHandler.showFileChooser("Excel Upload", extensions);
+        List<String> insertQuery = FileHandler.getInsertQuery(file, ExcelUploadFileHelper.FileType.CUSTOMER);
+    }//GEN-LAST:event_btnUploadActionPerformed
 
     /**
      * @param args the command line arguments
