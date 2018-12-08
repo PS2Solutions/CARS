@@ -9,6 +9,7 @@ import java.util.Vector;
 import javax.swing.JFrame;
 import utils.Arguments;
 import utils.KeyValuePair;
+import views.ContractScreen;
 import views.CustomerScreen;
 import views.DashboardScreen;
 import views.LaborScreen;
@@ -55,6 +56,11 @@ public class NavigationController {
             case NavigationConstants.MATERIAL:
                 MaterialScreen materialScreen = new MaterialScreen();
                 materialScreen.setVisible(true);
+                baseScreen.setVisible(false);
+                break;
+            case NavigationConstants.CONTRACT:
+                ContractScreen contractScreen = new ContractScreen();
+                contractScreen.setVisible(true);
                 baseScreen.setVisible(false);
                 break;
             }

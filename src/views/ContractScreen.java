@@ -5,15 +5,15 @@
  */
 package views;
 
-import dataclasses.MaterialDto;
+import dataclasses.ContractDto;
 import dataclasses.ReportContentDto;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JTable;
 import navigationCofiguration.NavigationConstants;
 import navigationCofiguration.NavigationController;
-import services.impl.MaterialServiceImpl;
-import services.interfaces.MaterialService;
+import services.impl.ContractServiceImpl;
+import services.interfaces.ContractService;
 import utils.DialogHelper;
 import utils.Helper;
 
@@ -21,16 +21,15 @@ import utils.Helper;
  *
  * @author shinu.k
  */
-public class MaterialScreen extends javax.swing.JFrame {
+public class ContractScreen extends javax.swing.JFrame {
 
     /**
      * Creates new form LaborScreen
      */
-    public MaterialScreen() {
+    public ContractScreen() {
         initComponents();
-        setMaterialReport();
+        setContractReport();
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -49,25 +48,23 @@ public class MaterialScreen extends javax.swing.JFrame {
         btnSave = new javax.swing.JButton();
         btnUpload = new javax.swing.JButton();
         jPLaborDeails = new javax.swing.JPanel();
-        txtMaterialCode = new javax.swing.JTextField();
+        txtReference = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        txtMaterialBrand = new javax.swing.JTextField();
+        txtCustomer = new javax.swing.JTextField();
+        txtAddress1 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        txtMaterialName = new javax.swing.JTextField();
-        comboQuotationType = new javax.swing.JComboBox<>();
+        txtCaption = new javax.swing.JTextField();
+        txtAddress2 = new javax.swing.JTextField();
+        comboType = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
-        comboCategoryType = new javax.swing.JComboBox<>();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        txtAreaRemarks = new javax.swing.JTextArea();
+        txtTotalCost = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        checkWarratyEligible = new javax.swing.JCheckBox();
-        checkActive = new javax.swing.JCheckBox();
-        txtWarranty = new javax.swing.JFormattedTextField();
-        txtPointRate = new javax.swing.JFormattedTextField();
+        txtDaysToComplete = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
         jPCustomerList = new javax.swing.JScrollPane();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
@@ -94,7 +91,7 @@ public class MaterialScreen extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("appResources/Strings"); // NOI18N
-        setTitle(bundle.getString("Material_Screen")); // NOI18N
+        setTitle(bundle.getString("Contract_Screen")); // NOI18N
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 255));
@@ -136,7 +133,7 @@ public class MaterialScreen extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(1105, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnAddNew, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -160,141 +157,133 @@ public class MaterialScreen extends javax.swing.JFrame {
 
         jPLaborDeails.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        txtMaterialCode.setColumns(20);
-        txtMaterialCode.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txtReference.setColumns(20);
+        txtReference.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel3.setText("Material name*");
+        jLabel3.setText("Caption*");
         jLabel3.setToolTipText("");
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel6.setText("Brand*");
-        jLabel6.setToolTipText("");
+        jLabel6.setText("Customer*");
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel7.setText("Quotation type");
+        jLabel7.setText("Type*");
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel8.setText("Point rate*");
+        jLabel8.setText("Address Line 2");
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel9.setText("Warranty period*");
-        jLabel9.setToolTipText("");
+        jLabel9.setText("Address Line 1");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel2.setText("Material Code*");
+        jLabel2.setText("Reference#");
+        jLabel2.setToolTipText("");
 
-        jLabel1.setText("Category type");
-        jLabel1.setToolTipText("");
+        comboType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        comboCategoryType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel1.setText("Total cost so far*");
 
-        txtAreaRemarks.setColumns(20);
-        txtAreaRemarks.setRows(5);
-        jScrollPane1.setViewportView(txtAreaRemarks);
+        txtTotalCost.setToolTipText("");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel4.setText("Remarks");
-        jLabel4.setToolTipText("");
+        jLabel4.setText("Days to complete*");
 
-        checkWarratyEligible.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        checkWarratyEligible.setText("Warranty eligible");
+        txtDaysToComplete.setToolTipText("");
 
-        checkActive.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        checkActive.setText("Active");
-        checkActive.setToolTipText("");
-
-        try {
-            txtWarranty.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("####")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-
-        txtPointRate.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/daily_wage.png"))); // NOI18N
+        jButton1.setText("Add daily wage");
+        jButton1.setToolTipText("");
+        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
 
         javax.swing.GroupLayout jPLaborDeailsLayout = new javax.swing.GroupLayout(jPLaborDeails);
         jPLaborDeails.setLayout(jPLaborDeailsLayout);
         jPLaborDeailsLayout.setHorizontalGroup(
             jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel6)
-                    .addComponent(txtMaterialCode, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
-                    .addComponent(txtMaterialBrand))
-                .addGap(47, 47, 47)
-                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                        .addComponent(txtWarranty, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(checkWarratyEligible)
-                        .addGap(41, 41, 41)
-                        .addComponent(checkActive)
-                        .addGap(41, 41, 41))
-                    .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addGap(86, 86, 86))
-                    .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtMaterialName, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))
-                        .addGap(48, 48, 48)
-                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel8)
-                            .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                                .addComponent(txtPointRate)
-                                .addGap(41, 41, 41)))))
-                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel7)
-                    .addComponent(comboQuotationType, 0, 163, Short.MAX_VALUE)
-                    .addComponent(comboCategoryType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(26, 26, 26)
+                .addContainerGap(71, Short.MAX_VALUE)
                 .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addContainerGap(83, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPLaborDeailsLayout.createSequentialGroup()
+                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addGroup(jPLaborDeailsLayout.createSequentialGroup()
+                                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(jPLaborDeailsLayout.createSequentialGroup()
+                                                .addComponent(jLabel2)
+                                                .addGap(108, 108, 108))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPLaborDeailsLayout.createSequentialGroup()
+                                                .addComponent(jLabel7)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                        .addGroup(jPLaborDeailsLayout.createSequentialGroup()
+                                            .addComponent(jLabel3)
+                                            .addGap(47, 47, 47)))
+                                    .addGroup(jPLaborDeailsLayout.createSequentialGroup()
+                                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel9)
+                                            .addComponent(jLabel8)
+                                            .addComponent(jLabel1)
+                                            .addComponent(jLabel4))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtReference, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtAddress1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(txtCaption, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
+                                        .addComponent(txtCustomer, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE))
+                                    .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(txtDaysToComplete, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(txtTotalCost, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(comboType, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(txtAddress2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)))))
+                        .addGap(66, 66, 66))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPLaborDeailsLayout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(23, 23, 23))))
         );
         jPLaborDeailsLayout.setVerticalGroup(
             jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                .addGap(39, 39, 39)
+                .addGap(60, 60, 60)
                 .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPLaborDeailsLayout.createSequentialGroup()
                         .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(txtMaterialName, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(comboQuotationType, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtPointRate, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel9)
-                                    .addComponent(jLabel1))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(comboCategoryType, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(checkWarratyEligible)
-                                    .addComponent(checkActive)))
-                            .addComponent(jScrollPane1)))
-                    .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtMaterialCode, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtReference, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtMaterialBrand, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtWarranty, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(38, Short.MAX_VALUE))
+                            .addComponent(jLabel3)
+                            .addComponent(txtCaption, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(25, 25, 25)
+                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(txtCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtAddress1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9))
+                        .addGap(52, 52, 52))
+                    .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel8)
+                        .addComponent(txtAddress2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(24, 24, 24)
+                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(comboType, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
+                .addGap(26, 26, 26)
+                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(txtTotalCost, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
+                .addGap(26, 26, 26)
+                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtDaysToComplete, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
+                .addGap(49, 49, 49)
+                .addComponent(jButton1)
+                .addContainerGap(81, Short.MAX_VALUE))
         );
 
         jPCustomerList.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -306,19 +295,21 @@ public class MaterialScreen extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPCustomerList)
-                    .addComponent(jPLaborDeails, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPCustomerList, javax.swing.GroupLayout.DEFAULT_SIZE, 778, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPLaborDeails, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPLaborDeails, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPCustomerList, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPLaborDeails, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPCustomerList))
+                .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -336,13 +327,13 @@ public class MaterialScreen extends javax.swing.JFrame {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         if (validateFields()) {
-            MaterialService materialService = new MaterialServiceImpl();
-            MaterialDto materialDto = getEnteredData();
-            String response = materialService.saveMaterial(materialDto);
+            ContractService contractService = new ContractServiceImpl();
+            ContractDto contractDto = getEnteredData();
+            String response = contractService.saveContract(contractDto);
             if (response.equalsIgnoreCase(Helper.getPropertyValue("Success"))) {
                 DialogHelper.showInfoMessage(Helper.getPropertyValue("Success"),
                         Helper.getPropertyValue("SuccessMessage"));
-                setMaterialReport();                
+                setContractReport();
             } else {
                 DialogHelper.showErrorMessage("Error", response);
             }
@@ -366,13 +357,13 @@ public class MaterialScreen extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MaterialScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ContractScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MaterialScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ContractScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MaterialScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ContractScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MaterialScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ContractScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -382,7 +373,7 @@ public class MaterialScreen extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MaterialScreen().setVisible(true);
+                new ContractScreen().setVisible(true);
             }
         });
     }
@@ -392,10 +383,8 @@ public class MaterialScreen extends javax.swing.JFrame {
     private javax.swing.JButton btnHome;
     private javax.swing.JButton btnSave;
     private javax.swing.JButton btnUpload;
-    private javax.swing.JCheckBox checkActive;
-    private javax.swing.JCheckBox checkWarratyEligible;
-    private javax.swing.JComboBox<String> comboCategoryType;
-    private javax.swing.JComboBox<String> comboQuotationType;
+    private javax.swing.JComboBox<String> comboType;
+    private javax.swing.JButton jButton1;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;
     private javax.swing.JLabel jLabel1;
@@ -409,69 +398,65 @@ public class MaterialScreen extends javax.swing.JFrame {
     private javax.swing.JScrollPane jPCustomerList;
     private javax.swing.JPanel jPLaborDeails;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea txtAreaRemarks;
-    private javax.swing.JTextField txtMaterialBrand;
-    private javax.swing.JTextField txtMaterialCode;
-    private javax.swing.JTextField txtMaterialName;
-    private javax.swing.JFormattedTextField txtPointRate;
-    private javax.swing.JFormattedTextField txtWarranty;
+    private javax.swing.JTextField txtAddress1;
+    private javax.swing.JTextField txtAddress2;
+    private javax.swing.JTextField txtCaption;
+    private javax.swing.JTextField txtCustomer;
+    private javax.swing.JTextField txtDaysToComplete;
+    private javax.swing.JTextField txtReference;
+    private javax.swing.JTextField txtTotalCost;
     // End of variables declaration//GEN-END:variables
 
-    JTable tblMaterial;
-    List<MaterialDto> materialDtos;
-    int selectedMaterialId;
+    JTable tblCustomer;
+    List<ContractDto> contractDtos;
+    int selectedContractId;
 
-    private void setMaterialReport() {
-        MaterialService materialService = new MaterialServiceImpl();
-        materialDtos = materialService.getMaterials();
+    private void setContractReport() {
+        ContractService contractService = new ContractServiceImpl();
+        contractDtos = contractService.getContracts();
 
-        if (materialDtos.size() > 0) {
-            ReportContentDto contentDto = materialService.getMaterialDetails(materialDtos);
+        if (contractDtos.size() > 0) {
+            ReportContentDto contentDto = contractService.getContractDetails(contractDtos);
             configureTable(contentDto);
         }
     }
 
     private void configureTable(ReportContentDto contentDto) {
 
-        tblMaterial = new JTable(contentDto.getRowData(), contentDto.getColumnNames());
-        tblMaterial.setRowSelectionAllowed(true);
-        tblMaterial.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblCustomer = new JTable(contentDto.getRowData(), contentDto.getColumnNames());
+        tblCustomer.setRowSelectionAllowed(true);
+        tblCustomer.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                int row = tblMaterial.rowAtPoint(evt.getPoint());
-                selectedMaterialId = materialDtos.get(row).getId();
-                txtMaterialCode.setEditable(false);
-                populateSelectedDetails(materialDtos.get(row));
+                int row = tblCustomer.rowAtPoint(evt.getPoint());
+                selectedContractId = contractDtos.get(row).getId();
+                populateSelectedDetails(contractDtos.get(row));
             }
         });
-        jPCustomerList.add(tblMaterial);
-        jPCustomerList.setViewportView(tblMaterial);
+        jPCustomerList.add(tblCustomer);
+        jPCustomerList.setViewportView(tblCustomer);
         jPCustomerList.setVisible(true);
     }
 
-    private void populateSelectedDetails(MaterialDto dto) {
-        txtMaterialCode.setText(dto.getMaterialCode());
-        txtMaterialName.setText(dto.getMaterialName());
-        txtPointRate.setText(Double.toString(dto.getPerPointRate()));
-        txtMaterialBrand.setText(dto.getBrand());
-        txtWarranty.setText(Long.toString(dto.getWarrentyPeriod()));
-        checkWarratyEligible.setSelected(dto.isWarrentyEligibility());
-        checkActive.setSelected(dto.getStatus());
-        txtAreaRemarks.setText(dto.getRemark());
+    private void populateSelectedDetails(ContractDto dto) {
+        txtReference.setText(dto.getContractRefNo());
+        txtCaption.setText(dto.getCaption());
+        txtCustomer.setText(dto.getCustomer());
+        txtAddress1.setText(dto.getAddress1());
+        txtAddress2.setText(dto.getAddress2());
+        txtTotalCost.setText(dto.getTotalAmount());
+        txtDaysToComplete.setText(Integer.toString(dto.getDaysToComplete()));
     }
 
     private void clearFields() {
-        selectedMaterialId = 0;
-        txtMaterialCode.setText("");
-        txtMaterialName.setText("");
-        txtPointRate.setText("");
-        txtMaterialBrand.setText("");
-        txtWarranty.setText("");
-        checkWarratyEligible.setSelected(false);
-        checkActive.setSelected(false);
-        txtAreaRemarks.setText("");
-        txtMaterialCode.setEditable(true);
+        selectedContractId = 0;
+        txtReference.setText("");
+        txtCaption.setText("");
+        txtCustomer.setText("");
+        txtAddress1.setText("");
+        txtAddress2.setText("");
+        txtTotalCost.setText("");
+        txtDaysToComplete.setText("");
     }
 
     private boolean validateFields() {
@@ -481,28 +466,29 @@ public class MaterialScreen extends javax.swing.JFrame {
             DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("EmptyFields"));
             fieldsAreValid = false;
         }
-        
+
         return fieldsAreValid;
     }
-    
+
     private boolean isFieldsEmpty() {
-         return (txtMaterialCode.getText().trim().isEmpty() || txtMaterialName.getText().trim().isEmpty() 
-                || txtPointRate.getText().trim().isEmpty() || txtMaterialBrand.getText().trim().isEmpty()
-                || txtWarranty.getText().trim().isEmpty());       
+        return (txtReference.getText().trim().isEmpty() || txtCaption.getText().trim().isEmpty() || txtCustomer.getText().trim().isEmpty()
+                || txtTotalCost.getText().trim().isEmpty() || txtDaysToComplete.getText().trim().isEmpty());
     }
-    
-    private MaterialDto getEnteredData() {
-        MaterialDto materialDto = new MaterialDto();
-        materialDto.setId(selectedMaterialId);
-        materialDto.setMaterialCode(txtMaterialCode.getText());
-        materialDto.setMaterialName(txtMaterialName.getText());
-        materialDto.setPerPointRate(Double.parseDouble(txtPointRate.getText()));
-        materialDto.setBrand(txtMaterialBrand.getText());
-        materialDto.setWarrentyPeriod(Long.parseLong(txtWarranty.getText()));
-        materialDto.setWarrentyEligibility(checkWarratyEligible.isSelected());
-        materialDto.setStatus(checkActive.isSelected());
-        materialDto.setRemark(txtAreaRemarks.getText());
+
+    private ContractDto getEnteredData() {
+        ContractDto contractDto = new ContractDto();
+        contractDto.setId(selectedContractId);
+        contractDto.setContractRefNo(txtReference.getText());
+        contractDto.setCaption(txtCaption.getText());
+        contractDto.setCustomer(txtCustomer.getText());
+        contractDto.setAddress1(txtAddress1.getText());
+        contractDto.setAddress2(txtAddress2.getText());
+        contractDto.setTotalAmount(txtTotalCost.getText());
+        contractDto.setDaysToComplete(Integer.parseInt(txtDaysToComplete.getText()));
         
-        return materialDto;
+        //TODO
+        //contractDto.setType();
+
+        return contractDto;
     }
 }

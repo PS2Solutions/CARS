@@ -108,6 +108,11 @@ public class DashboardScreen extends javax.swing.JFrame {
         btnContract.setText(bundle.getString("Contract_Menu_Caption")); // NOI18N
         btnContract.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnContract.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnContract.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnContractActionPerformed(evt);
+            }
+        });
 
         btnLaborCharge.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/wage.png"))); // NOI18N
         btnLaborCharge.setText(bundle.getString("Labor_Charge_Menu_Caption")); // NOI18N
@@ -259,6 +264,10 @@ public class DashboardScreen extends javax.swing.JFrame {
     private void btnMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMaterialActionPerformed
         NavigationController.navigateToScreen(NavigationConstants.MATERIAL, this);
     }//GEN-LAST:event_btnMaterialActionPerformed
+
+    private void btnContractActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContractActionPerformed
+        NavigationController.navigateToScreen(NavigationConstants.CONTRACT, this);
+    }//GEN-LAST:event_btnContractActionPerformed
 
 
     /**
