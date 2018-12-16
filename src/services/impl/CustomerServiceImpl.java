@@ -84,7 +84,7 @@ public class CustomerServiceImpl implements CustomerService {
                     String email = resultSet.getString("Email");
                     String contactNo = resultSet.getString("ContactNo");
                     String regNo = resultSet.getString("RegistrationNo");
-                    
+
                     customerDto.setId(id);
                     customerDto.setName(name);
                     customerDto.setCompanyName(companyName);
@@ -127,6 +127,23 @@ public class CustomerServiceImpl implements CustomerService {
             Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
+    }
+
+    @Override
+    public boolean uploadExcel(List<String> lstQuery) {
+        boolean response = true;
+        try {
+            for (String query : lstQuery) {
+                int rowId = DBHelper.updateDataToDb(query);
+                if (rowId == -1) {
+                    response = false;
+                    break;
+                }
+            }
+        } catch (Exception ex) {
+            response = false;
+        }
+        return response;
     }
 
 }

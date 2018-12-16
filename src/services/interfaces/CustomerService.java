@@ -13,4 +13,5 @@ public interface CustomerService {
     ReportContentDto getCustomerDetails( List<CustomerDto> customerDtos );
     String saveCustomer(CustomerDto customerDto);
     List<CustomerDto> getCustomers();
+    boolean uploadExcel(List<String> lstQuery);
 }
