@@ -17,6 +17,7 @@ public class CustomerDto {
     String address2;
     String phoneNumber;
     String email;
+    String companyRegNo;
     int totalContract;
     int activeContract;
     String quotes;
@@ -100,4 +101,13 @@ public class CustomerDto {
     public void setQuotes(String quotes) {
         this.quotes = quotes;
     }
+
+    public String getCompanyRegNo() {
+        return companyRegNo;
+    }
+
+    public void setCompanyRegNo(String companyRegNo) {
+        this.companyRegNo = companyRegNo;
+    }
+    
 }

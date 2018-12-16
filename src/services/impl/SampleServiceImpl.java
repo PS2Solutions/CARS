@@ -35,9 +35,10 @@ public class SampleServiceImpl implements SampleService{
        String data="";
        if (type == 1) {
          rs =  DBHelper.readDataFromDb("Select * from testTable");
-       } else {
-          rs = DBHelper.readDataUsingSP("getContent","1");
        }
+//       else {
+////          rs = DBHelper.callProcedure("getContent","1");
+//       }
       if (rs != null) {
             try {
                 while (rs.next()) {

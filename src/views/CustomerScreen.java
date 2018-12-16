@@ -60,6 +60,8 @@ public class CustomerScreen extends javax.swing.JFrame {
         txtContactNumber = new javax.swing.JFormattedTextField();
         txtCompanyName = new javax.swing.JTextField();
         txtEmail = new javax.swing.JTextField();
+        txtRegNo = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
         jPCustomerList = new javax.swing.JScrollPane();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
@@ -160,10 +162,10 @@ public class CustomerScreen extends javax.swing.JFrame {
         jLabel3.setToolTipText("");
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel6.setText("Address 1");
+        jLabel6.setText("Reg No");
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel7.setText("Phone*");
+        jLabel7.setText("Contact No*");
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel8.setText("Email*");
@@ -180,6 +182,9 @@ public class CustomerScreen extends javax.swing.JFrame {
             ex.printStackTrace();
         }
 
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel10.setText("Address 1");
+
         javax.swing.GroupLayout jPLaborDeailsLayout = new javax.swing.GroupLayout(jPLaborDeails);
         jPLaborDeails.setLayout(jPLaborDeailsLayout);
         jPLaborDeailsLayout.setHorizontalGroup(
@@ -187,65 +192,73 @@ public class CustomerScreen extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPLaborDeailsLayout.createSequentialGroup()
                 .addContainerGap(71, Short.MAX_VALUE)
                 .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6)
                     .addGroup(jPLaborDeailsLayout.createSequentialGroup()
                         .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                                        .addComponent(jLabel2)
-                                        .addGap(108, 108, 108))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPLaborDeailsLayout.createSequentialGroup()
-                                        .addComponent(jLabel7)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                                .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                                    .addComponent(jLabel3)
-                                    .addGap(47, 47, 47)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPLaborDeailsLayout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(108, 108, 108))
                             .addGroup(jPLaborDeailsLayout.createSequentialGroup()
                                 .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel9)
-                                    .addComponent(jLabel8))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel6))
+                                .addGap(47, 47, 47)))
                         .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtAddress2, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtContactNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(txtCompanyName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
-                                .addComponent(txtAddress1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)))))
-                .addGap(66, 66, 66))
+                            .addComponent(txtCompanyName, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtRegNo))
+                        .addGap(66, 66, 66))
+                    .addGroup(jPLaborDeailsLayout.createSequentialGroup()
+                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPLaborDeailsLayout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addGap(88, 88, 88)
+                                .addComponent(txtAddress1))
+                            .addGroup(jPLaborDeailsLayout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtContactNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPLaborDeailsLayout.createSequentialGroup()
+                                .addComponent(jLabel9)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtAddress2, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPLaborDeailsLayout.createSequentialGroup()
+                                .addComponent(jLabel8)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(67, 67, 67))))
         );
         jPLaborDeailsLayout.setVerticalGroup(
             jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPLaborDeailsLayout.createSequentialGroup()
                 .addGap(60, 60, 60)
-                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(txtCompanyName, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(25, 25, 25)
-                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(txtAddress1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtAddress2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9))
-                        .addGap(52, 52, 52))
-                    .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel8)
-                        .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(19, 19, 19)
+                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addGap(18, 18, 18)
+                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtCompanyName, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtRegNo, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addGap(21, 21, 21)
+                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(txtAddress1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtAddress2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addGap(18, 18, 18)
+                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtContactNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
-                .addContainerGap(228, Short.MAX_VALUE))
+                .addContainerGap(194, Short.MAX_VALUE))
         );
 
         jPCustomerList.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -293,6 +306,7 @@ public class CustomerScreen extends javax.swing.JFrame {
             CustomerDto customerDto = getEnteredData();
             String response = customerService.saveCustomer(customerDto);
             if (response.equalsIgnoreCase(Helper.getPropertyValue("Success"))) {
+                clearFields();
                 DialogHelper.showInfoMessage(Helper.getPropertyValue("Success"),
                         Helper.getPropertyValue("SuccessMessage"));
                 setCustomerReport();                
@@ -345,6 +359,7 @@ public class CustomerScreen extends javax.swing.JFrame {
     private javax.swing.JButton btnUpload;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel6;
@@ -360,6 +375,7 @@ public class CustomerScreen extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField txtContactNumber;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtName;
+    private javax.swing.JTextField txtRegNo;
     // End of variables declaration//GEN-END:variables
 
     JTable tblCustomer;
@@ -369,8 +385,7 @@ public class CustomerScreen extends javax.swing.JFrame {
     private void setCustomerReport() {
         CustomerService customerService = new CustomerServiceImpl();
         customerDtos = customerService.getCustomers();
-
-        if (customerDtos.size() > 0) {
+        if (customerDtos != null && customerDtos.size() > 0) {
             ReportContentDto contentDto = customerService.getCustomerDetails(customerDtos);
             configureTable(contentDto);
         }
@@ -396,10 +411,11 @@ public class CustomerScreen extends javax.swing.JFrame {
     private void populateSelectedDetails(CustomerDto dto) {
         txtName.setText(dto.getName());
         txtCompanyName.setText(dto.getCompanyName());
-        txtContactNumber.setText(dto.getPhoneNumber());
+        txtContactNumber.setText(""+dto.getPhoneNumber());
         txtAddress1.setText(dto.getAddress1());
         txtAddress2.setText(dto.getAddress2());
         txtEmail.setText(dto.getEmail());
+        txtRegNo.setText(dto.getCompanyRegNo());
     }
 
     private void clearFields() {
@@ -410,6 +426,7 @@ public class CustomerScreen extends javax.swing.JFrame {
         txtAddress1.setText("");
         txtAddress2.setText("");
         txtEmail.setText("");
+        txtRegNo.setText("");
     }
 
     private boolean validateFields() {
@@ -436,10 +453,11 @@ public class CustomerScreen extends javax.swing.JFrame {
         customerDto.setId(selectedCustomerId);
         customerDto.setName(txtName.getText());
         customerDto.setCompanyName(txtCompanyName.getText());
-        customerDto.setPhoneNumber(txtContactNumber.getText());
+        customerDto.setPhoneNumber(txtContactNumber.getText().trim());
         customerDto.setAddress1(txtAddress1.getText());
         customerDto.setAddress2(txtAddress2.getText());
         customerDto.setEmail(txtEmail.getText());
+        customerDto.setCompanyRegNo(txtRegNo.getText());
         
         return customerDto;
     }

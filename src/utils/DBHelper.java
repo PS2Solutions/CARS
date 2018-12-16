@@ -66,15 +66,18 @@ public class DBHelper {
         }
         return rowId;
     }
-     public static ResultSet readDataUsingSP(String spName,String params) {
+     public static ResultSet callProcedure(String spName,CallableStatement statement) {
         try {
-            String query = String.format("{CALL %s(%s)}",spName,params);
-            CallableStatement stmt = dbConnection.prepareCall(query);	
-            resultSet = stmt.executeQuery();
+            resultSet = statement.executeQuery();
         } catch (SQLException ex) {
             resultSet = null;
             Logger.getLogger(DBHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return resultSet;
     }
+
+    public static Connection getDbConnection() {
+        return dbConnection;
+    }
+     
 }
