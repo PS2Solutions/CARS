@@ -6,6 +6,9 @@
 package views;
 
 import dataclasses.RegistrationDto;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 import javax.swing.JFrame;
 import navigationCofiguration.NavigationConstants;
@@ -367,7 +370,11 @@ public class RegistrationScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void uploadLogoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadLogoBtnActionPerformed
-        logoPath = FileHandler.getCopiedFilePath();
+        List<String> extensions = new ArrayList<>();
+        extensions.add("jpg");
+        extensions.add("png");
+        File file = FileHandler.showFileChooser("Image Files", extensions);
+        logoPath = FileHandler.getCopiedFilePath(file);
     }//GEN-LAST:event_uploadLogoBtnActionPerformed
 
     private boolean validateFields() {
