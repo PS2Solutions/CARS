@@ -23,4 +23,9 @@ public interface LoginService {
      * @return user details when user enables the remember me other wise null.
      */
     LoginDto getUserCredentials();
+    /**
+     * For checking whether user registered or not.
+     * @return  is user already registered return true other wise false.
+     */
+    boolean isUserRegistered();
 }

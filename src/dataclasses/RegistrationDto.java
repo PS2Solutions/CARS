@@ -10,6 +10,7 @@ package dataclasses;
  * @author sreenath
  */
 public class RegistrationDto {
+    int userId;
     String Name;
     String companyName;
     String companyReg;
@@ -103,4 +104,13 @@ public class RegistrationDto {
     public String getPassword() {
         return password;
     }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+    
 }

@@ -6,15 +6,14 @@
 package views;
 
 import dataclasses.LoginDto;
-import java.util.Vector;
 import javax.swing.JFrame;
 import navigationCofiguration.NavigationConstants;
 import navigationCofiguration.NavigationController;
 import services.impl.LoginServiceImpl;
+import services.interfaces.LoginService;
 import utils.Arguments;
 import utils.DialogHelper;
 import utils.Helper;
-import utils.KeyValuePair;
 
 /**
  *
@@ -28,6 +27,7 @@ public class LoginScreen extends javax.swing.JFrame {
      */
     public LoginScreen() {
         initComponents();
+        configureRegistration();
         setUserCredentials();
     }
 
@@ -165,9 +165,11 @@ public class LoginScreen extends javax.swing.JFrame {
             dto.setPassword(txtPassword.getText().toString());
             dto.setIsRemember(chkRemember.isSelected());
             String response = loginService.validateLogin(dto);
-            if (response.equalsIgnoreCase("valid")) {
+            if (response != null && response.equalsIgnoreCase("valid")) {
                 NavigationController.navigateToScreen(NavigationConstants.DASHBOARD, LoginScreen.this, null);
-            } else{
+            } else if (!loginService.isUserRegistered()){
+                DialogHelper.showInfoMessage("Login", Helper.getPropertyValue("User_Not_Registered"));
+            } else {
                 DialogHelper.showInfoMessage("Login", Helper.getPropertyValue("InvalidLogin"));
             }
             
@@ -244,5 +246,10 @@ public class LoginScreen extends javax.swing.JFrame {
             txtPassword.setText(loginDto.getPassword());
             chkRemember.setSelected(loginDto.isIsRemember());
         }
+    }
+
+    private void configureRegistration() {
+        LoginService loginService = new LoginServiceImpl();
+        lblRegister.setVisible(!loginService.isUserRegistered());
     }
 }

@@ -9,7 +9,6 @@ import dataclasses.RegistrationDto;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 import javax.swing.JFrame;
 import navigationCofiguration.NavigationConstants;
 import navigationCofiguration.NavigationController;
@@ -29,6 +28,7 @@ public class RegistrationScreen extends javax.swing.JFrame {
     private String logoPath = null;
     private boolean isEdit = false;
     private String currentPassword;
+    private int userId = 0;
 
     /**
      * Creates new form RegistrationScreen
@@ -295,7 +295,7 @@ public class RegistrationScreen extends javax.swing.JFrame {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(1202, Short.MAX_VALUE)
+                .addGap(1202, 1202, 1202)
                 .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -308,7 +308,7 @@ public class RegistrationScreen extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -350,9 +350,13 @@ public class RegistrationScreen extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtEmailActionPerformed
 
-    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-
-    }//GEN-LAST:event_btnBackActionPerformed
+    private void uploadLogoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadLogoBtnActionPerformed
+        List<String> extensions = new ArrayList<>();
+        extensions.add("jpg");
+        extensions.add("png");
+        File file = FileHandler.showFileChooser("Image Files", extensions);
+        logoPath = FileHandler.getCopiedFilePath(file);
+    }//GEN-LAST:event_uploadLogoBtnActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         if (validateFields()) {
@@ -361,7 +365,7 @@ public class RegistrationScreen extends javax.swing.JFrame {
 
             if (response.equalsIgnoreCase(Helper.getPropertyValue("Success"))) {
                 DialogHelper.showInfoMessage(Helper.getPropertyValue("Success"),
-                        Helper.getPropertyValue("SuccessMessage"));
+                    Helper.getPropertyValue("SuccessMessage"));
                 NavigationController.navigateToScreen(NavigationConstants.DASHBOARD, RegistrationScreen.this);
             } else {
                 DialogHelper.showErrorMessage("Error", response);
@@ -369,13 +373,9 @@ public class RegistrationScreen extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSaveActionPerformed
 
-    private void uploadLogoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadLogoBtnActionPerformed
-        List<String> extensions = new ArrayList<>();
-        extensions.add("jpg");
-        extensions.add("png");
-        File file = FileHandler.showFileChooser("Image Files", extensions);
-        logoPath = FileHandler.getCopiedFilePath(file);
-    }//GEN-LAST:event_uploadLogoBtnActionPerformed
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        NavigationController.navigateToScreen(NavigationConstants.DASHBOARD, this, null);
+    }//GEN-LAST:event_btnBackActionPerformed
 
     private boolean validateFields() {
         boolean fieldsAreValid = true;
@@ -418,6 +418,7 @@ public class RegistrationScreen extends javax.swing.JFrame {
 
     private RegistrationDto getEnteredData() {
         RegistrationDto dto = new RegistrationDto();
+        dto.setUserId(userId);
         dto.setName(txtName.getText().trim());
         dto.setCompanyName(txtCompanyName.getText().trim());
         dto.setCompanyReg(txtCompanyReg.getText().trim());
@@ -434,6 +435,7 @@ public class RegistrationScreen extends javax.swing.JFrame {
     }
 
     private void setRegistrationData(RegistrationDto dto) {
+        userId = dto.getUserId();
         txtName.setText(dto.getName());
         txtCompanyName.setText(dto.getCompanyName());
         txtCompanyReg.setText(dto.getCompanyReg());
@@ -448,6 +450,7 @@ public class RegistrationScreen extends javax.swing.JFrame {
 
     private void setUsernameEnabled(boolean enabled) {
         txtUserName.setEnabled(enabled);
+        btnBack.setEnabled(!enabled);
     }
 
     /**
