@@ -49,6 +49,7 @@ public class DashboardScreen extends javax.swing.JFrame {
         btnLabor = new javax.swing.JButton();
         btnContract = new javax.swing.JButton();
         btnLaborCharge = new javax.swing.JButton();
+        btnReport = new javax.swing.JButton();
         jPSettings = new javax.swing.JPanel();
         btnExit = new javax.swing.JButton();
         btnSettings = new javax.swing.JButton();
@@ -124,6 +125,17 @@ public class DashboardScreen extends javax.swing.JFrame {
             }
         });
 
+        btnReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/report.png"))); // NOI18N
+        btnReport.setText(bundle.getString("Labor_Charge_Menu_Caption")); // NOI18N
+        btnReport.setToolTipText("");
+        btnReport.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnReport.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReportActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPMasterLayout = new javax.swing.GroupLayout(jPMaster);
         jPMaster.setLayout(jPMasterLayout);
         jPMasterLayout.setHorizontalGroup(
@@ -141,20 +153,24 @@ public class DashboardScreen extends javax.swing.JFrame {
                 .addComponent(btnContract, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
                 .addComponent(btnLaborCharge, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(551, Short.MAX_VALUE))
+                .addGap(27, 27, 27)
+                .addComponent(btnReport, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(436, Short.MAX_VALUE))
         );
         jPMasterLayout.setVerticalGroup(
             jPMasterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPMasterLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addGroup(jPMasterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnLaborCharge, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(btnContract, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(btnCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(jPMasterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(btnMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnLabor, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnQuotation, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(btnReport, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(jPMasterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(btnLaborCharge, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(btnContract, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(btnCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addGroup(jPMasterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnLabor, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnQuotation, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(0, 14, Short.MAX_VALUE))
         );
 
@@ -269,6 +285,10 @@ public class DashboardScreen extends javax.swing.JFrame {
         NavigationController.navigateToScreen(NavigationConstants.CONTRACT, this);
     }//GEN-LAST:event_btnContractActionPerformed
 
+    private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportActionPerformed
+        NavigationController.navigateToScreen(NavigationConstants.REPORT, this);
+    }//GEN-LAST:event_btnReportActionPerformed
+
 
     /**
      * @param args the command line arguments
@@ -314,6 +334,7 @@ public class DashboardScreen extends javax.swing.JFrame {
     private javax.swing.JButton btnLaborCharge;
     private javax.swing.JButton btnMaterial;
     private javax.swing.JButton btnQuotation;
+    private javax.swing.JButton btnReport;
     private javax.swing.JButton btnSettings;
     private javax.swing.JScrollPane jPContractReport;
     private javax.swing.JScrollPane jPLaborReport;

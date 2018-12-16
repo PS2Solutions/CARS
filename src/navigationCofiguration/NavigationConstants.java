@@ -18,4 +18,5 @@ public class NavigationConstants {
     public final static String CUSTOMER = "CUSTOMER";
     public final static String MATERIAL = "MATERIAL";
     public final static String CONTRACT = "CONTRACT";
+    public final static String REPORT = "REPORT";
 }

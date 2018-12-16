@@ -16,6 +16,7 @@ import views.LaborScreen;
 import views.MaterialScreen;
 import views.QuotationScreen;
 import views.RegistrationScreen;
+import views.ReportScreen;
 
 /**
  *
@@ -61,6 +62,11 @@ public class NavigationController {
             case NavigationConstants.CONTRACT:
                 ContractScreen contractScreen = new ContractScreen();
                 contractScreen.setVisible(true);
+                baseScreen.setVisible(false);
+                break;
+            case NavigationConstants.REPORT:
+                ReportScreen reportScreen = new ReportScreen();
+                reportScreen.setVisible(true);
                 baseScreen.setVisible(false);
                 break;
             }
