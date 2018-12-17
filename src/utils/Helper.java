@@ -71,11 +71,12 @@ public class Helper {
             Logger.getLogger(Helper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public static String getPropertyValue(String key){
-       return  java.util.ResourceBundle.getBundle("appResources/Strings").getString(key);
+
+    public static String getPropertyValue(String key) {
+        return java.util.ResourceBundle.getBundle("appResources/Strings").getString(key);
     }
-    public static JDatePickerImpl getDatePicker(){
+
+    public static JDatePickerImpl getDatePicker() {
         JDatePickerImpl datePicker;
         UtilDateModel model = new UtilDateModel();
 //        LocalDate now = LocalDate.now();
@@ -86,9 +87,9 @@ public class Helper {
         p.put("text.year", "Year");
         JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
         datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
-        return datePicker;                
+        return datePicker;
     }
-    
+
     public static boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."
                 + "[a-zA-Z0-9_+&*-]+)*@"
@@ -100,5 +101,25 @@ public class Helper {
             return false;
         }
         return pat.matcher(email.trim()).matches();
+    }
+
+    public static String getMysqlFormattedDate(String text) {
+        if (text != null && text.trim().length() > 0) {
+            String[] date = text.split("-");
+            String mySqlFormattedDate = date[2] + "-" + date[1] + "-" + date[0] + " 00:00:00";
+            return mySqlFormattedDate;
+        }else {
+            return null;
+        }
+    }
+     public static String getFormattedDate(String text) {
+        if (text != null && text.trim().length() > 0) {
+//            String date = text.split(" ")[0];
+            String[] date= (text.split(" ")[0]).split("-");
+            String mySqlFormattedDate = date[2] + "-" + date[1] + "-" + date[0];
+            return mySqlFormattedDate;
+        }else {
+            return null;
+        }
     }
 }

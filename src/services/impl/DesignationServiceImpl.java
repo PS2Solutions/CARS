@@ -6,8 +6,10 @@
 package services.impl;
 
 import dataclasses.DesignationDto;
+import java.sql.ResultSet;
 import java.util.Vector;
 import services.interfaces.DesignationService;
+import utils.DBHelper;
 
 /**
  *
@@ -15,14 +17,25 @@ import services.interfaces.DesignationService;
  */
 public class DesignationServiceImpl implements DesignationService {
 
+    public DesignationServiceImpl() {
+        DBHelper.connectToDb();
+    }
+
     @Override
     public Vector<DesignationDto> getDesignations() {
         Vector<DesignationDto> designationDtos = new Vector<>();
-        for (int i = 0; i < 3; i++) {
-            DesignationDto dd = new DesignationDto();
-            dd.setId(+i);
-            dd.setDesignation("Test" + i);
-            designationDtos.add(dd);
+        ResultSet designationSet = DBHelper.readDataFromDb("select * from Designations");
+        if (designationSet != null) {
+            try {
+                while (designationSet.next()) {
+                    DesignationDto designationDto = new DesignationDto();
+                    designationDto.setId(designationSet.getInt("ID"));
+                    designationDto.setDesignation(designationSet.getString("Designation"));
+                    designationDtos.add(designationDto);
+                }
+            } catch (Exception ex) {
+
+            }
         }
         return designationDtos;
     }

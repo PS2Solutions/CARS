@@ -18,7 +18,7 @@ public class LaborDto {
     String address1;
     String address2;
     String phoneNumber;
-    double wage;
+    int wage;
     String joinDate;
     String resignDate;
     boolean isActive;
@@ -88,11 +88,11 @@ public class LaborDto {
         this.phoneNumber = phoneNumber;
     }
 
-    public double getWage() {
+    public int getWage() {
         return wage;
     }
 
-    public void setWage(double wage) {
+    public void setWage(int wage) {
         this.wage = wage;
     }
 

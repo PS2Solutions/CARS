@@ -456,12 +456,13 @@ public class LaborScreen extends javax.swing.JFrame {
             LaborService laborService = new LaborServiceImpl();
             LaborDto laborDto = getEnteredData();
             String response = laborService.saveLabor(laborDto);
-            if (response.equalsIgnoreCase(Helper.getPropertyValue("Success"))) {
+            if (response != null && response.equalsIgnoreCase(Helper.getPropertyValue("Success"))) {
                 DialogHelper.showInfoMessage(Helper.getPropertyValue("Success"),
                         Helper.getPropertyValue("SuccessMessage"));
+                clearFields();
                 setLaborReport();
             } else {
-                DialogHelper.showErrorMessage("Error", response);
+                DialogHelper.showErrorMessage("Error", Helper.getPropertyValue("Failed_To_Update"));
             }
         } else {
             DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("EmptyFields"));
@@ -659,10 +660,10 @@ public class LaborScreen extends javax.swing.JFrame {
         laborDto.setIdentityType(cmbIdProof.getSelectedItem().toString());
         laborDto.setIdentityNumber(txtIdProofNumber.getText().trim());
         laborDto.setIsActive(chkStatus.isSelected());
-        laborDto.setJoinDate(joinDatePicker.getJFormattedTextField().getText());
-        laborDto.setResignDate(resignDatePicker.getJFormattedTextField().getText());
+        laborDto.setJoinDate(Helper.getMysqlFormattedDate(joinDatePicker.getJFormattedTextField().getText()));
+        laborDto.setResignDate(Helper.getMysqlFormattedDate(resignDatePicker.getJFormattedTextField().getText()));
         try {
-            laborDto.setWage(Double.parseDouble(txtDailyWage.getText().trim()));
+            laborDto.setWage(Integer.parseInt(txtDailyWage.getText().trim()));
         } catch (Exception ex) {
             laborDto.setWage(0);
         }

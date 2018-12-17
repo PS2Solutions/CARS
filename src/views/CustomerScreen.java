@@ -320,7 +320,7 @@ public class CustomerScreen extends javax.swing.JFrame {
                 clearFields();
                 DialogHelper.showInfoMessage(Helper.getPropertyValue("Success"),
                         Helper.getPropertyValue("SuccessMessage"));
-                setCustomerReport();                
+                setCustomerReport();
             } else {
                 DialogHelper.showErrorMessage("Error", response);
             }
@@ -407,12 +407,12 @@ public class CustomerScreen extends javax.swing.JFrame {
     }
 
     private void configureTable(ReportContentDto contentDto) {
-        TableModel model =new DefaultTableModel(contentDto.getRowData(), contentDto.getColumnNames()){
+        TableModel model = new DefaultTableModel(contentDto.getRowData(), contentDto.getColumnNames()) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
-           
+
         };
         tblCustomer = new JTable(model);
         tblCustomer.setRowSelectionAllowed(true);
@@ -432,7 +432,7 @@ public class CustomerScreen extends javax.swing.JFrame {
     private void populateSelectedDetails(CustomerDto dto) {
         txtName.setText(dto.getName());
         txtCompanyName.setText(dto.getCompanyName());
-        txtContactNumber.setText(""+dto.getPhoneNumber());
+        txtContactNumber.setText("" + dto.getPhoneNumber());
         txtAddress1.setText(dto.getAddress1());
         txtAddress2.setText(dto.getAddress2());
         txtEmail.setText(dto.getEmail());
@@ -460,15 +460,15 @@ public class CustomerScreen extends javax.swing.JFrame {
             DialogHelper.showErrorMessage("Validation", Helper.getPropertyValue("InvalidEmail"));
             fieldsAreValid = false;
         }
-        
+
         return fieldsAreValid;
     }
-    
+
     private boolean isFieldsEmpty() {
-         return (txtName.getText().trim().isEmpty() || txtCompanyName.getText().trim().isEmpty() 
-                || txtContactNumber.getText().trim().isEmpty() || txtEmail.getText().trim().isEmpty());       
+        return (txtName.getText().trim().isEmpty() || txtCompanyName.getText().trim().isEmpty()
+                || txtContactNumber.getText().trim().isEmpty() || txtEmail.getText().trim().isEmpty());
     }
-    
+
     private CustomerDto getEnteredData() {
         CustomerDto customerDto = new CustomerDto();
         customerDto.setId(selectedCustomerId);
@@ -479,14 +479,19 @@ public class CustomerScreen extends javax.swing.JFrame {
         customerDto.setAddress2(txtAddress2.getText());
         customerDto.setEmail(txtEmail.getText());
         customerDto.setCompanyRegNo(txtRegNo.getText());
-        
+
         return customerDto;
     }
-     private void uploadExcel() {//GEN-FIRST:event_btnUploadActionPerformed
+
+    private void uploadExcel() {
         List<String> extensions = new ArrayList<>();
         extensions.add("xlsx");
         extensions.add("xls");
         File file = FileHandler.showFileChooser("Excel Upload", extensions);
-        List<String> insertQuery = FileHandler.getInsertQuery(file, ExcelUploadFileHelper.FileType.CUSTOMER);
+        if (file.getName().equals("customer_Details")) {
+            List<String> insertQuery = FileHandler.getInsertQuery(file, ExcelUploadFileHelper.FileType.CUSTOMER);
+        } else {
+            DialogHelper.showErrorMessage("Upload Excel", "Invalid file.");
+        }
     }
 }
