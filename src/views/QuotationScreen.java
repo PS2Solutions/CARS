@@ -56,7 +56,6 @@ public class QuotationScreen extends javax.swing.JFrame {
         btnPrint = new javax.swing.JButton();
         btnHome = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
-        btnUpload = new javax.swing.JButton();
         btnAddNew = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -124,10 +123,6 @@ public class QuotationScreen extends javax.swing.JFrame {
             }
         });
 
-        btnUpload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/upload.png"))); // NOI18N
-        btnUpload.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        btnUpload.setFocusPainted(false);
-
         btnAddNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/add.png"))); // NOI18N
         btnAddNew.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         btnAddNew.setFocusPainted(false);
@@ -150,21 +145,18 @@ public class QuotationScreen extends javax.swing.JFrame {
                 .addComponent(btnAddNew, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnAddNew, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -582,7 +574,6 @@ public class QuotationScreen extends javax.swing.JFrame {
     private javax.swing.JButton btnHome;
     private javax.swing.JButton btnPrint;
     private javax.swing.JButton btnSave;
-    private javax.swing.JButton btnUpload;
     private javax.swing.JComboBox<String> cmbCustomer;
     private javax.swing.JComboBox<String> cmbType;
     private javax.swing.JLabel jLabel1;

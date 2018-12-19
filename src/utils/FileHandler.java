@@ -5,6 +5,7 @@
  */
 package utils;
 
+import dataclasses.UploadHelperDto;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -70,32 +71,24 @@ public class FileHandler {
         return selectedFile;
     }
 
-    public static List<String> getInsertQuery(File file, ExcelUploadFileHelper.FileType type) {
-        List<String> insertQueries = new ArrayList<>();
+    public static  List<UploadHelperDto> getExcelData(File file) {
+        List<UploadHelperDto> uploadHelperDtos  = new ArrayList<>();
         try {
             Workbook workbook = WorkbookFactory.create(file);
-            String tableName = ExcelUploadFileHelper.getTableName(type);
-            String insertQuery = "Insert into " + tableName + "( " + ExcelUploadFileHelper.getIdentityColumn(type);
             Sheet sheet = workbook.getSheetAt(0);
-            Sheet colTypeSheet = workbook.getSheetAt(1);
-            insertQuery += "," + getColumnNames(workbook) + " ) values ( ";
             for (Row row : sheet) {
-                String query = insertQuery;
-                query += "1";//Id value need to change
-                int i = 0;
-                for (Cell cell : row) {
-                    String colType = colTypeSheet.getRow(0).getCell(i).getStringCellValue();
-                    query += "," + getColValue(colType, cell);
+                UploadHelperDto helperDto = new UploadHelperDto();
+               for (Cell cell : row) {                   
+                   helperDto.getColumnValues().add(cell.getStringCellValue());
                 }
-                insertQueries.add(query);
+               uploadHelperDtos.add(helperDto);
             }
         } catch (IOException ex) {
             Logger.getLogger(FileHandler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (EncryptedDocumentException ex) {
             Logger.getLogger(FileHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return insertQueries;
-
+        return uploadHelperDtos;
     }
 
     /**

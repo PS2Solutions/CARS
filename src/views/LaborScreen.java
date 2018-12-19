@@ -8,6 +8,8 @@ package views;
 import dataclasses.DesignationDto;
 import dataclasses.LaborDto;
 import dataclasses.ReportContentDto;
+import dataclasses.UploadHelperDto;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -22,12 +24,15 @@ import javax.swing.table.TableRowSorter;
 import navigationCofiguration.NavigationConstants;
 import navigationCofiguration.NavigationController;
 import org.jdatepicker.impl.JDatePickerImpl;
+import services.impl.CustomerServiceImpl;
 import services.impl.DashboardServiceImpl;
 import services.impl.DesignationServiceImpl;
 import services.impl.LaborServiceImpl;
+import services.interfaces.CustomerService;
 import services.interfaces.DesignationService;
 import services.interfaces.LaborService;
 import utils.DialogHelper;
+import utils.FileHandler;
 import utils.Helper;
 
 /**
@@ -92,7 +97,7 @@ public class LaborScreen extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         txtEmpNameSearch = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        btnSearch = new javax.swing.JButton();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
         jFrame1.getContentPane().setLayout(jFrame1Layout);
@@ -155,6 +160,11 @@ public class LaborScreen extends javax.swing.JFrame {
         btnUpload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/upload.png"))); // NOI18N
         btnUpload.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         btnUpload.setFocusPainted(false);
+        btnUpload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUploadActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -363,11 +373,11 @@ public class LaborScreen extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel11.setText("Employee ID");
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jButton1.setText("Search");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnSearch.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnSearch.setText("Search");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnSearchActionPerformed(evt);
             }
         });
 
@@ -385,7 +395,7 @@ public class LaborScreen extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(txtEmpNameSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(btnSearch)
                 .addGap(29, 29, 29))
         );
         jPanel2Layout.setVerticalGroup(
@@ -396,7 +406,7 @@ public class LaborScreen extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(txtEmpNameSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel11)
-                        .addComponent(jButton1))
+                        .addComponent(btnSearch))
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(txtEmpIdSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel10)))
@@ -473,7 +483,7 @@ public class LaborScreen extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtEmpIdSearchActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         String employeeId = txtEmpIdSearch.getText().trim();
         String name = txtEmpNameSearch.getText().trim();
         if (employeeId.length() > 0 || name.length() > 0) {
@@ -486,7 +496,11 @@ public class LaborScreen extends javax.swing.JFrame {
 
             }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void btnUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadActionPerformed
+        uploadExcel();
+    }//GEN-LAST:event_btnUploadActionPerformed
 
     /**
      * @param args the command line arguments
@@ -527,11 +541,11 @@ public class LaborScreen extends javax.swing.JFrame {
     private javax.swing.JButton btnAddNew;
     private javax.swing.JButton btnHome;
     private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnUpload;
     private javax.swing.JCheckBox chkStatus;
     private javax.swing.JComboBox<String> cmbDesignation;
     private javax.swing.JComboBox<String> cmbIdProof;
-    private javax.swing.JButton jButton1;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;
     private javax.swing.JLabel jLabel1;
@@ -702,5 +716,23 @@ public class LaborScreen extends javax.swing.JFrame {
                 break;
         }
         return index;
+    }
+     private void uploadExcel() {
+        List<String> extensions = new ArrayList<>();
+        extensions.add("xlsx");
+        extensions.add("xls");
+        File file = FileHandler.showFileChooser("Excel Upload", extensions);
+        if (file.getName().equals("Labor_Details")) {
+            List<UploadHelperDto> uplodedData = FileHandler.getExcelData(file);
+            LaborService laborService = new LaborServiceImpl();
+            boolean response = laborService.uploadExcel(uplodedData);
+            if(response) {
+                  DialogHelper.showErrorMessage("Upload Excel", Helper.getPropertyValue("Data_Uploded"));
+            } else {
+                  DialogHelper.showErrorMessage("Upload Excel", Helper.getPropertyValue("Failed_To_Upload"));
+            }
+        } else {
+            DialogHelper.showErrorMessage("Upload Excel", Helper.getPropertyValue("Invalid_File"));
+        }
     }
 }

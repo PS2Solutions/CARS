@@ -7,11 +7,12 @@ package services.interfaces;
 
 import dataclasses.CustomerDto;
 import dataclasses.ReportContentDto;
+import dataclasses.UploadHelperDto;
 import java.util.List;
 
 public interface CustomerService {
     ReportContentDto getCustomerDetails( List<CustomerDto> customerDtos );
     String saveCustomer(CustomerDto customerDto);
     List<CustomerDto> getCustomers();
-    boolean uploadExcel(List<String> lstQuery);
+    boolean uploadExcel(List<UploadHelperDto> helperDtos);
 }

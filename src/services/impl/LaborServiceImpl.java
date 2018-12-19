@@ -8,6 +8,7 @@ package services.impl;
 import dataclasses.CustomerDto;
 import dataclasses.LaborDto;
 import dataclasses.ReportContentDto;
+import dataclasses.UploadHelperDto;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,42 +33,46 @@ public class LaborServiceImpl implements LaborService {
         List<LaborDto> laborDtos = new ArrayList<LaborDto>();
         ResultSet resultSet = DBHelper.readDataFromDb("Select * from labors");
         if (resultSet != null) {
-            try {
-                while (resultSet.next()) {
-                    LaborDto laborDto = new LaborDto();
-                     int id = resultSet.getInt("ID");
-                    String laborID  = resultSet.getString("LaborID");
-                    String name = resultSet.getString("Name");
-                    String designation = resultSet.getString("Designation");
-                    String identityType = resultSet.getString("IdentityType");
-                    String identityNo = resultSet.getString("IdentityNo");
-                    String address1 = resultSet.getString("Address1");
-                    String address2 = resultSet.getString("Address2");
-                    String phoneNumber = resultSet.getString("PhoneNumber");
-                    int wage = resultSet.getInt("Wage");
-                    String joiningDate = resultSet.getString("JoiningDate");
-                    String resignationDate = resultSet.getString("ResignationDate");
-                    Boolean isActive = resultSet.getBoolean("IsActive");
-                    laborDto.setId(id);
-                    laborDto.setLaborId(laborID);
-                    laborDto.setName(name);
-                    laborDto.setDesignation(designation);
-                    laborDto.setIdentityType(identityType);
-                    laborDto.setIdentityNumber(identityNo);
-                    laborDto.setAddress1(address1);
-                    laborDto.setAddress2(address2);
-                    laborDto.setPhoneNumber(phoneNumber);
-                    laborDto.setWage(wage);
-                    laborDto.setJoinDate(Helper.getFormattedDate(joiningDate));
-                    laborDto.setResignDate(Helper.getFormattedDate(resignationDate));
-                    laborDto.setIsActive(isActive);
-                    laborDtos.add(laborDto);
-                }
-            } catch (Exception ex) {
-
-            }
+            prepareLaborDetails(resultSet, laborDtos);
         }
         return laborDtos;
+    }
+
+    private void prepareLaborDetails(ResultSet resultSet, List<LaborDto> laborDtos) {
+        try {
+            while (resultSet.next()) {
+                LaborDto laborDto = new LaborDto();
+                int id = resultSet.getInt("ID");
+                String laborID = resultSet.getString("LaborID");
+                String name = resultSet.getString("Name");
+                String designation = resultSet.getString("Designation");
+                String identityType = resultSet.getString("IdentityType");
+                String identityNo = resultSet.getString("IdentityNo");
+                String address1 = resultSet.getString("Address1");
+                String address2 = resultSet.getString("Address2");
+                String phoneNumber = resultSet.getString("PhoneNumber");
+                int wage = resultSet.getInt("Wage");
+                String joiningDate = resultSet.getString("JoiningDate");
+                String resignationDate = resultSet.getString("ResignationDate");
+                Boolean isActive = resultSet.getBoolean("IsActive");
+                laborDto.setId(id);
+                laborDto.setLaborId(laborID);
+                laborDto.setName(name);
+                laborDto.setDesignation(designation);
+                laborDto.setIdentityType(identityType);
+                laborDto.setIdentityNumber(identityNo);
+                laborDto.setAddress1(address1);
+                laborDto.setAddress2(address2);
+                laborDto.setPhoneNumber(phoneNumber);
+                laborDto.setWage(wage);
+                laborDto.setJoinDate(Helper.getFormattedDate(joiningDate));
+                laborDto.setResignDate(Helper.getFormattedDate(resignationDate));
+                laborDto.setIsActive(isActive);
+                laborDtos.add(laborDto);
+            }
+        } catch (Exception ex) {
+
+        }
     }
 
     @Override
@@ -130,7 +135,45 @@ public class LaborServiceImpl implements LaborService {
 
     @Override
     public List<LaborDto> getLabor(String empolyeeId, String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<LaborDto> laborDtos = new ArrayList<LaborDto>();
+        ResultSet resultSet = DBHelper.readDataFromDb("Select * from labors where LaborID = '" + empolyeeId + "' OR Name = '" + name+"'");
+        if (resultSet != null) {
+            prepareLaborDetails(resultSet, laborDtos);
+        }
+        return laborDtos;
+    }
+
+    @Override
+    public boolean uploadExcel(List<UploadHelperDto> helperDtos) {
+        boolean response = true;
+        try {
+            for (UploadHelperDto excelContent : helperDtos) {
+                if (helperDtos.indexOf(excelContent) > 0) {
+                    LaborDto laborDto = new LaborDto();
+                    laborDto.setId(0);
+                    laborDto.setLaborId(excelContent.getColumnValues().get(0));
+                    laborDto.setName(excelContent.getColumnValues().get(1));
+                    laborDto.setDesignation(excelContent.getColumnValues().get(2));
+                    laborDto.setIdentityType(excelContent.getColumnValues().get(3));
+                    laborDto.setIdentityNumber(excelContent.getColumnValues().get(4));
+                    laborDto.setAddress1(excelContent.getColumnValues().get(5));
+                    laborDto.setAddress2(excelContent.getColumnValues().get(6));
+                    laborDto.setPhoneNumber(excelContent.getColumnValues().get(7));
+                    laborDto.setWage(Integer.parseInt(excelContent.getColumnValues().get(8).trim()));
+                    laborDto.setJoinDate(excelContent.getColumnValues().get(9));
+                    laborDto.setResignDate(excelContent.getColumnValues().get(10));
+                    laborDto.setIsActive(true);
+                    String resp = saveLabor(laborDto);
+                    if (!resp.equalsIgnoreCase(Helper.getPropertyValue("Success"))) {
+                        response = false;
+                        break;
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            response = false;
+        }
+        return response;
     }
 
 }

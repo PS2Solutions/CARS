@@ -7,6 +7,7 @@ package services.impl;
 
 import dataclasses.CustomerDto;
 import dataclasses.ReportContentDto;
+import dataclasses.UploadHelperDto;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import services.interfaces.CustomerService;
 import utils.DBHelper;
+import utils.Helper;
 
 /**
  *
@@ -130,15 +132,26 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public boolean uploadExcel(List<String> lstQuery) {
+    public boolean uploadExcel(List<UploadHelperDto> helperDtos) {
         boolean response = true;
         try {
-            for (String query : lstQuery) {
-                int rowId = DBHelper.updateDataToDb(query);
-                if (rowId == -1) {
-                    response = false;
-                    break;
-                }
+            for (UploadHelperDto excelContent : helperDtos) {
+               if(helperDtos.indexOf(excelContent) > 0){
+                    CustomerDto customerDto = new CustomerDto();
+                    customerDto.setId(0);
+                    customerDto.setName(excelContent.getColumnValues().get(0));
+                    customerDto.setCompanyName(excelContent.getColumnValues().get(1));
+                    customerDto.setPhoneNumber(excelContent.getColumnValues().get(2));
+                    customerDto.setAddress1(excelContent.getColumnValues().get(3));
+                    customerDto.setAddress2(excelContent.getColumnValues().get(4));
+                    customerDto.setEmail(excelContent.getColumnValues().get(5));
+                    customerDto.setCompanyRegNo(excelContent.getColumnValues().get(6));
+                    String resp = updateCustomer(customerDto);
+                    if (!resp.equalsIgnoreCase(Helper.getPropertyValue("Success"))) {
+                        response = false;
+                        break;
+                    }
+               }
             }
         } catch (Exception ex) {
             response = false;

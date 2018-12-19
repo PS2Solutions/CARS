@@ -7,6 +7,7 @@ package services.interfaces;
 
 import dataclasses.LaborDto;
 import dataclasses.ReportContentDto;
+import dataclasses.UploadHelperDto;
 import java.util.List;
 
 /**
@@ -18,4 +19,5 @@ public interface LaborService {
     ReportContentDto getLaborDetails( List<LaborDto> laborDtos );
     String saveLabor(LaborDto laborDto);
     List<LaborDto> getLabor(String empolyeeId, String name);
+    boolean uploadExcel(List<UploadHelperDto> helperDtos);
 }
