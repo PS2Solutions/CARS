@@ -6,13 +6,16 @@
 package services.impl;
 
 import dataclasses.CustomersDto;
+import dataclasses.DesignationDto;
 import dataclasses.MaterialDto;
 import dataclasses.QuotationMasterDto;
 import dataclasses.QuotationTypeDto;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import services.interfaces.QuotationService;
+import utils.DBHelper;
 
 /**
  *
@@ -46,14 +49,21 @@ public class QuotationServiceImpl implements QuotationService{
 
     @Override
     public Vector<QuotationTypeDto> getQuotationType() {
-         Vector<QuotationTypeDto> cds =new Vector<>();
-        for(int i= 0; i<2;i++){
-            QuotationTypeDto cd =new QuotationTypeDto();
-            cd.setTypeId(i+1);
-            cd.setType("Test"+i);
-            cds.add(cd);
+       Vector<QuotationTypeDto> quotationTypeDtos = new Vector<>();
+        ResultSet quotationTypeSet = DBHelper.readDataFromDb("select * from quotationtypes");
+        if (quotationTypeSet != null) {
+            try {
+                while (quotationTypeSet.next()) {
+                    QuotationTypeDto quotationTypeDto = new QuotationTypeDto();
+                    quotationTypeDto.setTypeId(quotationTypeSet.getInt("ID"));
+                    quotationTypeDto.setType(quotationTypeSet.getString("Type"));
+                    quotationTypeDtos.add(quotationTypeDto);
+                }
+            } catch (Exception ex) {
+
+            }
         }
-        return cds;
+        return quotationTypeDtos;
     }
 
     @Override

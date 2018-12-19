@@ -5,15 +5,23 @@
  */
 package views;
 
+import dataclasses.MaterialCategoryDto;
 import dataclasses.MaterialDto;
+import dataclasses.QuotationTypeDto;
 import dataclasses.ReportContentDto;
 import java.util.List;
+import java.util.Vector;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JTable;
 import navigationCofiguration.NavigationConstants;
 import navigationCofiguration.NavigationController;
+import services.impl.MaterialCategoryServiceImpl;
 import services.impl.MaterialServiceImpl;
+import services.impl.QuotationServiceImpl;
+import services.interfaces.MaterialCategoryService;
 import services.interfaces.MaterialService;
+import services.interfaces.QuotationService;
 import utils.DialogHelper;
 import utils.Helper;
 
@@ -28,9 +36,9 @@ public class MaterialScreen extends javax.swing.JFrame {
      */
     public MaterialScreen() {
         initComponents();
+        prepareComponents();
         setMaterialReport();
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -421,19 +429,21 @@ public class MaterialScreen extends javax.swing.JFrame {
     JTable tblMaterial;
     List<MaterialDto> materialDtos;
     int selectedMaterialId;
-
+    Vector<MaterialCategoryDto> categoryDtos;
+    Vector<QuotationTypeDto> quotationTypeDtos;
+    
     private void setMaterialReport() {
         MaterialService materialService = new MaterialServiceImpl();
         materialDtos = materialService.getMaterials();
-
+        
         if (materialDtos.size() > 0) {
             ReportContentDto contentDto = materialService.getMaterialDetails(materialDtos);
             configureTable(contentDto);
         }
     }
-
+    
     private void configureTable(ReportContentDto contentDto) {
-
+        
         tblMaterial = new JTable(contentDto.getRowData(), contentDto.getColumnNames());
         tblMaterial.setRowSelectionAllowed(true);
         tblMaterial.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -449,7 +459,7 @@ public class MaterialScreen extends javax.swing.JFrame {
         jPCustomerList.setViewportView(tblMaterial);
         jPCustomerList.setVisible(true);
     }
-
+    
     private void populateSelectedDetails(MaterialDto dto) {
         txtMaterialCode.setText(dto.getMaterialCode());
         txtMaterialName.setText(dto.getMaterialName());
@@ -460,7 +470,7 @@ public class MaterialScreen extends javax.swing.JFrame {
         checkActive.setSelected(dto.getStatus());
         txtAreaRemarks.setText(dto.getRemark());
     }
-
+    
     private void clearFields() {
         selectedMaterialId = 0;
         txtMaterialCode.setText("");
@@ -473,10 +483,10 @@ public class MaterialScreen extends javax.swing.JFrame {
         txtAreaRemarks.setText("");
         txtMaterialCode.setEditable(true);
     }
-
+    
     private boolean validateFields() {
         boolean fieldsAreValid = true;
-
+        
         if (isFieldsEmpty()) {
             DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("EmptyFields"));
             fieldsAreValid = false;
@@ -486,9 +496,9 @@ public class MaterialScreen extends javax.swing.JFrame {
     }
     
     private boolean isFieldsEmpty() {
-         return (txtMaterialCode.getText().trim().isEmpty() || txtMaterialName.getText().trim().isEmpty() 
+        return (txtMaterialCode.getText().trim().isEmpty() || txtMaterialName.getText().trim().isEmpty()
                 || txtPointRate.getText().trim().isEmpty() || txtMaterialBrand.getText().trim().isEmpty()
-                || txtWarranty.getText().trim().isEmpty());       
+                || txtWarranty.getText().trim().isEmpty());        
     }
     
     private MaterialDto getEnteredData() {
@@ -504,5 +514,18 @@ public class MaterialScreen extends javax.swing.JFrame {
         materialDto.setRemark(txtAreaRemarks.getText());
         
         return materialDto;
+    }
+    
+    private void prepareComponents() {
+        MaterialCategoryService materialCategoryService = new MaterialCategoryServiceImpl();
+        categoryDtos = materialCategoryService.getCategories();
+        DefaultComboBoxModel model = new DefaultComboBoxModel(materialCategoryService.getCategories(categoryDtos));
+        comboCategoryType.setModel(model);
+        
+        QuotationService quotationService = new QuotationServiceImpl();
+        quotationTypeDtos = quotationService.getQuotationType();
+        DefaultComboBoxModel boxModel = new DefaultComboBoxModel(quotationService.getQuotationType(quotationTypeDtos));
+        comboQuotationType.setModel(boxModel);
+        
     }
 }

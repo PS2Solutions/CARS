@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import services.interfaces.MaterialService;
+import utils.DBHelper;
 
 /**
  *
@@ -18,6 +19,11 @@ import services.interfaces.MaterialService;
  */
 public class MaterialServiceImpl implements MaterialService {
 
+    public MaterialServiceImpl() {
+        DBHelper.connectToDb();
+    }
+
+    
     @Override
     public ReportContentDto getMaterialDetails(List<MaterialDto> materialDtos) {
         ReportContentDto contentDto = new ReportContentDto();
