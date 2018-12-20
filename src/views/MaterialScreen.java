@@ -512,7 +512,8 @@ public class MaterialScreen extends javax.swing.JFrame {
         materialDto.setWarrentyEligibility(checkWarratyEligible.isSelected());
         materialDto.setStatus(checkActive.isSelected());
         materialDto.setRemark(txtAreaRemarks.getText());
-        
+        materialDto.setCategoryId(categoryDtos.get(comboCategoryType.getSelectedIndex()).getId());
+        materialDto.setQuoteTypeId(quotationTypeDtos.get(comboQuotationType.getSelectedIndex()).getTypeId());
         return materialDto;
     }
     
