@@ -9,6 +9,9 @@ import dataclasses.MaterialCategoryDto;
 import dataclasses.MaterialDto;
 import dataclasses.QuotationTypeDto;
 import dataclasses.ReportContentDto;
+import dataclasses.UploadHelperDto;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
@@ -16,13 +19,16 @@ import javax.swing.JFrame;
 import javax.swing.JTable;
 import navigationCofiguration.NavigationConstants;
 import navigationCofiguration.NavigationController;
+import services.impl.LaborServiceImpl;
 import services.impl.MaterialCategoryServiceImpl;
 import services.impl.MaterialServiceImpl;
 import services.impl.QuotationServiceImpl;
+import services.interfaces.LaborService;
 import services.interfaces.MaterialCategoryService;
 import services.interfaces.MaterialService;
 import services.interfaces.QuotationService;
 import utils.DialogHelper;
+import utils.FileHandler;
 import utils.Helper;
 
 /**
@@ -138,6 +144,11 @@ public class MaterialScreen extends javax.swing.JFrame {
         btnUpload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/upload.png"))); // NOI18N
         btnUpload.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         btnUpload.setFocusPainted(false);
+        btnUpload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUploadActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -350,12 +361,17 @@ public class MaterialScreen extends javax.swing.JFrame {
             if (response.equalsIgnoreCase(Helper.getPropertyValue("Success"))) {
                 DialogHelper.showInfoMessage(Helper.getPropertyValue("Success"),
                         Helper.getPropertyValue("SuccessMessage"));
-                setMaterialReport();                
+                clearFields();
+                setMaterialReport();
             } else {
                 DialogHelper.showErrorMessage("Error", response);
             }
         }
     }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadActionPerformed
+        uploadExcel();
+    }//GEN-LAST:event_btnUploadActionPerformed
 
     /**
      * @param args the command line arguments
@@ -431,19 +447,19 @@ public class MaterialScreen extends javax.swing.JFrame {
     int selectedMaterialId;
     Vector<MaterialCategoryDto> categoryDtos;
     Vector<QuotationTypeDto> quotationTypeDtos;
-    
+
     private void setMaterialReport() {
         MaterialService materialService = new MaterialServiceImpl();
         materialDtos = materialService.getMaterials();
-        
+
         if (materialDtos.size() > 0) {
             ReportContentDto contentDto = materialService.getMaterialDetails(materialDtos);
             configureTable(contentDto);
         }
     }
-    
+
     private void configureTable(ReportContentDto contentDto) {
-        
+
         tblMaterial = new JTable(contentDto.getRowData(), contentDto.getColumnNames());
         tblMaterial.setRowSelectionAllowed(true);
         tblMaterial.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -459,7 +475,7 @@ public class MaterialScreen extends javax.swing.JFrame {
         jPCustomerList.setViewportView(tblMaterial);
         jPCustomerList.setVisible(true);
     }
-    
+
     private void populateSelectedDetails(MaterialDto dto) {
         txtMaterialCode.setText(dto.getMaterialCode());
         txtMaterialName.setText(dto.getMaterialName());
@@ -470,7 +486,7 @@ public class MaterialScreen extends javax.swing.JFrame {
         checkActive.setSelected(dto.getStatus());
         txtAreaRemarks.setText(dto.getRemark());
     }
-    
+
     private void clearFields() {
         selectedMaterialId = 0;
         txtMaterialCode.setText("");
@@ -483,24 +499,24 @@ public class MaterialScreen extends javax.swing.JFrame {
         txtAreaRemarks.setText("");
         txtMaterialCode.setEditable(true);
     }
-    
+
     private boolean validateFields() {
         boolean fieldsAreValid = true;
-        
+
         if (isFieldsEmpty()) {
             DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("EmptyFields"));
             fieldsAreValid = false;
         }
-        
+
         return fieldsAreValid;
     }
-    
+
     private boolean isFieldsEmpty() {
         return (txtMaterialCode.getText().trim().isEmpty() || txtMaterialName.getText().trim().isEmpty()
                 || txtPointRate.getText().trim().isEmpty() || txtMaterialBrand.getText().trim().isEmpty()
-                || txtWarranty.getText().trim().isEmpty());        
+                || txtWarranty.getText().trim().isEmpty());
     }
-    
+
     private MaterialDto getEnteredData() {
         MaterialDto materialDto = new MaterialDto();
         materialDto.setId(selectedMaterialId);
@@ -516,17 +532,36 @@ public class MaterialScreen extends javax.swing.JFrame {
         materialDto.setQuoteTypeId(quotationTypeDtos.get(comboQuotationType.getSelectedIndex()).getTypeId());
         return materialDto;
     }
-    
+
     private void prepareComponents() {
         MaterialCategoryService materialCategoryService = new MaterialCategoryServiceImpl();
         categoryDtos = materialCategoryService.getCategories();
         DefaultComboBoxModel model = new DefaultComboBoxModel(materialCategoryService.getCategories(categoryDtos));
         comboCategoryType.setModel(model);
-        
+
         QuotationService quotationService = new QuotationServiceImpl();
         quotationTypeDtos = quotationService.getQuotationType();
         DefaultComboBoxModel boxModel = new DefaultComboBoxModel(quotationService.getQuotationType(quotationTypeDtos));
         comboQuotationType.setModel(boxModel);
-        
+
+    }
+
+    private void uploadExcel() {
+        List<String> extensions = new ArrayList<>();
+        extensions.add("xlsx");
+        extensions.add("xls");
+        File file = FileHandler.showFileChooser("Excel Upload", extensions);
+        if (file.getName().equals("Material_Details")) {
+            List<UploadHelperDto> uplodedData = FileHandler.getExcelData(file);
+            LaborService laborService = new LaborServiceImpl();
+            boolean response = laborService.uploadExcel(uplodedData);
+            if (response) {
+                DialogHelper.showErrorMessage("Upload Excel", Helper.getPropertyValue("Data_Uploded"));
+            } else {
+                DialogHelper.showErrorMessage("Upload Excel", Helper.getPropertyValue("Failed_To_Upload"));
+            }
+        } else {
+            DialogHelper.showErrorMessage("Upload Excel", Helper.getPropertyValue("Invalid_File"));
+        }
     }
 }

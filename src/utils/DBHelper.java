@@ -22,11 +22,9 @@ public class DBHelper {
 
     private static Connection dbConnection;
     private static Statement statement;
-    private static ResultSet resultSet;
 
     static {
         try {
-//            Class.forName("com.mysql.jdbc.Driver");
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException cnf) {
             System.out.println("Driver could not be loaded : " + cnf);
@@ -47,6 +45,7 @@ public class DBHelper {
     }
 
     public static ResultSet readDataFromDb(String query) {
+        ResultSet resultSet;
         try {
             resultSet = statement.executeQuery(query);
         } catch (SQLException ex) {
@@ -66,7 +65,9 @@ public class DBHelper {
         }
         return rowId;
     }
-     public static ResultSet callProcedure(String spName,CallableStatement statement) {
+
+    public static ResultSet callProcedure(String spName, CallableStatement statement) {
+        ResultSet resultSet;
         try {
             resultSet = statement.executeQuery();
         } catch (SQLException ex) {
@@ -79,5 +80,5 @@ public class DBHelper {
     public static Connection getDbConnection() {
         return dbConnection;
     }
-     
+
 }

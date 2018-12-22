@@ -29,6 +29,9 @@ import utils.Helper;
  */
 public class MaterialServiceImpl implements MaterialService {
 
+    Vector<QuotationTypeDto> quotationTypeDtos;
+    Vector<MaterialCategoryDto> materialCategoryDtos;
+
     public MaterialServiceImpl() {
         DBHelper.connectToDb();
     }
@@ -99,6 +102,8 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public List<MaterialDto> getMaterials() {
         List<MaterialDto> materialDtos = new ArrayList<MaterialDto>();
+        quotationTypeDtos = (new QuotationServiceImpl()).getQuotationType();
+        materialCategoryDtos = (new MaterialCategoryServiceImpl()).getCategories();
         ResultSet resultSet = DBHelper.readDataFromDb("Select * from materials");
         if (resultSet != null) {
             prepareMaterialsDetails(resultSet, materialDtos);
@@ -138,8 +143,8 @@ public class MaterialServiceImpl implements MaterialService {
                 dto.setCategory(getCategory(categoryID));
                 dto.setRemark(remark);
                 String imagePath = (image == null ? "" : image);
-                /*dto.setImagePath(imagePath);
-                dto.setLastEdit(Helper.getFormattedDate(lastEdit));*/
+                dto.setImagePath(imagePath);
+                dto.setLastEdit(Helper.getFormattedDate(lastEdit));
                 materialDtos.add(dto);
 
             }
@@ -150,8 +155,7 @@ public class MaterialServiceImpl implements MaterialService {
 
     private String getQuotationType(int quotationTypeID) {
         String type = "";
-        Vector<QuotationTypeDto> dtos = (new QuotationServiceImpl()).getQuotationType();
-        for (QuotationTypeDto dto : dtos) {
+        for (QuotationTypeDto dto : quotationTypeDtos) {
             if (dto.getTypeId() == quotationTypeID) {
                 type = dto.getType();
                 break;
@@ -162,8 +166,7 @@ public class MaterialServiceImpl implements MaterialService {
 
     private String getCategory(int categoryID) {
         String type = "";
-        Vector<MaterialCategoryDto> dtos = (new MaterialCategoryServiceImpl()).getCategories();
-        for (MaterialCategoryDto dto : dtos) {
+        for (MaterialCategoryDto dto : materialCategoryDtos) {
             if (dto.getId() == categoryID) {
                 type = dto.getCategory();
                 break;
