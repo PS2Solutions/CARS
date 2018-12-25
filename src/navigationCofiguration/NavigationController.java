@@ -13,6 +13,7 @@ import views.ContractScreen;
 import views.CustomerScreen;
 import views.DashboardScreen;
 import views.LaborScreen;
+import views.LaborWageScreen;
 import views.MaterialScreen;
 import views.QuotationScreen;
 import views.RegistrationScreen;
@@ -22,13 +23,14 @@ import views.ReportScreen;
  *
  * @author shinu.k
  */
-public class NavigationController {    
-    public static void navigateToScreen(String key, JFrame baseScreen){
+public class NavigationController {
+
+    public static void navigateToScreen(String key, JFrame baseScreen) {
         navigateToScreen(key, baseScreen, null);
     }
-    
-    public static void navigateToScreen(String key, JFrame baseScreen, Arguments arguments){
-        switch(key){
+
+    public static void navigateToScreen(String key, JFrame baseScreen, Arguments arguments) {
+        switch (key) {
             case NavigationConstants.DASHBOARD:
                 DashboardScreen dashboardScreen = new DashboardScreen();
                 dashboardScreen.setVisible(true);
@@ -69,6 +71,11 @@ public class NavigationController {
                 reportScreen.setVisible(true);
                 baseScreen.setVisible(false);
                 break;
-            }
+            case NavigationConstants.DAILY_WAGE_SCREEN:
+                LaborWageScreen laborWageScreen = new LaborWageScreen();
+                laborWageScreen.setVisible(true);
+                baseScreen.setVisible(false);
+                break;
+        }
     }
 }

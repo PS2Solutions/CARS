@@ -14,4 +14,7 @@ public class Constants {
     public static String connURL = "";
     public static String dbUser = "";
     public static String dbPass = "";
+
+    public static final int QUOTE = 1;
+    public static final int CONTRACT = 2;
 }

@@ -10,6 +10,7 @@ package navigationCofiguration;
  * @author shinu.k
  */
 public class NavigationConstants {
+
     public final static String DASHBOARD = "DASHBOARD_SCREEN";
     public final static String REGISTER = "REGISTERATION_SCREEN";
     public final static String LABOR = "LABOR_SCREEN";
@@ -19,4 +20,5 @@ public class NavigationConstants {
     public final static String MATERIAL = "MATERIAL";
     public final static String CONTRACT = "CONTRACT";
     public final static String REPORT = "REPORT";
+    public final static String DAILY_WAGE_SCREEN = "DAILY_WAGE_SCREEN";
 }

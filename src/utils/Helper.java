@@ -5,13 +5,17 @@
  */
 package utils;
 
+import com.mysql.cj.protocol.Resultset;
+import dataclasses.DesignationDto;
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -108,18 +112,75 @@ public class Helper {
             String[] date = text.split("-");
             String mySqlFormattedDate = date[2] + "-" + date[1] + "-" + date[0] + " 00:00:00";
             return mySqlFormattedDate;
-        }else {
+        } else {
             return null;
         }
     }
-     public static String getFormattedDate(String text) {
+
+    public static String getFormattedDate(String text) {
         if (text != null && text.trim().length() > 0) {
 //            String date = text.split(" ")[0];
-            String[] date= (text.split(" ")[0]).split("-");
+            String[] date = (text.split(" ")[0]).split("-");
             String mySqlFormattedDate = date[2] + "-" + date[1] + "-" + date[0];
             return mySqlFormattedDate;
-        }else {
+        } else {
             return null;
         }
+    }
+
+    public static String getReferenceNo(int type) {
+        DBHelper.connectToDb();
+        int currentIndex = getCurrentIndex(type);
+        String formattedIntex = "Year" + getFormattedIndex(currentIndex);
+        switch (type) {
+            case Constants.QUOTE:
+                formattedIntex = "Q" + formattedIntex;
+                break;
+            case Constants.CONTRACT:
+                formattedIntex = "C" + formattedIntex;
+                break;
+        }
+        return formattedIntex;
+    }
+
+    private static int getCurrentIndex(int type) {
+        int currentIndex = 0;
+        ResultSet resultset = null;
+        switch (type) {
+            case Constants.QUOTE:
+                resultset = DBHelper.readDataFromDb("Select QuotationIndex from configuration");
+                if (resultset != null) {
+                    try {
+                        while (resultset.next()) {
+                            currentIndex = resultset.getInt("QuotationIndex");
+                        }
+                    } catch (Exception ex) {
+
+                    }
+                }
+                break;
+            case Constants.CONTRACT:
+                resultset = DBHelper.readDataFromDb("Select ContractIndex  from configuration");
+                if (resultset != null) {
+                    try {
+                        while (resultset.next()) {
+                            currentIndex = resultset.getInt("QuotationIndex");
+                        }
+                    } catch (Exception ex) {
+
+                    }
+                }
+                break;
+        }
+        return currentIndex;
+    }
+
+    private static String getFormattedIndex(int currentIndex) {
+        String formattedIndex = "" + (currentIndex + 1);
+        int count = 5 - formattedIndex.length();
+        for (; count > 0; count--) {
+            formattedIndex = "0" + formattedIndex;
+        }
+        return formattedIndex;
     }
 }
