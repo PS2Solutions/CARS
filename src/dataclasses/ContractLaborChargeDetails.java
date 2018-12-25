@@ -13,9 +13,9 @@ public class ContractLaborChargeDetails {
 
     int contractId;
     String contractReference;
-    String contactName;
     int noOfLabors;
     double chargeSofar;
+    double totalAmount;
 
     public String getContractReference() {
         return contractReference;
@@ -23,14 +23,6 @@ public class ContractLaborChargeDetails {
 
     public void setContractReference(String contractReference) {
         this.contractReference = contractReference;
-    }
-
-    public String getContactName() {
-        return contactName;
-    }
-
-    public void setContactName(String contactName) {
-        this.contactName = contactName;
     }
 
     public int getNoOfLabors() {
@@ -55,6 +47,14 @@ public class ContractLaborChargeDetails {
 
     public void setContractId(int contractId) {
         this.contractId = contractId;
+    }
+
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
 }
