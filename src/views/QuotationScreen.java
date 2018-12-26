@@ -5,25 +5,33 @@
  */
 package views;
 
-import dataclasses.CustomersDto;
+import dataclasses.CustomerDto;
 import dataclasses.MaterialDto;
 import dataclasses.QuotationDetailsDto;
 import dataclasses.QuotationMasterDto;
 import dataclasses.QuotationTypeDto;
-import java.awt.Color;
-import java.util.ArrayList;
+import dataclasses.RegistrationDto;
+import java.awt.Desktop;
+import java.awt.event.ItemEvent;
+import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
-import javax.swing.JTextField;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import navigationCofiguration.NavigationConstants;
 import navigationCofiguration.NavigationController;
 import services.impl.QuotationServiceImpl;
+import services.impl.RegistrationServiceImpl;
 import services.interfaces.QuotationService;
-import utils.AutoSuggestor;
+import utils.Constants;
 import utils.DialogHelper;
 import utils.Helper;
+import utils.ReportGenerator;
 
 /**
  *
@@ -36,11 +44,19 @@ public class QuotationScreen extends javax.swing.JFrame {
      */
     public QuotationScreen() {
         initComponents();
+
+        quotationService = new QuotationServiceImpl();
+
         quotationMaster = new QuotationMasterDto();
+
         configureMaterialAddition(false);
+        configureTable();
         setCustomers();
         setQuoteType();
-        setMaterials();//TODO call when user selects quote type
+        setMaterials();
+
+        txtQuoteReference.setText(Helper.getReferenceNo(Constants.QUOTE));
+        btnPrint.setEnabled(false);
     }
 
     /**
@@ -86,7 +102,7 @@ public class QuotationScreen extends javax.swing.JFrame {
         txtMaterialRate = new javax.swing.JFormattedTextField();
         txtMaterialQty = new javax.swing.JFormattedTextField();
         txtMaterialAmount = new javax.swing.JFormattedTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        jSpMaterialList = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("appResources/Strings"); // NOI18N
@@ -173,6 +189,7 @@ public class QuotationScreen extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel2.setText("Customer");
 
+        txtQuoteReference.setEnabled(false);
         txtQuoteReference.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtQuoteReferenceActionPerformed(evt);
@@ -228,6 +245,11 @@ public class QuotationScreen extends javax.swing.JFrame {
         jLabel8.setText("Type");
 
         cmbType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbType.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbTypeItemStateChanged(evt);
+            }
+        });
         cmbType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbTypeActionPerformed(evt);
@@ -245,19 +267,20 @@ public class QuotationScreen extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(55, 55, 55)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addGap(108, 108, 108)
+                        .addComponent(txtQuoteReference, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel9)
                             .addComponent(jLabel2)
                             .addComponent(jLabel1))
-                        .addGap(108, 108, 108)
+                        .addGap(116, 116, 116)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtQuoteReference, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtQuoteTitle, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtQuoteTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cmbCustomer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addGroup(jPanel2Layout.createSequentialGroup()
                             .addComponent(jLabel3)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -282,15 +305,15 @@ public class QuotationScreen extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(98, 98, 98)
+                .addGap(103, 103, 103)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtQuoteReference, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtQuoteTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtQuoteReference, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
-                .addGap(23, 23, 23)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cmbCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
@@ -355,55 +378,59 @@ public class QuotationScreen extends javax.swing.JFrame {
             .addGroup(jPAddMaterialLayout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(jPAddMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtMaterialCode, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jLabel10)
+                    .addComponent(txtMaterialCode, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(jPAddMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtMaterialRate, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPAddMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel12)
-                    .addComponent(txtMaterialQty, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPAddMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPAddMaterialLayout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(jLabel13))
-                    .addComponent(txtMaterialAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-                .addComponent(btnAddMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel12)
+                        .addGap(73, 73, 73))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPAddMaterialLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtMaterialQty, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addGroup(jPAddMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPAddMaterialLayout.createSequentialGroup()
+                        .addComponent(jLabel13)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPAddMaterialLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(txtMaterialAmount)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnAddMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(22, 22, 22))))
         );
         jPAddMaterialLayout.setVerticalGroup(
             jPAddMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPAddMaterialLayout.createSequentialGroup()
-                .addGroup(jPAddMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addContainerGap()
+                .addGroup(jPAddMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPAddMaterialLayout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(btnAddMaterial))
+                        .addGroup(jPAddMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel11))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtMaterialCode, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPAddMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtMaterialAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtMaterialQty, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtMaterialRate, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPAddMaterialLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPAddMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPAddMaterialLayout.createSequentialGroup()
-                                .addGroup(jPAddMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel10)
-                                    .addComponent(jLabel11))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPAddMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(txtMaterialCode, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtMaterialRate, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(txtMaterialQty, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtMaterialAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPAddMaterialLayout.createSequentialGroup()
-                                .addGroup(jPAddMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel12)
-                                    .addComponent(jLabel13))
-                                .addGap(37, 37, 37)))))
+                        .addGroup(jPAddMaterialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel13)
+                            .addComponent(jLabel12))
+                        .addGap(37, 37, 37))
+                    .addGroup(jPAddMaterialLayout.createSequentialGroup()
+                        .addComponent(btnAddMaterial)
+                        .addGap(3, 3, 3)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jScrollPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jSpMaterialList.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -415,10 +442,9 @@ public class QuotationScreen extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPAddMaterial, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addContainerGap())))
+                    .addComponent(jSpMaterialList, javax.swing.GroupLayout.DEFAULT_SIZE, 657, Short.MAX_VALUE)
+                    .addComponent(jPAddMaterial, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -429,7 +455,7 @@ public class QuotationScreen extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPAddMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1)))
+                        .addComponent(jSpMaterialList)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(7, 7, 7))
@@ -439,6 +465,22 @@ public class QuotationScreen extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
+        try {
+            RegistrationDto regDto = new RegistrationServiceImpl().getRegistrationDetails();
+            CustomerDto customerDto = customerDtos.get(cmbCustomer.getSelectedIndex());
+            String quotType = cmbType.getSelectedItem().toString().trim(); 
+                    
+            String output = ReportGenerator.generateQuotationReport(quotationMaster, regDto, customerDto, quotType);
+
+            if (output == null) {
+
+            } else {
+                Desktop.getDesktop().open(new File(output));
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(QuotationScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
 
     }//GEN-LAST:event_btnPrintActionPerformed
 
@@ -449,6 +491,14 @@ public class QuotationScreen extends javax.swing.JFrame {
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         if (validateEntry()) {
             setEnteredValues();
+
+            boolean response = quotationService.saveQuotation(quotationMaster);
+
+            if (response) {
+                DialogHelper.showInfoMessage(Helper.getPropertyValue("Success"),
+                        Helper.getPropertyValue("SuccessMessage"));
+                btnPrint.setEnabled(true);
+            }
         } else {
             DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("EmptyFields"));
         }
@@ -458,24 +508,61 @@ public class QuotationScreen extends javax.swing.JFrame {
         String response = DialogHelper.showInputDialog(this, Helper.getPropertyValue("Quotation_Dialogue_Caption"),
                 Helper.getPropertyValue("Quotation_Dialogue_Question"));
         clearValues();
-        if (response != null) {
-
+        btnPrint.setEnabled(false);
+        if (response != null && !response.isEmpty()) {
+            selectedId = 0;
+            quotationMaster = quotationService.getQuotation(response);
+            if (quotationMaster != null && quotationMaster.getDetailsDtos() != null) {
+                populateMaterialTable(quotationMaster.getDetailsDtos());
+                cmbType.setSelectedIndex(getIndexForType(quotationMaster.getTypeId()));
+                cmbType.setEnabled(false);
+            }
         }
     }//GEN-LAST:event_btnAddNewActionPerformed
 
+    private int getIndexForType(int typeId) {
+        int index = 0;
+        for (QuotationTypeDto quotationTypeDto : quotationTypeDtos) {
+            if (quotationTypeDto.getTypeId() == typeId) {
+                break;
+            }
+            ++index;
+        }
+
+        return index;
+    }
+
+    private void populateMaterialTable(List<QuotationDetailsDto> detailsDtos) {
+        for (QuotationDetailsDto detailsDto : detailsDtos) {
+            dtModel.addRow(new Object[]{detailsDto.getMaterialCode(), detailsDto.getUnitRate(), detailsDto.getQuantity(), detailsDto.getAmount()});
+        }
+    }
+
     private void clearValues() {
+        selectedId = 0;
         txtAddress1.setText("");
         txtAddress2.setText("");
-        txtQuoteReference.setText("");
+        txtQuoteReference.setText(Helper.getReferenceNo(Constants.QUOTE));
         txtQuoteTitle.setText("");
         txtStatus.setText("");
         txtLaborCharge.setText("");
         txtAmount.setText("");
-        txtMaterialQty.setText("");
-        txtMaterialRate.setText("");
-        txtMaterialAmount.setText("");
         cmbCustomer.setSelectedIndex(0);
         cmbType.setSelectedIndex(0);
+
+        clearMaterials();
+        clearMaterialTable();
+    }
+
+    private void clearMaterials() {
+        txtMaterialCode.setText("");
+        txtMaterialRate.setText("");
+        txtMaterialQty.setText("");
+        txtMaterialAmount.setText("");
+    }
+    
+    private void clearMaterialTable() {
+        dtModel.setRowCount(0);
     }
 
     private void txtQuoteTitleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtQuoteTitleActionPerformed
@@ -507,31 +594,48 @@ public class QuotationScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_txtAmountActionPerformed
 
     private void btnAddMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddMaterialActionPerformed
+
         QuotationDetailsDto detailsDto = new QuotationDetailsDto();
-        if (txtMaterialCode.getText().trim().length() > 0 && txtMaterialQty.getText().trim().length() > 0) {
-            detailsDto.setMaterialCode(txtMaterialCode.getText().trim());
-            try {
-                detailsDto.setAmount(Double.parseDouble(txtMaterialAmount.getText().toString().trim()));
-            } catch (Exception e) {
-                detailsDto.setAmount(0);
+        String materialCode = txtMaterialCode.getText().trim();
+        if (materialCode.length() > 0 && txtMaterialQty.getText().trim().length() > 0) {
+            if (materials.containsKey(materialCode)) {
+                detailsDto.setMaterialCode(materialCode);
+                MaterialDto materialDto = materials.get(materialCode);
+                detailsDto.setMaterialId(materialDto.getId());
+                detailsDto.setMaterialName(materialDto.getMaterialName());
+                try {
+                    detailsDto.setAmount(Double.parseDouble(txtMaterialAmount.getText().toString().trim()));
+                } catch (Exception e) {
+                    detailsDto.setAmount(0);
+                }
+                try {
+                    detailsDto.setQuantity(Integer.parseInt(txtMaterialQty.getText().toString().trim()));
+                } catch (Exception e) {
+                    detailsDto.setAmount(0);
+                }
+                try {
+                    detailsDto.setUnitRate(Integer.parseInt(txtMaterialRate.getText().toString().trim()));
+                } catch (Exception e) {
+                    detailsDto.setAmount(0);
+                }
+                quotationMaster.getDetailsDtos().add(detailsDto);
+                dtModel.addRow(new Object[]{detailsDto.getMaterialCode(), detailsDto.getUnitRate(), detailsDto.getQuantity(), detailsDto.getAmount()});
+                clearMaterials();
+            } else {
+                DialogHelper.showErrorMessage("Validation", Helper.getPropertyValue("Invalid_Material_Code"));
             }
-            try {
-                detailsDto.setQuantity(Integer.parseInt(txtMaterialQty.getText().toString().trim()));
-            } catch (Exception e) {
-                detailsDto.setAmount(0);
-            }
-            try {
-                detailsDto.setUnitRate(Integer.parseInt(txtMaterialRate.getText().toString().trim()));
-            } catch (Exception e) {
-                detailsDto.setAmount(0);
-            }
-            quotationMaster.getDetailsDtos().add(detailsDto);
         }
     }//GEN-LAST:event_btnAddMaterialActionPerformed
 
     private void cmbTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTypeActionPerformed
 
     }//GEN-LAST:event_cmbTypeActionPerformed
+
+    private void cmbTypeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbTypeItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            setMaterials();
+        }
+    }//GEN-LAST:event_cmbTypeItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -592,7 +696,7 @@ public class QuotationScreen extends javax.swing.JFrame {
     private javax.swing.JPanel jPAddMaterial;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jSpMaterialList;
     private javax.swing.JTextField txtAddress1;
     private javax.swing.JTextField txtAddress2;
     private javax.swing.JTextField txtAmount;
@@ -605,15 +709,34 @@ public class QuotationScreen extends javax.swing.JFrame {
     private javax.swing.JTextField txtQuoteTitle;
     private javax.swing.JTextField txtStatus;
     // End of variables declaration//GEN-END:variables
-    List<MaterialDto> materialDtos;
-    Vector<CustomersDto> customersDtos;
+
+    Map< String, MaterialDto> materials;
+    Vector<CustomerDto> customerDtos;
     Vector<QuotationTypeDto> quotationTypeDtos;
     QuotationMasterDto quotationMaster;
+    int selectedId;
+    DefaultTableModel dtModel;
+
+    QuotationService quotationService;
+
+    private void configureTable() {
+        dtModel = new DefaultTableModel();
+        dtModel.addColumn("Material");
+        dtModel.addColumn("Unit rate");
+        dtModel.addColumn("Quantity");
+        dtModel.addColumn("Amount");
+
+        JTable tblMaterial = new JTable(dtModel);
+        jSpMaterialList.add(tblMaterial);
+        jSpMaterialList.setViewportView(tblMaterial);
+        jSpMaterialList.setVisible(true);
+    }
 
     private void setMaterials() {
         configureMaterialAddition(true);
-        QuotationService quotationService = new QuotationServiceImpl();
-        materialDtos = quotationService.getMaterials(0);
+
+        QuotationTypeDto quotationTypeDto = quotationTypeDtos.get(cmbType.getSelectedIndex());
+        materials = quotationService.getMaterials(quotationTypeDto.getTypeId());
     }
 
     private void configureMaterialAddition(boolean isEnabled) {
@@ -624,14 +747,12 @@ public class QuotationScreen extends javax.swing.JFrame {
     }
 
     private void setCustomers() {
-        QuotationService quotationService = new QuotationServiceImpl();
-        customersDtos = quotationService.getCustomers();
-        DefaultComboBoxModel model = new DefaultComboBoxModel(quotationService.getCustomers(customersDtos));
+        customerDtos = quotationService.getCustomers();
+        DefaultComboBoxModel model = new DefaultComboBoxModel(quotationService.getCustomers(customerDtos));
         cmbCustomer.setModel(model);
     }
 
     private void setQuoteType() {
-        QuotationService quotationService = new QuotationServiceImpl();
         quotationTypeDtos = quotationService.getQuotationType();
         DefaultComboBoxModel model = new DefaultComboBoxModel(quotationService.getQuotationType(quotationTypeDtos));
         cmbType.setModel(model);
@@ -647,23 +768,24 @@ public class QuotationScreen extends javax.swing.JFrame {
     }
 
     private void setEnteredValues() {
+        quotationMaster.setId(selectedId);
         quotationMaster.setAddress1(txtAddress1.getText().trim());
         quotationMaster.setAddress2(txtAddress2.getText().trim());
         try {
             quotationMaster.setAmount(Double.parseDouble(txtAmount.getText().trim()));
         } catch (Exception ex) {
-             quotationMaster.setAmount(0);
+            quotationMaster.setAmount(0);
         }
-        
-        quotationMaster.setCustomerId(customersDtos.get(cmbCustomer.getSelectedIndex()).getCustomerId());
+
+        quotationMaster.setCustomerId(customerDtos.get(cmbCustomer.getSelectedIndex()).getId());
         quotationMaster.setCustomerName(cmbCustomer.getSelectedItem().toString().trim());
         try {
             quotationMaster.setLaborCharge(Double.parseDouble(txtLaborCharge.getText().trim()));
         } catch (Exception ex) {
-             quotationMaster.setLaborCharge(0);
+            quotationMaster.setLaborCharge(0);
         }
         quotationMaster.setReferenceNo(txtQuoteReference.getText().trim());
-        quotationMaster.setStatus(txtStatus.getText().trim());
+        quotationMaster.setStatus(Integer.parseInt(txtStatus.getText().trim()));
         quotationMaster.setTitle(txtQuoteTitle.getText().trim());
         quotationMaster.setType(cmbType.getSelectedItem().toString().trim());
         QuotationTypeDto quotationTypeDto = quotationTypeDtos.get(cmbType.getSelectedIndex());

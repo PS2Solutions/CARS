@@ -5,6 +5,7 @@
  */
 package dataclasses;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,15 +14,17 @@ import java.util.List;
  * @author shinu.k
  */
 public class QuotationMasterDto {
+    int id;
     String title;
     String referenceNo;
     int customerId;
     String customerName;
+    Date createdDate;
     String address1;
     String address2;
     String type;
     int typeId;
-    String status;
+    int status;
     double laborCharge;
     double amount;
     List<QuotationDetailsDto> detailsDtos;
@@ -29,7 +32,11 @@ public class QuotationMasterDto {
     public QuotationMasterDto() {
         this.detailsDtos = new ArrayList<>();
     }
-    
+
+    public int getId() {
+        return id;
+    }
+       
     public String getTitle() {
         return title;
     }
@@ -90,15 +97,19 @@ public class QuotationMasterDto {
         return typeId;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+    
     public void setTypeId(int typeId) {
         this.typeId = typeId;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
@@ -125,6 +136,12 @@ public class QuotationMasterDto {
     public void setDetailsDtos(List<QuotationDetailsDto> detailsDtos) {
         this.detailsDtos = detailsDtos;
     }
-    
-    
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
 }

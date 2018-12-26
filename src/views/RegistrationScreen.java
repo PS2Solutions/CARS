@@ -389,10 +389,10 @@ public class RegistrationScreen extends javax.swing.JFrame {
         } else if (!Helper.isValidEmail(txtEmail.getText())) {
             DialogHelper.showErrorMessage("Validation", Helper.getPropertyValue("InvalidEmail"));
             fieldsAreValid = false;
-        } else if (logoPath == null) {
+        } /*else if (logoPath == null) {
             DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("ChooseLogo"));
             fieldsAreValid = false;
-        } 
+        } */
 
         return fieldsAreValid;
     }
