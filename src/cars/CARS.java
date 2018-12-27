@@ -35,7 +35,7 @@ public class CARS {
     private static boolean setupDBCredentials() {
         boolean dbConnectionResponse = false;
         try {
-            String DBDetails = utils.Helper.readDataFromFile("c:/cars/", "DBConfig.txt");
+            String DBDetails = utils.Helper.readDataFromFile("/home/sreenath/Desktop/", "DBConfig.txt");
             JSONObject jSONObject = new JSONObject(DBDetails);
             Constants.connURL = jSONObject.getString("Connection_URL");
             Constants.dbUser = jSONObject.getString("DBUser");

@@ -5,10 +5,19 @@
  */
 package utils;
 
+import com.lowagie.text.DocWriter;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.html.simpleparser.HTMLWorker;
+import com.lowagie.text.pdf.PdfWriter;
 import dataclasses.UploadHelperDto;
+import java.awt.Desktop;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringReader;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,6 +37,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import views.QuotationScreen;
 
 /**
  *
@@ -35,13 +45,10 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
  */
 public class FileHandler {
 
-    final static String BASE_DIRECTORY = "c:/cars/";
-    public static final String EXCEL_EXPORT_PATH = "c:/cars/Reports/";
-
     public static String getCopiedFilePath(File selectedFile) {
         try {
             String name = selectedFile.getName();
-            String destination = BASE_DIRECTORY + name;
+            String destination = Constants.BASE_DIRECTORY + name;
 
             CopyOption[] options = new CopyOption[]{
                 StandardCopyOption.REPLACE_EXISTING,
@@ -71,17 +78,17 @@ public class FileHandler {
         return selectedFile;
     }
 
-    public static  List<UploadHelperDto> getExcelData(File file) {
-        List<UploadHelperDto> uploadHelperDtos  = new ArrayList<>();
+    public static List<UploadHelperDto> getExcelData(File file) {
+        List<UploadHelperDto> uploadHelperDtos = new ArrayList<>();
         try {
             Workbook workbook = WorkbookFactory.create(file);
             Sheet sheet = workbook.getSheetAt(0);
             for (Row row : sheet) {
                 UploadHelperDto helperDto = new UploadHelperDto();
-               for (Cell cell : row) {                   
-                   helperDto.getColumnValues().add(cell.getStringCellValue());
+                for (Cell cell : row) {
+                    helperDto.getColumnValues().add(cell.getStringCellValue());
                 }
-               uploadHelperDtos.add(helperDto);
+                uploadHelperDtos.add(helperDto);
             }
         } catch (IOException ex) {
             Logger.getLogger(FileHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -101,13 +108,13 @@ public class FileHandler {
     public static boolean exportTableToExcel(JTable table, String name) throws IOException {
         boolean isExcelExported = false;
         FileWriter out = null;
-        File file = new File(EXCEL_EXPORT_PATH);
+        File file = new File(Constants.EXCEL_EXPORT_PATH);
         if (!file.exists()) {
             file.mkdir();
         }
         try {
             TableModel model = table.getModel();
-            out = new FileWriter(EXCEL_EXPORT_PATH + name);
+            out = new FileWriter(Constants.EXCEL_EXPORT_PATH + name);
             for (int i = 0; i < model.getColumnCount(); i++) {
                 out.write(model.getColumnName(i) + "\t");
             }
@@ -150,4 +157,24 @@ public class FileHandler {
         }
     }
 
+    public static boolean WriteToPdfFile(String file, String content) {
+        try {
+            final Document document = new Document();
+            DocWriter docWriter = PdfWriter.getInstance(document, new FileOutputStream(file));
+            document.open();
+
+            HTMLWorker worker = new HTMLWorker(document);
+
+            worker.parse(new StringReader(content));
+
+            document.close();
+            docWriter.close();
+
+            return true;
+        } catch (Exception ex) {
+            Logger.getLogger(QuotationScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return false;
+    }
 }

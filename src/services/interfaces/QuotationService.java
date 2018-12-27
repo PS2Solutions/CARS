@@ -5,11 +5,11 @@
  */
 package services.interfaces;
 
-import dataclasses.CustomersDto;
+import dataclasses.CustomerDto;
 import dataclasses.MaterialDto;
 import dataclasses.QuotationMasterDto;
 import dataclasses.QuotationTypeDto;
-import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -18,11 +18,11 @@ import java.util.Vector;
  */
 public interface QuotationService {
 
-    List<MaterialDto> getMaterials(int QuotationType);
+    Map< String,MaterialDto> getMaterials(int QuotationType);
 
-    Vector<CustomersDto> getCustomers();
+    Vector<CustomerDto> getCustomers();
 
-    Vector<String> getCustomers(Vector<CustomersDto> customersDtos);
+    Vector<String> getCustomers(Vector<CustomerDto> customersDtos);
 
     Vector<QuotationTypeDto> getQuotationType();
 

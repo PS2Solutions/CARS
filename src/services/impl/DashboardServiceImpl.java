@@ -8,8 +8,17 @@ package services.impl;
 import dataclasses.ContractDashboardReportDto;
 import dataclasses.LaborWageDashboardReportDto;
 import dataclasses.ReportContentDto;
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import services.interfaces.DashboardService;
+import utils.DBHelper;
 
 /**
  *
@@ -19,55 +28,81 @@ public class DashboardServiceImpl implements DashboardService{
 
     @Override
     public ReportContentDto getContractReport() {
-        Vector<ContractDashboardReportDto> dashboardReportDtos = new Vector<ContractDashboardReportDto>();
+        try
+        {
+              Vector<ContractDashboardReportDto> dashboardReportDtos = new Vector<ContractDashboardReportDto>();
+        CallableStatement statement = DBHelper.getDbConnection().prepareCall(
+                            "{call GetContractLastMonthReport()}");
+                Format formatter = new SimpleDateFormat("dd-MM-yyyy");
+                
+        ResultSet resultSet = statement.executeQuery();//sql response
+        while (resultSet.next()) {
+                String referenceNo = resultSet.getString("Reference No");
+                String startDate = formatter.format(resultSet.getDate("Start Date"));
+                int amount = resultSet.getInt("Amount");
+                int collectedAmount = resultSet.getInt("Collected Amount");
+                ContractDashboardReportDto dto = new ContractDashboardReportDto();
+                dto.setContractRefNo(referenceNo);
+                dto.setStartDate(startDate);
+                dto.setCollectedAmount(Integer.toString(collectedAmount));
+                dto.setTotalAmount(Integer.toString(amount));
+                dashboardReportDtos.add(dto);
+        }
+        
+      
         ReportContentDto contentDto = new ReportContentDto();
         Vector<Vector> rowData = new Vector<Vector>();
-        for (int i=0 ; i<100 ; i++) {
-            ContractDashboardReportDto dto = new ContractDashboardReportDto();
-            dto.setContractRefNo("Ref: "+i);
-            dto.setStartDate("12 jun 2018");
-            dto.setEndDate("12 jun 2018");
-            dto.setDaysToComplete(10);
-            dto.setStatus("Progress");
-            dto.setTotalAmount("100");
-            dashboardReportDtos.add(dto);
-        }
+       
          for (int i=0 ; i<dashboardReportDtos.size(); i++) {
              Vector<String> row = new Vector<>();
              row.add(dashboardReportDtos.get(i).getContractRefNo());
              row.add(dashboardReportDtos.get(i).getStartDate());
-             row.add(dashboardReportDtos.get(i).getEndDate());
-             row.add(""+dashboardReportDtos.get(i).getDaysToComplete());
+             row.add(dashboardReportDtos.get(i).getCollectedAmount());
              row.add(dashboardReportDtos.get(i).getTotalAmount());
-             row.add(dashboardReportDtos.get(i).getStatus());
              rowData.add(row);
          }
          Vector<String> columnNames = new Vector<String>();
-         columnNames.addElement("Contract Ref");
+         columnNames.addElement("Contract");
          columnNames.addElement("Start Date");
-         columnNames.addElement("End Date");
-         columnNames.addElement("Pending days");
          columnNames.addElement("Amount");
-         columnNames.addElement("Status");
+         columnNames.addElement("Collected Amount");
          contentDto.setRowData(rowData);
          contentDto.setColumnNames(columnNames);
          return contentDto;
+        
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     @Override
     public ReportContentDto getLaborWageReport() {
-        
+         try
+        {
         Vector<LaborWageDashboardReportDto> reportDtos = new Vector<LaborWageDashboardReportDto>();
         ReportContentDto contentDto = new ReportContentDto();
         Vector<Vector> rowData = new Vector<Vector>();
-        for (int i=0 ; i<100 ; i++) {
-            LaborWageDashboardReportDto dto = new LaborWageDashboardReportDto();
-            dto.setLaborId("Ref: "+i);
-            dto.setName("sasi");
-            dto.setDesignation("Test");
-            dto.setWeekWage("100");
-            reportDtos.add(dto);
+        
+        CallableStatement statement = DBHelper.getDbConnection().prepareCall(
+                            "{call GetLabourReport()}");
+        
+        ResultSet resultSet = statement.executeQuery();//sql response
+         while (resultSet.next()) {
+                String labourID = resultSet.getString("Labour");
+                String name = resultSet.getString("Name");
+                String designation = resultSet.getString("Designation");        
+                int wage = resultSet.getInt("Wage");
+                
+                LaborWageDashboardReportDto dto = new LaborWageDashboardReportDto();
+                dto.setLaborId(labourID);
+                dto.setName(name);
+                dto.setDesignation(designation);
+                dto.setWeekWage(Integer.toString(wage));
+                reportDtos.add(dto);
         }
+         
          for (int i=0 ; i<reportDtos.size(); i++) {
              Vector<String> row = new Vector<>();
              row.add(reportDtos.get(i).getLaborId());
@@ -80,10 +115,16 @@ public class DashboardServiceImpl implements DashboardService{
          columnNames.addElement("Labor Id");
          columnNames.addElement("Name");
          columnNames.addElement("Designation");
-         columnNames.addElement("Week Wage");
+         columnNames.addElement("Wage");
          contentDto.setRowData(rowData);
          contentDto.setColumnNames(columnNames);
          return contentDto;
+         
+         }
+        catch(SQLException ex) {
+            Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
     
 }

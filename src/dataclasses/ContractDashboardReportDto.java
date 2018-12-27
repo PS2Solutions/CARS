@@ -15,6 +15,7 @@ public class ContractDashboardReportDto {
     String endDate;
     String Status;
     String totalAmount;
+    String collectedAmount;
     int daysToComplete;
 
     public String getContractRefNo() {
@@ -56,7 +57,15 @@ public class ContractDashboardReportDto {
     public void setTotalAmount(String totalAmount) {
         this.totalAmount = totalAmount;
     }
+    
+    public String getCollectedAmount() {
+        return collectedAmount;
+    }
 
+    public void setCollectedAmount(String collectedAmount) {
+        this.collectedAmount = collectedAmount;
+    }
+    
     public int getDaysToComplete() {
         return daysToComplete;
     }
