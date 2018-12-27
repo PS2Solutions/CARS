@@ -5,10 +5,8 @@
  */
 package services.interfaces;
 
-import dataclasses.ContractDto;
 import dataclasses.ContractLaborChargeDetails;
 import dataclasses.DailyWageDto;
-import dataclasses.DesignationDto;
 import dataclasses.LaborDto;
 import dataclasses.ReportContentDto;
 import java.util.List;
@@ -19,8 +17,6 @@ import java.util.Vector;
  * @author shinu.k
  */
 public interface DailyWageService {
-
-    Vector<String> getContractReference(List<ContractLaborChargeDetails> contractDtos);
 
     List<ContractLaborChargeDetails> getContractLaborDetails();
 

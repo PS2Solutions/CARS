@@ -16,6 +16,8 @@ import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import navigationCofiguration.NavigationConstants;
 import navigationCofiguration.NavigationController;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -601,8 +603,14 @@ public class LaborScreen extends javax.swing.JFrame {
     }
 
     private void configureTable(ReportContentDto contentDto) {
+        TableModel model = new DefaultTableModel(contentDto.getRowData(), contentDto.getColumnNames()) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
 
-        tblContract = new JTable(contentDto.getRowData(), contentDto.getColumnNames());
+        };
+        tblContract = new JTable(model);
         tblContract.setRowSelectionAllowed(true);
         tblContract.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override

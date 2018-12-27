@@ -17,6 +17,8 @@ import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import navigationCofiguration.NavigationConstants;
 import navigationCofiguration.NavigationController;
 import services.impl.LaborServiceImpl;
@@ -459,8 +461,14 @@ public class MaterialScreen extends javax.swing.JFrame {
     }
 
     private void configureTable(ReportContentDto contentDto) {
+        TableModel model = new DefaultTableModel(contentDto.getRowData(), contentDto.getColumnNames()) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
 
-        tblMaterial = new JTable(contentDto.getRowData(), contentDto.getColumnNames());
+        };
+        tblMaterial = new JTable(model);
         tblMaterial.setRowSelectionAllowed(true);
         tblMaterial.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
