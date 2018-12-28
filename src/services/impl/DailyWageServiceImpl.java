@@ -12,6 +12,7 @@ import dataclasses.ReportContentDto;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -19,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import services.interfaces.DailyWageService;
 import utils.DBHelper;
+import utils.Helper;
 
 /**
  *
@@ -83,7 +85,34 @@ public class DailyWageServiceImpl implements DailyWageService {
 
     @Override
     public String updateDailyWage(List<DailyWageDto> dailyWageDtos) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String response = null;
+        for (DailyWageDto dailyWageDto : dailyWageDtos) {
+            try {
+                try (
+                        CallableStatement statement = DBHelper.getDbConnection().prepareCall(
+                                "{call UpdateLaborWageDetails( ?, ?, ?,?,?,?,?,?,?)}");) {
+                    statement.registerOutParameter(9, Types.VARCHAR);
+                    statement.setInt(1, dailyWageDto.getContractId());
+                    statement.setInt(2, dailyWageDto.getLaborId());
+                    statement.setString(3, dailyWageDto.getDate());
+                    statement.setDouble(4, dailyWageDto.getWage());
+                    statement.setDouble(5, dailyWageDto.getFa());
+                    statement.setDouble(6, dailyWageDto.getTa());
+                    statement.setDouble(7, dailyWageDto.getOa());
+                    statement.setString(8, dailyWageDto.getRemark());
+                    ResultSet resultSet = statement.executeQuery();//sql response
+                    response = (String) statement.getObject(9, String.class);// out value
+                    if (response != null && !response.equalsIgnoreCase(Helper.getPropertyValue("Success"))) {
+                        break;
+                    }
+
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
+            }
+        }
+        return response;
     }
 
     @Override

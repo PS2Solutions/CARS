@@ -5,6 +5,8 @@
  */
 package dataclasses;
 
+import java.sql.Date;
+
 /**
  *
  * @author shinu.k
@@ -14,8 +16,8 @@ public class ReportsDto {
     String reportName;
     String procedureName;
     boolean isDateFilterAvailable;
-    String startDate;
-    String endDate;
+    Date startDate;
+    Date endDate;
 
     public String getReportName() {
         return reportName;
@@ -41,20 +43,22 @@ public class ReportsDto {
         this.isDateFilterAvailable = isDateFilterAvailable;
     }
 
-    public String getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
+
+   
 
 }

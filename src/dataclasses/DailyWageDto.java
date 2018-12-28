@@ -21,6 +21,7 @@ public class DailyWageDto {
     double ta;
     double fa;
     double oa;
+    String remark;
     List<ExtraPurchaseDetails> purchaseDetailses;
 
     public DailyWageDto() {
@@ -89,6 +90,14 @@ public class DailyWageDto {
 
     public void setPurchaseDetailses(List<ExtraPurchaseDetails> purchaseDetailses) {
         this.purchaseDetailses = purchaseDetailses;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getRemark() {
+        return remark;
     }
 
 }

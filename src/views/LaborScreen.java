@@ -119,7 +119,6 @@ public class LaborScreen extends javax.swing.JFrame {
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("appResources/Strings"); // NOI18N
         setTitle(bundle.getString("Labor_Screen")); // NOI18N
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setPreferredSize(new java.awt.Dimension(1245, 709));
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());

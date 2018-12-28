@@ -13,13 +13,20 @@ import javax.swing.JOptionPane;
  * @author shinu.k
  */
 public class DialogHelper {
-     public static void showErrorMessage(String title, String message) {
+
+    public static void showErrorMessage(String title, String message) {
         JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
-     }
-     public static void showInfoMessage(String title, String message) {
+    }
+
+    public static void showInfoMessage(String title, String message) {
         JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
-     }
-     public static String showInputDialog(Component parentComponent, String title, String message){
-          return JOptionPane.showInputDialog(parentComponent, message, title,1);
-     }
+    }
+
+    public static String showInputDialog(Component parentComponent, String title, String message) {
+        return JOptionPane.showInputDialog(parentComponent, message, title, 1);
+    }
+
+    public static int showQuestionDialog(Component parentComponent, String title, String message) {
+        return JOptionPane.showConfirmDialog(parentComponent, message, title, 1);
+    }
 }

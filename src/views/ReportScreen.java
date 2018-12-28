@@ -9,6 +9,8 @@ import dataclasses.ReportContentDto;
 import dataclasses.ReportsDto;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -234,6 +236,20 @@ public class ReportScreen extends javax.swing.JFrame {
                 || endDatePicker.getJFormattedTextField().getText().trim().length() == 0)) {
             DialogHelper.showInfoMessage("Warning", Helper.getPropertyValue("ReportValidation"));
         } else {
+            if (reportsDto.isIsDateFilterAvailable()) {
+                try {
+                    SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+                    java.util.Date tmpStratDt =  formatter.parse(startPicker.getJFormattedTextField().getText().trim());
+                    java.util.Date tmpEndDt = formatter.parse(endDatePicker.getJFormattedTextField().getText().trim());
+                    java.sql.Date sqlStartDate = new java.sql.Date(tmpStratDt.getYear(), tmpStratDt.getMonth(), tmpStratDt.getDay());
+                    java.sql.Date sqlEndDate = new java.sql.Date(tmpEndDt.getYear(), tmpEndDt.getMonth(), tmpEndDt.getDay());
+
+                    reportsDto.setStartDate(sqlStartDate);
+                    reportsDto.setEndDate(sqlEndDate);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
             ReportService reportService = new ReportServiceImpl();
             reportName = reportsDto.getReportName();
             reportContent = reportService.getreport(reportsDto);
@@ -244,10 +260,10 @@ public class ReportScreen extends javax.swing.JFrame {
     private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportActionPerformed
         try {
             boolean response = FileHandler.exportTableToExcel(tblReport, reportName + ".xls");
-            if(response) {
-                 DialogHelper.showInfoMessage("Response", "Report exported");
+            if (response) {
+                DialogHelper.showInfoMessage("Response", "Report exported");
             } else {
-                 DialogHelper.showErrorMessage("Error", Helper.getPropertyValue("ReportExportError"));
+                DialogHelper.showErrorMessage("Error", Helper.getPropertyValue("ReportExportError"));
             }
         } catch (IOException ex) {
             Logger.getLogger(ReportScreen.class.getName()).log(Level.SEVERE, null, ex);

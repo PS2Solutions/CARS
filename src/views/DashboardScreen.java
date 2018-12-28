@@ -126,7 +126,7 @@ public class DashboardScreen extends javax.swing.JFrame {
         });
 
         btnReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/report.png"))); // NOI18N
-        btnReport.setText(bundle.getString("Labor_Charge_Menu_Caption")); // NOI18N
+        btnReport.setText(bundle.getString("Report_Menu_Caption")); // NOI18N
         btnReport.setToolTipText("");
         btnReport.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnReport.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
