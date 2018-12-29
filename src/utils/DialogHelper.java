@@ -27,6 +27,10 @@ public class DialogHelper {
     }
 
     public static int showQuestionDialog(Component parentComponent, String title, String message) {
-        return JOptionPane.showConfirmDialog(parentComponent, message, title, 1);
+        return showQuestionDialog(parentComponent, message, title, 1);
+    }
+    
+    public static int showQuestionDialog(Component parentComponent, String title, String message, int optionType) {
+        return JOptionPane.showConfirmDialog(parentComponent, message, title, optionType);
     }
 }

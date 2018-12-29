@@ -12,6 +12,7 @@ import dataclasses.RegistrationDto;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,7 +61,9 @@ public class ReportGenerator {
             content = content.replace(CUSTOMER_PHONE, customerDto.getPhoneNumber());
             
             content = content.replace(QUOTATION_REFERENCE, quotDto.getReferenceNo());
-            //content = content.replace(QUOT_DATE, quotDto.getCreatedDate().toString());
+            
+            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+            content = content.replace(QUOT_DATE, sdf.format(quotDto.getCreatedDate()));
 
             content = content.replace(QUOT_TYPE, quotType);
             
