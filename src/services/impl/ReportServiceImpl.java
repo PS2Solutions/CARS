@@ -5,22 +5,19 @@
  */
 package services.impl;
 
-import dataclasses.ContractDashboardReportDto;
-import dataclasses.LaborWageDashboardReportDto;
 import dataclasses.ReportContentDto;
 import dataclasses.ReportsDto;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import services.interfaces.ReportService;
 import services.interfaces.ReportService;
 import utils.DBHelper;
 
@@ -29,7 +26,7 @@ import utils.DBHelper;
  * @author shinu.k
  */
 public class ReportServiceImpl implements ReportService {
-    
+
     @Override
     public List<ReportsDto> getAvailableReports() {
         List<ReportsDto> dtos = new ArrayList<>();
@@ -53,7 +50,7 @@ public class ReportServiceImpl implements ReportService {
         }
         return dtos;
     }
-    
+
     @Override
     public Vector<String> getReportNames(List<ReportsDto> reportsDtos) {
         Vector<String> reportNames = new Vector<>();
@@ -62,7 +59,7 @@ public class ReportServiceImpl implements ReportService {
         }
         return reportNames;
     }
-    
+
     @Override
     public ReportContentDto getreport(ReportsDto reportsDto) {
         ReportContentDto contentDto;
@@ -73,14 +70,19 @@ public class ReportServiceImpl implements ReportService {
         }
         return contentDto;
     }
-    
+
     private ReportContentDto getDateFilterReport(ReportsDto reportsDto) {
         ReportContentDto contentDto = new ReportContentDto();
         try {
             CallableStatement statement = DBHelper.getDbConnection().prepareCall(
                     "{call " + reportsDto.getProcedureName() + "(?,?)}");
-            statement.setDate("dateFrom", reportsDto.getStartDate());
-            statement.setDate("dateTo", reportsDto.getEndDate());
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date startDate = formatter.parse(reportsDto.getStartDate());
+            Date endDate = formatter.parse(reportsDto.getEndDate());
+            java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
+            java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
+            statement.setDate("dateFrom", sqlStartDate);
+            statement.setDate("dateTo", sqlEndDate);
             ResultSet resultSet = statement.executeQuery();
             Vector<Vector> rowData = new Vector<Vector>();
             Vector<String> columnNames = new Vector<String>();
@@ -88,25 +90,25 @@ public class ReportServiceImpl implements ReportService {
             int columnsNumber = rsmd.getColumnCount();
             while (resultSet.next()) {
                 Vector<String> row = new Vector<>();
-                for (int i = 0; i < columnsNumber; i++) {
+                for (int i = 1; i <= columnsNumber; i++) {
                     row.add(resultSet.getString(i));
                 }
                 rowData.add(row);
             }
-            for (int i = 0; i < columnsNumber; i++) {
+            for (int i = 1; i <= columnsNumber; i++) {
                 columnNames.add(rsmd.getColumnName(i));
             }
             contentDto.setRowData(rowData);
             contentDto.setColumnNames(columnNames);
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
         return contentDto;
     }
-    
+
     private ReportContentDto getReport(ReportsDto reportsDto) {
-         ReportContentDto contentDto = new ReportContentDto();
+        ReportContentDto contentDto = new ReportContentDto();
         try {
             CallableStatement statement = DBHelper.getDbConnection().prepareCall(
                     "{call " + reportsDto.getProcedureName() + "()}");
@@ -133,5 +135,5 @@ public class ReportServiceImpl implements ReportService {
         }
         return contentDto;
     }
-    
+
 }

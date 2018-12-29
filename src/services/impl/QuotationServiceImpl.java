@@ -145,7 +145,7 @@ public class QuotationServiceImpl implements QuotationService {
                 statement.setString(3, masterDto.getReferenceNo());
                 statement.setInt(4, masterDto.getCustomerId());
                 statement.setDouble(5, masterDto.getAmount());
-                statement.setInt(6, masterDto.getStatus());
+                statement.setInt(6, 0);
                 statement.setString(7, masterDto.getAddress1());
                 statement.setString(8, masterDto.getAddress2());
                 statement.setInt(9, masterDto.getTypeId());

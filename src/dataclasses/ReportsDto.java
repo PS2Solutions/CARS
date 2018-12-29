@@ -16,8 +16,8 @@ public class ReportsDto {
     String reportName;
     String procedureName;
     boolean isDateFilterAvailable;
-    Date startDate;
-    Date endDate;
+    String startDate;
+    String endDate;
 
     public String getReportName() {
         return reportName;
@@ -43,22 +43,20 @@ public class ReportsDto {
         this.isDateFilterAvailable = isDateFilterAvailable;
     }
 
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
-
-   
 
 }

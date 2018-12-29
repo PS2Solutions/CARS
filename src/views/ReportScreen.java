@@ -9,8 +9,8 @@ import dataclasses.ReportContentDto;
 import dataclasses.ReportsDto;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -197,12 +197,12 @@ public class ReportScreen extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jSPReportPanel))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSPReportPanel, javax.swing.GroupLayout.Alignment.LEADING))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -212,8 +212,9 @@ public class ReportScreen extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSPReportPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 520, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(7, 7, 7)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -238,14 +239,8 @@ public class ReportScreen extends javax.swing.JFrame {
         } else {
             if (reportsDto.isIsDateFilterAvailable()) {
                 try {
-                    SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
-                    java.util.Date tmpStratDt =  formatter.parse(startPicker.getJFormattedTextField().getText().trim());
-                    java.util.Date tmpEndDt = formatter.parse(endDatePicker.getJFormattedTextField().getText().trim());
-                    java.sql.Date sqlStartDate = new java.sql.Date(tmpStratDt.getYear(), tmpStratDt.getMonth(), tmpStratDt.getDay());
-                    java.sql.Date sqlEndDate = new java.sql.Date(tmpEndDt.getYear(), tmpEndDt.getMonth(), tmpEndDt.getDay());
-
-                    reportsDto.setStartDate(sqlStartDate);
-                    reportsDto.setEndDate(sqlEndDate);
+                    reportsDto.setStartDate(Helper.getMysqlFormattedDate(startPicker.getJFormattedTextField().getText().trim()));
+                    reportsDto.setEndDate(Helper.getMysqlFormattedDate(endDatePicker.getJFormattedTextField().getText().trim()));
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -364,9 +359,13 @@ public class ReportScreen extends javax.swing.JFrame {
     }
 
     private void loadReport() {
-        tblReport = new JTable(reportContent.getRowData(), reportContent.getColumnNames());
-        jSPReportPanel.add(tblReport);
-        jSPReportPanel.setViewportView(tblReport);
-        jSPReportPanel.setVisible(true);
+        if (reportContent != null) {
+            tblReport = new JTable(reportContent.getRowData(), reportContent.getColumnNames());
+            jSPReportPanel.add(tblReport);
+            jSPReportPanel.setViewportView(tblReport);
+            jSPReportPanel.setVisible(true);
+        } else {
+            DialogHelper.showInfoMessage("Report", "Report not available");
+        }
     }
 }

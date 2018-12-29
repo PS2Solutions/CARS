@@ -15,6 +15,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -130,8 +131,11 @@ public class Helper {
 
     public static String getReferenceNo(int type) {
         DBHelper.connectToDb();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String year = dateTimeFormatter.format(LocalDate.now()).toString().split("-")[0].trim();
         int currentIndex = getCurrentIndex(type);
-        String formattedIntex = "Year" + getFormattedIndex(currentIndex);
+
+        String formattedIntex = year + getFormattedIndex(currentIndex);
         switch (type) {
             case Constants.QUOTE:
                 formattedIntex = "Q" + formattedIntex;
@@ -173,6 +177,45 @@ public class Helper {
                 break;
         }
         return currentIndex;
+    }
+
+    public static boolean updateReferenceNo(int type) {
+        int currentIndex = 0;
+        boolean result = false;
+        ResultSet resultset = null;
+        switch (type) {
+            case Constants.QUOTE:
+                resultset = DBHelper.readDataFromDb("Select QuotationIndex from configuration");
+                if (resultset != null) {
+                    try {
+                        while (resultset.next()) {
+                            currentIndex = resultset.getInt("QuotationIndex");
+                        }
+                        currentIndex += 1;
+                        DBHelper.updateDataToDb("Update configuration set QuotationIndex = " + currentIndex);
+                        result = true;
+                    } catch (Exception ex) {
+                        result = false;
+                    }
+                }
+                break;
+            case Constants.CONTRACT:
+                resultset = DBHelper.readDataFromDb("Select ContractIndex  from configuration");
+                if (resultset != null) {
+                    try {
+                        while (resultset.next()) {
+                            currentIndex = resultset.getInt("ContractIndex");
+                        }
+                        currentIndex += 1;
+                        DBHelper.updateDataToDb("Update configuration set ContractIndex = " + currentIndex);
+                        result = true;
+                    } catch (Exception ex) {
+                        result = false;
+                    }
+                }
+                break;
+        }
+        return result;
     }
 
     private static String getFormattedIndex(int currentIndex) {
