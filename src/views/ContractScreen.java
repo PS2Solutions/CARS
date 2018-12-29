@@ -47,22 +47,8 @@ public class ContractScreen extends javax.swing.JFrame {
         btnHome = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
         jPLaborDeails = new javax.swing.JPanel();
-        txtReference = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        txtCustomer = new javax.swing.JTextField();
-        txtAddress1 = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        txtCaption = new javax.swing.JTextField();
-        txtAddress2 = new javax.swing.JTextField();
-        comboType = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         txtTotalCost = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        txtDaysToComplete = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jPCustomerList = new javax.swing.JScrollPane();
 
@@ -149,40 +135,10 @@ public class ContractScreen extends javax.swing.JFrame {
 
         jPLaborDeails.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        txtReference.setColumns(20);
-        txtReference.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel3.setText("Caption*");
-        jLabel3.setToolTipText("");
-
-        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel6.setText("Customer*");
-
-        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel7.setText("Type*");
-
-        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel8.setText("Address Line 2");
-
-        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel9.setText("Address Line 1");
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel2.setText("Reference#");
-        jLabel2.setToolTipText("");
-
-        comboType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel1.setText("Total cost so far*");
 
         txtTotalCost.setToolTipText("");
-
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel4.setText("Days to complete*");
-
-        txtDaysToComplete.setToolTipText("");
 
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/daily_wage.png"))); // NOI18N
@@ -195,87 +151,24 @@ public class ContractScreen extends javax.swing.JFrame {
         jPLaborDeailsLayout.setHorizontalGroup(
             jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                .addContainerGap(71, Short.MAX_VALUE)
-                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPLaborDeailsLayout.createSequentialGroup()
-                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                                                .addComponent(jLabel2)
-                                                .addGap(108, 108, 108))
-                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPLaborDeailsLayout.createSequentialGroup()
-                                                .addComponent(jLabel7)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                                        .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                                            .addComponent(jLabel3)
-                                            .addGap(47, 47, 47)))
-                                    .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel9)
-                                            .addComponent(jLabel8)
-                                            .addComponent(jLabel1)
-                                            .addComponent(jLabel4))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtReference, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtAddress1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(txtCaption, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
-                                        .addComponent(txtCustomer, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE))
-                                    .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(txtDaysToComplete, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(txtTotalCost, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(comboType, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(txtAddress2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)))))
-                        .addGap(66, 66, 66))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPLaborDeailsLayout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(23, 23, 23))))
+                .addGap(20, 20, 20)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtTotalCost, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 744, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(22, 22, 22))
         );
         jPLaborDeailsLayout.setVerticalGroup(
             jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                .addGap(60, 60, 60)
+                .addGap(21, 21, 21)
                 .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtReference, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(txtCaption, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(25, 25, 25)
-                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(txtCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtAddress1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9))
-                        .addGap(52, 52, 52))
                     .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel8)
-                        .addComponent(txtAddress2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(24, 24, 24)
-                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(comboType, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
-                .addGap(26, 26, 26)
-                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtTotalCost, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
-                .addGap(26, 26, 26)
-                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(txtDaysToComplete, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
-                .addGap(49, 49, 49)
-                .addComponent(jButton1)
-                .addContainerGap(81, Short.MAX_VALUE))
+                        .addComponent(jLabel1)
+                        .addComponent(txtTotalCost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton1))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         jPCustomerList.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -284,26 +177,24 @@ public class ContractScreen extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPCustomerList, javax.swing.GroupLayout.DEFAULT_SIZE, 778, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPLaborDeails, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPLaborDeails, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPCustomerList))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPLaborDeails, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPCustomerList))
+                .addComponent(jPCustomerList, javax.swing.GroupLayout.PREFERRED_SIZE, 536, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jPLaborDeails, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -374,27 +265,13 @@ public class ContractScreen extends javax.swing.JFrame {
     private javax.swing.JButton btnAddNew;
     private javax.swing.JButton btnHome;
     private javax.swing.JButton btnSave;
-    private javax.swing.JComboBox<String> comboType;
     private javax.swing.JButton jButton1;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jPCustomerList;
     private javax.swing.JPanel jPLaborDeails;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField txtAddress1;
-    private javax.swing.JTextField txtAddress2;
-    private javax.swing.JTextField txtCaption;
-    private javax.swing.JTextField txtCustomer;
-    private javax.swing.JTextField txtDaysToComplete;
-    private javax.swing.JTextField txtReference;
     private javax.swing.JTextField txtTotalCost;
     // End of variables declaration//GEN-END:variables
 
@@ -430,45 +307,39 @@ public class ContractScreen extends javax.swing.JFrame {
     }
 
     private void populateSelectedDetails(ContractDto dto) {
-        txtReference.setText(dto.getContractRefNo());
+        /*txtReference.setText(dto.getContractRefNo());
         txtCaption.setText(dto.getCaption());
         txtCustomer.setText(dto.getCustomer());
         txtAddress1.setText(dto.getAddress1());
         txtAddress2.setText(dto.getAddress2());
         txtTotalCost.setText(dto.getTotalAmount());
-        txtDaysToComplete.setText(Integer.toString(dto.getDaysToComplete()));
+        txtDaysToComplete.setText(Integer.toString(dto.getDaysToComplete()));*/
     }
 
     private void clearFields() {
         selectedContractId = 0;
-        txtReference.setText("");
+        /*txtReference.setText("");
         txtCaption.setText("");
         txtCustomer.setText("");
         txtAddress1.setText("");
         txtAddress2.setText("");
         txtTotalCost.setText("");
-        txtDaysToComplete.setText("");
+        txtDaysToComplete.setText("");*/
     }
 
     private boolean validateFields() {
         boolean fieldsAreValid = true;
 
-        if (isFieldsEmpty()) {
-            DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("EmptyFields"));
-            fieldsAreValid = false;
-        }
+        
 
         return fieldsAreValid;
     }
 
-    private boolean isFieldsEmpty() {
-        return (txtReference.getText().trim().isEmpty() || txtCaption.getText().trim().isEmpty() || txtCustomer.getText().trim().isEmpty()
-                || txtTotalCost.getText().trim().isEmpty() || txtDaysToComplete.getText().trim().isEmpty());
-    }
+   
 
     private ContractDto getEnteredData() {
         ContractDto contractDto = new ContractDto();
-        contractDto.setId(selectedContractId);
+        /*contractDto.setId(selectedContractId);
         contractDto.setContractRefNo(txtReference.getText());
         contractDto.setCaption(txtCaption.getText());
         contractDto.setCustomer(txtCustomer.getText());
@@ -478,7 +349,7 @@ public class ContractScreen extends javax.swing.JFrame {
         contractDto.setDaysToComplete(Integer.parseInt(txtDaysToComplete.getText()));
         
         //TODO
-        //contractDto.setType();
+        //contractDto.setType();*/
 
         return contractDto;
     }

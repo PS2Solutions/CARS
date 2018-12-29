@@ -137,8 +137,8 @@ public class QuotationServiceImpl implements QuotationService {
         try {
             try (
                     CallableStatement statement = DBHelper.getDbConnection().prepareCall(
-                            "{call UpdateQuotationDetails(?,?,?,?,?,?,?,?,?,?,?,?)}");) {
-                statement.registerOutParameter(12, Types.VARCHAR);
+                            "{call UpdateQuotationDetails(?,?,?,?,?,?,?,?,?,?,?,?,?)}");) {
+                statement.registerOutParameter(13, Types.VARCHAR);
 
                 statement.setInt(1, masterDto.getId());
                 statement.setString(2, masterDto.getTitle());
@@ -151,9 +151,10 @@ public class QuotationServiceImpl implements QuotationService {
                 statement.setInt(9, masterDto.getTypeId());
                 statement.setInt(10, 0);
                 statement.setDouble(11, masterDto.getAmount());
+                statement.setDate(12, masterDto.getCreatedDate());
                 statement.executeQuery();//sql response
                 
-                quoteID = statement.getObject(12, Integer.class);// out value
+                quoteID = statement.getObject(13, Integer.class);// out value
             }
         } catch (SQLException ex) {
             Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);

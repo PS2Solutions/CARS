@@ -7,10 +7,7 @@ package views;
 
 import dataclasses.ReportContentDto;
 import dataclasses.ReportsDto;
-import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -23,7 +20,6 @@ import navigationCofiguration.NavigationController;
 import org.jdatepicker.impl.JDatePickerImpl;
 import services.impl.ReportServiceImpl;
 import services.interfaces.ReportService;
-import utils.Constants;
 import utils.DialogHelper;
 import utils.FileHandler;
 import utils.Helper;

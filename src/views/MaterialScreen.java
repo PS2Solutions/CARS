@@ -225,11 +225,7 @@ public class MaterialScreen extends javax.swing.JFrame {
         checkActive.setText("Active");
         checkActive.setToolTipText("");
 
-        try {
-            txtWarranty.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("####")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
+        txtWarranty.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
 
         txtPointRate.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
 

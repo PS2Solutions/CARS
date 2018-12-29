@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import navigationCofiguration.NavigationConstants;
@@ -446,12 +447,13 @@ public class QuotationScreen extends javax.swing.JFrame {
             String output = ReportGenerator.generateQuotationReport(quotationMaster, regDto, customerDto, quotType);
             
             if (output == null) {
-                
+                DialogHelper.showErrorMessage(Helper.getPropertyValue("Error"), Helper.getPropertyValue("Error_Quotation_Print_Message"));
             } else {
                 Desktop.getDesktop().open(new File(output));
             }
         } catch (Exception ex) {
             Logger.getLogger(QuotationScreen.class.getName()).log(Level.SEVERE, null, ex);
+            DialogHelper.showErrorMessage(Helper.getPropertyValue("Error"), Helper.getPropertyValue("Error_Quotation_Print_Message"));
         }
         
 
@@ -469,14 +471,29 @@ public class QuotationScreen extends javax.swing.JFrame {
                 Helper.updateReferenceNo(Constants.QUOTE);
                 DialogHelper.showInfoMessage(Helper.getPropertyValue("Success"),
                         Helper.getPropertyValue("SuccessMessage"));
-                clearValues();
-                btnPrint.setEnabled(true);
+                
+                ConfirmPrint();
             }
         } else {
             DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("EmptyFields"));
         }
     }//GEN-LAST:event_btnSaveActionPerformed
 
+    private void ConfirmPrint() {
+        int result = DialogHelper.showQuestionDialog(this, Helper.getPropertyValue("Quotation_Print"), Helper.getPropertyValue("Quotation_Print_Message"), JOptionPane.OK_CANCEL_OPTION);
+        
+        if(result == JOptionPane.OK_OPTION) {
+            btnPrint.setEnabled(true);
+            btnSave.setEnabled(false);
+        } else {
+            btnPrint.setEnabled(false);
+            btnSave.setEnabled(true);
+            clearValues();
+        }
+                
+                
+    }
+    
     private void btnAddNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNewActionPerformed
         String response = DialogHelper.showInputDialog(this, Helper.getPropertyValue("Quotation_Dialogue_Caption"),
                 Helper.getPropertyValue("Quotation_Dialogue_Question"));
@@ -748,5 +765,6 @@ public class QuotationScreen extends javax.swing.JFrame {
         quotationMaster.setType(cmbType.getSelectedItem().toString().trim());
         QuotationTypeDto quotationTypeDto = quotationTypeDtos.get(cmbType.getSelectedIndex());
         quotationMaster.setTypeId(quotationTypeDto.getTypeId());
+        quotationMaster.setCreatedDate(new java.sql.Date(new java.util.Date().getTime()));
     }
 }
