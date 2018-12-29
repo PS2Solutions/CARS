@@ -561,10 +561,10 @@ public class MaterialScreen extends javax.swing.JFrame {
         File file = FileHandler.showFileChooser("Excel Upload", extensions);
         if (file.getName().equals("Material_Details")) {
             List<UploadHelperDto> uplodedData = FileHandler.getExcelData(file);
-            LaborService laborService = new LaborServiceImpl();
-            boolean response = laborService.uploadExcel(uplodedData);
+            MaterialService materialService = new MaterialServiceImpl();
+            boolean response = materialService.uploadExcel(uplodedData);
             if (response) {
-                DialogHelper.showErrorMessage("Upload Excel", Helper.getPropertyValue("Data_Uploded"));
+                DialogHelper.showInfoMessage("Upload Excel", Helper.getPropertyValue("Data_Uploded"));
             } else {
                 DialogHelper.showErrorMessage("Upload Excel", Helper.getPropertyValue("Failed_To_Upload"));
             }

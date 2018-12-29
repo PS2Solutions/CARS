@@ -488,12 +488,12 @@ public class CustomerScreen extends javax.swing.JFrame {
         extensions.add("xlsx");
         extensions.add("xls");
         File file = FileHandler.showFileChooser("Excel Upload", extensions);
-        if (file.getName().equals("Customer_Details")) {
+        if (file.getName().contains("Customer_Details")) {
             List<UploadHelperDto> uplodedData = FileHandler.getExcelData(file);
             CustomerService customerService = new CustomerServiceImpl();
             boolean response = customerService.uploadExcel(uplodedData);
             if(response) {
-                  DialogHelper.showErrorMessage("Upload Excel", Helper.getPropertyValue("Data_Uploded"));
+                  DialogHelper.showInfoMessage("Upload Excel", Helper.getPropertyValue("Data_Uploded"));
             } else {
                   DialogHelper.showErrorMessage("Upload Excel", Helper.getPropertyValue("Failed_To_Upload"));
             }

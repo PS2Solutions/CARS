@@ -33,6 +33,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableModel;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -85,8 +86,16 @@ public class FileHandler {
             Sheet sheet = workbook.getSheetAt(0);
             for (Row row : sheet) {
                 UploadHelperDto helperDto = new UploadHelperDto();
-                for (Cell cell : row) {
-                    helperDto.getColumnValues().add(cell.getStringCellValue());
+                for (Cell cell : row) {  
+                    if (cell.getCellType() == CellType.NUMERIC) {
+                        helperDto.getColumnValues().add("" + cell.getNumericCellValue());
+                    } else if (cell.getCellType() == CellType.STRING) {
+                        helperDto.getColumnValues().add("" + cell.getRichStringCellValue());
+                    } else if (cell.getCellType() == CellType.BLANK) {
+                        helperDto.getColumnValues().add("");
+                    } else {
+                        helperDto.getColumnValues().add("" + cell.getDateCellValue());
+                    }
                 }
                 uploadHelperDtos.add(helperDto);
             }

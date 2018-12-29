@@ -13,11 +13,14 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.poi.ss.usermodel.DateUtil;
 import services.interfaces.LaborService;
 import utils.DBHelper;
 import utils.Helper;
@@ -136,7 +139,7 @@ public class LaborServiceImpl implements LaborService {
     @Override
     public List<LaborDto> getLabor(String empolyeeId, String name) {
         List<LaborDto> laborDtos = new ArrayList<LaborDto>();
-        ResultSet resultSet = DBHelper.readDataFromDb("Select * from labors where LaborID = '" + empolyeeId + "' OR Name = '" + name+"'");
+        ResultSet resultSet = DBHelper.readDataFromDb("Select * from labors where LaborID = '" + empolyeeId + "' OR Name = '" + name + "'");
         if (resultSet != null) {
             prepareLaborDetails(resultSet, laborDtos);
         }
@@ -159,9 +162,12 @@ public class LaborServiceImpl implements LaborService {
                     laborDto.setAddress1(excelContent.getColumnValues().get(5));
                     laborDto.setAddress2(excelContent.getColumnValues().get(6));
                     laborDto.setPhoneNumber(excelContent.getColumnValues().get(7));
-                    laborDto.setWage(Integer.parseInt(excelContent.getColumnValues().get(8).trim()));
-                    laborDto.setJoinDate(excelContent.getColumnValues().get(9));
-                    laborDto.setResignDate(excelContent.getColumnValues().get(10));
+                    String[] arrWage = excelContent.getColumnValues().get(8).trim().split("\\.");
+                    laborDto.setWage(Integer.parseInt(arrWage[0]));
+                    double dJoinDate = Double.parseDouble(excelContent.getColumnValues().get(9).trim());
+                    Date javaDate = DateUtil.getJavaDate(dJoinDate);
+                    laborDto.setJoinDate(new SimpleDateFormat("yyyy-MM-dd").format(javaDate));
+                    laborDto.setResignDate(null);
                     laborDto.setIsActive(true);
                     String resp = saveLabor(laborDto);
                     if (!resp.equalsIgnoreCase(Helper.getPropertyValue("Success"))) {

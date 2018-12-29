@@ -136,12 +136,12 @@ public class CustomerServiceImpl implements CustomerService {
         boolean response = true;
         try {
             for (UploadHelperDto excelContent : helperDtos) {
-               if(helperDtos.indexOf(excelContent) > 0){
+                if (helperDtos.indexOf(excelContent) > 0) {
                     CustomerDto customerDto = new CustomerDto();
                     customerDto.setId(0);
                     customerDto.setName(excelContent.getColumnValues().get(0));
                     customerDto.setCompanyName(excelContent.getColumnValues().get(1));
-                    customerDto.setPhoneNumber(excelContent.getColumnValues().get(2));
+                     customerDto.setPhoneNumber(excelContent.getColumnValues().get(2));
                     customerDto.setAddress1(excelContent.getColumnValues().get(3));
                     customerDto.setAddress2(excelContent.getColumnValues().get(4));
                     customerDto.setEmail(excelContent.getColumnValues().get(5));
@@ -151,7 +151,7 @@ public class CustomerServiceImpl implements CustomerService {
                         response = false;
                         break;
                     }
-               }
+                }
             }
         } catch (Exception ex) {
             response = false;

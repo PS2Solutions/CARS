@@ -721,12 +721,12 @@ public class LaborScreen extends javax.swing.JFrame {
         extensions.add("xlsx");
         extensions.add("xls");
         File file = FileHandler.showFileChooser("Excel Upload", extensions);
-        if (file.getName().equals("Labor_Details")) {
+        if (file.getName().contains("Labor_Details")) {
             List<UploadHelperDto> uplodedData = FileHandler.getExcelData(file);
             LaborService laborService = new LaborServiceImpl();
             boolean response = laborService.uploadExcel(uplodedData);
             if(response) {
-                  DialogHelper.showErrorMessage("Upload Excel", Helper.getPropertyValue("Data_Uploded"));
+                  DialogHelper.showInfoMessage("Upload Excel", Helper.getPropertyValue("Data_Uploded"));
             } else {
                   DialogHelper.showErrorMessage("Upload Excel", Helper.getPropertyValue("Failed_To_Upload"));
             }
