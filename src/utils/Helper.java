@@ -5,8 +5,6 @@
  */
 package utils;
 
-import com.mysql.cj.protocol.Resultset;
-import dataclasses.DesignationDto;
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -14,9 +12,10 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -240,5 +239,15 @@ public class Helper {
             formattedIndex = "0" + formattedIndex;
         }
         return formattedIndex;
+    }
+    
+    public static String getCurrentMysqlFormattedDate() {
+        return getMysqlFormattedDate(getCurrentDate());
+    }
+    
+    public static String getCurrentDate() {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        return sdf.format(date);
     }
 }

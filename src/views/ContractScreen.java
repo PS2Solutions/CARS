@@ -6,14 +6,24 @@
 package views;
 
 import dataclasses.ContractDto;
-import dataclasses.ReportContentDto;
+import java.awt.GridLayout;
 import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 import navigationCofiguration.NavigationConstants;
 import navigationCofiguration.NavigationController;
+import org.jdatepicker.impl.JDatePickerImpl;
 import services.impl.ContractServiceImpl;
+import services.impl.QuotationServiceImpl;
 import services.interfaces.ContractService;
+import services.interfaces.QuotationService;
+import utils.Constants;
 import utils.DialogHelper;
 import utils.Helper;
 
@@ -28,6 +38,9 @@ public class ContractScreen extends javax.swing.JFrame {
      */
     public ContractScreen() {
         initComponents();
+
+        initQuotationRefs();
+        configureTable();
         setContractReport();
     }
 
@@ -49,7 +62,7 @@ public class ContractScreen extends javax.swing.JFrame {
         jPLaborDeails = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtTotalCost = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        btnAddDailyWage = new javax.swing.JButton();
         jPCustomerList = new javax.swing.JScrollPane();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
@@ -140,11 +153,16 @@ public class ContractScreen extends javax.swing.JFrame {
 
         txtTotalCost.setToolTipText("");
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/daily_wage.png"))); // NOI18N
-        jButton1.setText("Add daily wage");
-        jButton1.setToolTipText("");
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
+        btnAddDailyWage.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnAddDailyWage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/daily_wage.png"))); // NOI18N
+        btnAddDailyWage.setText("Add daily wage");
+        btnAddDailyWage.setToolTipText("");
+        btnAddDailyWage.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
+        btnAddDailyWage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddDailyWageActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPLaborDeailsLayout = new javax.swing.GroupLayout(jPLaborDeails);
         jPLaborDeails.setLayout(jPLaborDeailsLayout);
@@ -156,7 +174,7 @@ public class ContractScreen extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtTotalCost, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 744, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAddDailyWage, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22))
         );
         jPLaborDeailsLayout.setVerticalGroup(
@@ -167,7 +185,7 @@ public class ContractScreen extends javax.swing.JFrame {
                     .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1)
                         .addComponent(txtTotalCost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton1))
+                    .addComponent(btnAddDailyWage))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
 
@@ -202,6 +220,7 @@ public class ContractScreen extends javax.swing.JFrame {
 
     private void btnAddNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNewActionPerformed
         clearFields();
+        addContract();
     }//GEN-LAST:event_btnAddNewActionPerformed
 
     private void btnHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeActionPerformed
@@ -209,19 +228,20 @@ public class ContractScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_btnHomeActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        if (validateFields()) {
-            ContractService contractService = new ContractServiceImpl();
-            ContractDto contractDto = getEnteredData();
-            String response = contractService.saveContract(contractDto);
-            if (response.equalsIgnoreCase(Helper.getPropertyValue("Success"))) {
-                DialogHelper.showInfoMessage(Helper.getPropertyValue("Success"),
-                        Helper.getPropertyValue("SuccessMessage"));
-                setContractReport();
-            } else {
-                DialogHelper.showErrorMessage("Error", response);
-            }
+        if (selectedRow < 0) {
+            DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("SelectContract"));
+        } else if (validateFields()) {
+            updateEnteredData();
+
+            saveContract(false);
+        } else {
+            DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("EmptyFields"));
         }
     }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnAddDailyWageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddDailyWageActionPerformed
+        NavigationController.navigateToScreen(NavigationConstants.DAILY_WAGE_SCREEN, this);
+    }//GEN-LAST:event_btnAddDailyWageActionPerformed
 
     /**
      * @param args the command line arguments
@@ -262,10 +282,10 @@ public class ContractScreen extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAddDailyWage;
     private javax.swing.JButton btnAddNew;
     private javax.swing.JButton btnHome;
     private javax.swing.JButton btnSave;
-    private javax.swing.JButton jButton1;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;
     private javax.swing.JLabel jLabel1;
@@ -275,82 +295,150 @@ public class ContractScreen extends javax.swing.JFrame {
     private javax.swing.JTextField txtTotalCost;
     // End of variables declaration//GEN-END:variables
 
-    JTable tblCustomer;
+    DefaultTableModel dtModel;
     List<ContractDto> contractDtos;
-    int selectedContractId;
+    ContractDto selectedDto;
+    int selectedRow = -1;
+    List<String> quotationRefs;
+
+    private void configureTable() {
+        dtModel = new DefaultTableModel();
+        dtModel.addColumn("Reference No");
+        dtModel.addColumn("Start Date");
+        dtModel.addColumn("Collected Amount");
+        dtModel.addColumn("Last Collection Date");
+        dtModel.addColumn("Agrement Reference");
+
+        JTable tblContract = new JTable(dtModel);
+        tblContract.setRowSelectionAllowed(true);
+        tblContract.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                selectedRow = tblContract.rowAtPoint(evt.getPoint());
+                selectedDto = contractDtos.get(selectedRow);
+                btnSave.setEnabled(true);
+            }
+        });
+
+        jPCustomerList.add(tblContract);
+        jPCustomerList.setViewportView(tblContract);
+        jPCustomerList.setVisible(true);
+    }
 
     private void setContractReport() {
         ContractService contractService = new ContractServiceImpl();
         contractDtos = contractService.getContracts();
 
-        if (contractDtos.size() > 0) {
-            ReportContentDto contentDto = contractService.getContractDetails(contractDtos);
-            configureTable(contentDto);
+        if (contractDtos != null) {
+            populateContractTable();
         }
     }
 
-    private void configureTable(ReportContentDto contentDto) {
-
-        tblCustomer = new JTable(contentDto.getRowData(), contentDto.getColumnNames());
-        tblCustomer.setRowSelectionAllowed(true);
-        tblCustomer.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                int row = tblCustomer.rowAtPoint(evt.getPoint());
-                selectedContractId = contractDtos.get(row).getId();
-                populateSelectedDetails(contractDtos.get(row));
-            }
-        });
-        jPCustomerList.add(tblCustomer);
-        jPCustomerList.setViewportView(tblCustomer);
-        jPCustomerList.setVisible(true);
+    private void populateContractTable() {
+        for (ContractDto contractDto : contractDtos) {
+            dtModel.addRow(new Object[]{contractDto.getContractRefNo(), contractDto.getStartDate(), contractDto.getTotalAmount(), contractDto.getLastCollectionDate(), contractDto.getAgrementReference()});
+        }
     }
 
-    private void populateSelectedDetails(ContractDto dto) {
-        /*txtReference.setText(dto.getContractRefNo());
-        txtCaption.setText(dto.getCaption());
-        txtCustomer.setText(dto.getCustomer());
-        txtAddress1.setText(dto.getAddress1());
-        txtAddress2.setText(dto.getAddress2());
-        txtTotalCost.setText(dto.getTotalAmount());
-        txtDaysToComplete.setText(Integer.toString(dto.getDaysToComplete()));*/
+    private void updateContractTable() {
+        dtModel.removeRow(selectedRow);
+        dtModel.insertRow(selectedRow, new Object[]{selectedDto.getContractRefNo(), selectedDto.getStartDate(), selectedDto.getTotalAmount(), selectedDto.getLastCollectionDate(), selectedDto.getAgrementReference()});
+    }
+
+    private void updateEnteredData() {
+        selectedDto.setLastCollectionDate(Helper.getCurrentMysqlFormattedDate());
+        double curAmount = txtTotalCost.getText().trim().isEmpty() ? 0 : Double.parseDouble(txtTotalCost.getText().trim());
+        selectedDto.setTotalAmount(selectedDto.getTotalAmount() + curAmount);
     }
 
     private void clearFields() {
-        selectedContractId = 0;
-        /*txtReference.setText("");
-        txtCaption.setText("");
-        txtCustomer.setText("");
-        txtAddress1.setText("");
-        txtAddress2.setText("");
         txtTotalCost.setText("");
-        txtDaysToComplete.setText("");*/
     }
 
     private boolean validateFields() {
-        boolean fieldsAreValid = true;
-
-        
-
-        return fieldsAreValid;
+        return !(txtTotalCost.getText().trim().isEmpty());
     }
 
-   
+    private void addContract() {
+        JPanel jPanel = new JPanel(new GridLayout(4, 2));
 
-    private ContractDto getEnteredData() {
-        ContractDto contractDto = new ContractDto();
-        /*contractDto.setId(selectedContractId);
-        contractDto.setContractRefNo(txtReference.getText());
-        contractDto.setCaption(txtCaption.getText());
-        contractDto.setCustomer(txtCustomer.getText());
-        contractDto.setAddress1(txtAddress1.getText());
-        contractDto.setAddress2(txtAddress2.getText());
-        contractDto.setTotalAmount(txtTotalCost.getText());
-        contractDto.setDaysToComplete(Integer.parseInt(txtDaysToComplete.getText()));
-        
-        //TODO
-        //contractDto.setType();*/
+        jPanel.add(new JLabel("Reference No"));
+        JTextField refField = new JTextField();
+        refField.setEnabled(false);
+        refField.setText(Helper.getReferenceNo(Constants.CONTRACT));
+        jPanel.add(refField);
 
-        return contractDto;
+        jPanel.add(new JLabel("Agrement Reference"));
+        JTextField agrRefField = new JTextField();
+        agrRefField.setEnabled(false);
+        agrRefField.setText(Helper.getReferenceNo(Constants.AGREMENT));
+        jPanel.add(agrRefField);
+
+        jPanel.add(new JLabel("Quotation Reference"));
+        JTextField quotRefField = new JTextField();
+        jPanel.add(quotRefField);
+
+        JDatePickerImpl datePicker = Helper.getDatePicker();
+        JScrollPane jPJoinDate = jPJoinDate = new JScrollPane();
+        jPJoinDate.setVisible(true);
+        jPJoinDate.setViewportView(datePicker);
+
+        jPanel.add(new JLabel("Start date"));
+        jPanel.add(jPJoinDate);
+
+        int result = DialogHelper.showQuestionDialog(this, "Choose the Quotation", jPanel, JOptionPane.OK_CANCEL_OPTION);
+
+        if (result == JOptionPane.OK_OPTION) {
+            String quotRef = quotRefField.getText().trim();
+            if (quotRef.isEmpty()) {
+                DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("EmptyQuotationFields"));
+            } else if (!quotationRefValid(quotRef)) {
+                DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("InvalidQuotationFields"));
+            } else {
+                setContract(refField.getText(), agrRefField.getText(), datePicker.getJFormattedTextField().getText());
+                saveContract(true);
+            }
+        }
+    }
+
+    private void saveContract(boolean isAdd) {
+        ContractService contractService = new ContractServiceImpl();
+        String response = contractService.saveContract(selectedDto);
+        if (response.equalsIgnoreCase(Helper.getPropertyValue("Success"))) {
+            DialogHelper.showInfoMessage(Helper.getPropertyValue("Success"),
+                    Helper.getPropertyValue("SuccessMessage"));
+
+            if (isAdd) {
+                addConractToTable();
+            } else {
+                updateContractTable();
+            }
+
+        } else {
+            DialogHelper.showErrorMessage("Error", response);
+        }
+    }
+
+    private void setContract(String refNo, String agrRefNo, String startDate) {
+        selectedDto = new ContractDto();
+        selectedDto.setContractRefNo(refNo);
+        selectedDto.setAgrementReference(agrRefNo);
+        selectedDto.setStartDate(Helper.getMysqlFormattedDate(startDate));
+        selectedDto.setLastCollectionDate(Helper.getCurrentMysqlFormattedDate());
+        selectedDto.setTotalAmount(0);
+    }
+
+    private boolean quotationRefValid(String quotRef) {
+        return quotationRefs.contains(quotRef);
+    }
+
+    private void initQuotationRefs() {
+        QuotationService quotationService = new QuotationServiceImpl();
+
+        quotationRefs = quotationService.getQuotationRefs();
+    }
+
+    private void addConractToTable() {
+        dtModel.addRow(new Object[]{selectedDto.getContractRefNo(), selectedDto.getStartDate(), selectedDto.getTotalAmount(), selectedDto.getLastCollectionDate(), selectedDto.getAgrementReference()});
     }
 }

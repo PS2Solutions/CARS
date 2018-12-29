@@ -26,11 +26,15 @@ public class DialogHelper {
         return JOptionPane.showInputDialog(parentComponent, message, title, 1);
     }
 
-    public static int showQuestionDialog(Component parentComponent, String title, String message) {
-        return showQuestionDialog(parentComponent, message, title, 1);
+    public static int showQuestionDialog(Component parentComponent, String title, Object message) {
+        return showQuestionDialog(parentComponent, title, message, 1, JOptionPane.PLAIN_MESSAGE);
     }
     
-    public static int showQuestionDialog(Component parentComponent, String title, String message, int optionType) {
-        return JOptionPane.showConfirmDialog(parentComponent, message, title, optionType);
+    public static int showQuestionDialog(Component parentComponent, String title, Object message, int optionType) {
+        return showQuestionDialog(parentComponent, title, message, optionType, JOptionPane.PLAIN_MESSAGE);
+    }
+    
+    public static int showQuestionDialog(Component parentComponent, String title, Object message, int optionType, int messageType) {
+        return JOptionPane.showConfirmDialog(parentComponent, message, title, optionType, messageType);
     }
 }

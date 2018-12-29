@@ -6,7 +6,6 @@
 package services.impl;
 
 import dataclasses.CustomerDto;
-import dataclasses.CustomersDto;
 import dataclasses.MaterialDto;
 import dataclasses.QuotationDetailsDto;
 import dataclasses.QuotationMasterDto;
@@ -256,5 +255,23 @@ public class QuotationServiceImpl implements QuotationService {
         }
         
         return null;
+    }
+
+    @Override
+    public List<String> getQuotationRefs() {
+        List<String> quotationRefs = new ArrayList<String>();
+        
+        ResultSet set = DBHelper.readDataFromDb("select ReferenceNo from quotations");
+        if (set != null) {
+            try {
+                while (set.next()) {
+                    quotationRefs.add(set.getString("ReferenceNo"));
+                }
+            } catch (Exception ex) {
+
+            }
+        }
+        
+        return quotationRefs;
     }
 }

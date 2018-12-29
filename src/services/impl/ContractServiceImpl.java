@@ -7,10 +7,17 @@ package services.impl;
 
 import dataclasses.ContractDto;
 import dataclasses.ReportContentDto;
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import services.interfaces.ContractService;
+import utils.DBHelper;
 
 /**
  *
@@ -25,10 +32,10 @@ public class ContractServiceImpl implements ContractService{
         for(ContractDto contractDto : contractDtos) {
             Vector<String> row = new Vector<>();
             
-            row.add(contractDto.getCaption());
-            row.add(contractDto.getStartDate());
-            row.add(contractDto.getEndDate());
-            row.add(contractDto.getStatus());
+            //row.add(contractDto.getCaption());
+           // row.add(contractDto.getStartDate());
+           // row.add(contractDto.getEndDate());
+           // row.add(contractDto.getStatus());
            
             rowData.add(row);
         }
@@ -46,29 +53,57 @@ public class ContractServiceImpl implements ContractService{
 
     @Override
     public String saveContract(ContractDto contractDto) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String response = null;
+        try {
+            try (
+                    CallableStatement statement = DBHelper.getDbConnection().prepareCall(
+                            "{call  UpdateContractDetails ( ?,?,?,?,?,?,?,?)}");) {
+                statement.registerOutParameter(8, Types.VARCHAR);
+
+                statement.setInt(1, contractDto.getId());
+                statement.setString(2, contractDto.getContractRefNo());
+                statement.setString(3, contractDto.getStartDate());
+                statement.setDate(4, contractDto.getEndDate());
+                statement.setDouble(5, contractDto.getTotalAmount());
+                statement.setString(6, contractDto.getLastCollectionDate());
+                statement.setString(7, contractDto.getAgrementReference());
+                
+                ResultSet resultSet = statement.executeQuery();//sql response
+                response = (String) statement.getObject(8, String.class);// out value
+                return response;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     @Override
     public List<ContractDto> getContracts() {
         List<ContractDto> contractDtos = new ArrayList<ContractDto>();
-        for (int i=0 ; i<100 ; i++) {
-            ContractDto dto = new ContractDto();
-            dto.setId(i);
-            dto.setContractRefNo("Reff " + i);
-            dto.setCaption("Caption " + i);
-            dto.setCustomer("Customer " + i);
-            dto.setAddress1("Address 1 " + i);
-            dto.setAddress2("Address 2 " + i);
-            dto.setType(i);
-            dto.setTotalAmount("Cost " + i);
-            dto.setDaysToComplete(i);
-            dto.setStartDate("startDate" + i);
-            dto.setEndDate("endDate" + i);
-            dto.setStatus("Status "  +i);
-     
-            contractDtos.add(dto);
+        
+        ResultSet resultSet = DBHelper.readDataFromDb("Select * from contracts");
+        if (resultSet != null) {
+            try {
+                while (resultSet.next()) {
+                    String endDate = resultSet.getString("EndDate");
+                    if(endDate == null || endDate.isEmpty()) {
+                        ContractDto dto = new ContractDto();
+                        dto.setId(resultSet.getInt("ID"));
+                        dto.setContractRefNo(resultSet.getString("ReferenceNo"));
+                        dto.setStartDate(resultSet.getString("StartDate"));
+                        dto.setTotalAmount(resultSet.getDouble("CollectedAmount"));
+                        dto.setLastCollectionDate(resultSet.getString("LastCollectionDate"));
+                        dto.setAgrementReference(resultSet.getString("AgrementReference"));
+                        
+                        contractDtos.add(dto);
+                    }
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+
         return contractDtos;
     }
     

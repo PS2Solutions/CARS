@@ -9,6 +9,7 @@ import dataclasses.CustomerDto;
 import dataclasses.MaterialDto;
 import dataclasses.QuotationMasterDto;
 import dataclasses.QuotationTypeDto;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -31,4 +32,6 @@ public interface QuotationService {
     boolean saveQuotation(QuotationMasterDto masterDto);
     
     QuotationMasterDto getQuotation(String referenceNo);
+    
+    List<String> getQuotationRefs();
 }

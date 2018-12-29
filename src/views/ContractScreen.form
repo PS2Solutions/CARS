@@ -196,7 +196,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="txtTotalCost" min="-2" pref="290" max="-2" attributes="0"/>
                   <EmptySpace pref="744" max="32767" attributes="0"/>
-                  <Component id="jButton1" min="-2" pref="154" max="-2" attributes="0"/>
+                  <Component id="btnAddDailyWage" min="-2" pref="154" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -210,7 +210,7 @@
                           <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txtTotalCost" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnAddDailyWage" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="23" max="32767" attributes="0"/>
               </Group>
@@ -231,7 +231,7 @@
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton1">
+        <Component class="javax.swing.JButton" name="btnAddDailyWage">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Tahoma" size="11" style="1"/>
@@ -243,6 +243,9 @@
             <Property name="toolTipText" type="java.lang.String" value=""/>
             <Property name="horizontalTextPosition" type="int" value="10"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddDailyWageActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
