@@ -17,6 +17,7 @@ public class Constants {
 
     public static final int QUOTE = 1;
     public static final int CONTRACT = 2;
+    public static final int AGREMENT = 3;
     
     public static final String BASE_DIRECTORY = "c:/cars/";
     public static final String EXCEL_EXPORT_PATH = BASE_DIRECTORY + "Reports/";

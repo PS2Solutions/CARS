@@ -143,6 +143,9 @@ public class Helper {
             case Constants.CONTRACT:
                 formattedIntex = "C" + formattedIntex;
                 break;
+            case Constants.AGREMENT:
+                formattedIntex = "A" + formattedIntex;
+                break;
         }
         return formattedIntex;
     }
@@ -168,7 +171,19 @@ public class Helper {
                 if (resultset != null) {
                     try {
                         while (resultset.next()) {
-                            currentIndex = resultset.getInt("QuotationIndex");
+                            currentIndex = resultset.getInt("ContractIndex");
+                        }
+                    } catch (Exception ex) {
+
+                    }
+                }
+                break;
+            case Constants.AGREMENT:
+                resultset = DBHelper.readDataFromDb("Select ContractIndex  from configuration");
+                if (resultset != null) {
+                    try {
+                        while (resultset.next()) {
+                            currentIndex = resultset.getInt("ContractIndex");
                         }
                     } catch (Exception ex) {
 
