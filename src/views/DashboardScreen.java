@@ -28,8 +28,8 @@ public class DashboardScreen extends javax.swing.JFrame {
      */
     public DashboardScreen() {
         initComponents();
-        //loadContractReport();
-        //loadLaborWageReport();
+        loadContractReport();
+        loadLaborWageReport();
     }
 
     /**
