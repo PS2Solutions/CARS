@@ -5,6 +5,7 @@
  */
 package services.impl;
 
+import dataclasses.ContractDto;
 import dataclasses.CustomerDto;
 import dataclasses.MaterialDto;
 import dataclasses.QuotationDetailsDto;
@@ -261,7 +262,7 @@ public class QuotationServiceImpl implements QuotationService {
     public List<String> getQuotationRefs() {
         List<String> quotationRefs = new ArrayList<String>();
         
-        ResultSet set = DBHelper.readDataFromDb("select ReferenceNo from quotations");
+        ResultSet set = DBHelper.readDataFromDb("select ReferenceNo from quotations where ContractID = 0");
         if (set != null) {
             try {
                 while (set.next()) {
@@ -273,5 +274,10 @@ public class QuotationServiceImpl implements QuotationService {
         }
         
         return quotationRefs;
+    }
+    
+    public int updateQuotation(String quotationRef, int contractId) {
+        int result = DBHelper.updateDataToDb("Update quotations set ContractID = " + contractId + " where ReferenceNo = '" + quotationRef + "'");
+        return result;
     }
 }

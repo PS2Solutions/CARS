@@ -299,7 +299,7 @@ public class ContractScreen extends javax.swing.JFrame {
     List<ContractDto> contractDtos;
     ContractDto selectedDto;
     int selectedRow = -1;
-    List<String> quotationRefs;
+    String quotationRef = null;
 
     private void configureTable() {
         dtModel = new DefaultTableModel();
@@ -389,10 +389,10 @@ public class ContractScreen extends javax.swing.JFrame {
         int result = DialogHelper.showQuestionDialog(this, "Choose the Quotation", jPanel, JOptionPane.OK_CANCEL_OPTION);
 
         if (result == JOptionPane.OK_OPTION) {
-            String quotRef = quotRefField.getText().trim();
-            if (quotRef.isEmpty()) {
+            quotationRef = quotRefField.getText().trim();
+            if (quotationRef.isEmpty()) {
                 DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("EmptyQuotationFields"));
-            } else if (!quotationRefValid(quotRef)) {
+            } else if (!quotationRefValid(quotationRef)) {
                 DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("InvalidQuotationFields"));
             } else {
                 setContract(refField.getText(), agrRefField.getText(), datePicker.getJFormattedTextField().getText());
@@ -403,8 +403,28 @@ public class ContractScreen extends javax.swing.JFrame {
 
     private void saveContract(boolean isAdd) {
         ContractService contractService = new ContractServiceImpl();
-        String response = contractService.saveContract(selectedDto);
-        if (response.equalsIgnoreCase(Helper.getPropertyValue("Success"))) {
+
+        int contractId = contractService.saveContract(selectedDto);
+        if (contractId > 0) {
+            if (isAdd) {
+                updateQuotationRef(quotationRef, contractId);
+                addConractToTable();
+                
+                Helper.updateReferenceNo(Constants.CONTRACT);
+                Helper.updateReferenceNo(Constants.AGREMENT);
+            } else {
+                updateContractTable();
+            }
+
+            DialogHelper.showInfoMessage(Helper.getPropertyValue("Success"),
+                    Helper.getPropertyValue("SuccessMessage"));
+
+            clearFields();
+        } else {
+            DialogHelper.showErrorMessage("Error", "Error");
+        }
+
+        /*if (response.equalsIgnoreCase(Helper.getPropertyValue("Success"))) {
             DialogHelper.showInfoMessage(Helper.getPropertyValue("Success"),
                     Helper.getPropertyValue("SuccessMessage"));
 
@@ -416,7 +436,7 @@ public class ContractScreen extends javax.swing.JFrame {
             clearFields();
         } else {
             DialogHelper.showErrorMessage("Error", response);
-        }
+        }*/
     }
 
     private void setContract(String refNo, String agrRefNo, String startDate) {
@@ -429,16 +449,24 @@ public class ContractScreen extends javax.swing.JFrame {
     }
 
     private boolean quotationRefValid(String quotRef) {
+        QuotationService quotationService = new QuotationServiceImpl();
+        List<String> quotationRefs = quotationService.getQuotationRefs();
+        
         return quotationRefs.contains(quotRef);
     }
 
     private void initQuotationRefs() {
-        QuotationService quotationService = new QuotationServiceImpl();
+        
 
-        quotationRefs = quotationService.getQuotationRefs();
+        
     }
 
     private void addConractToTable() {
         dtModel.addRow(new Object[]{selectedDto.getContractRefNo(), selectedDto.getStartDate(), selectedDto.getTotalAmount(), selectedDto.getLastCollectionDate(), selectedDto.getAgrementReference()});
+    }
+
+    private int updateQuotationRef(String quotationRef, int contractId) {
+        QuotationService quotationService = new QuotationServiceImpl();
+        return quotationService.updateQuotation(quotationRef, contractId);
     }
 }

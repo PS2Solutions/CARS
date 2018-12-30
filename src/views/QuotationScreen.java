@@ -501,6 +501,7 @@ public class QuotationScreen extends javax.swing.JFrame {
                 Helper.getPropertyValue("Quotation_Dialogue_Question"));
         clearValues();
         btnPrint.setEnabled(false);
+        btnSave.setEnabled(true);
         if (response != null && !response.isEmpty()) {
             selectedId = 0;
             quotationMaster = quotationService.getQuotation(response);
