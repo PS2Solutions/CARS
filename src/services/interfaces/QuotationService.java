@@ -34,4 +34,6 @@ public interface QuotationService {
     QuotationMasterDto getQuotation(String referenceNo);
     
     List<String> getQuotationRefs();
+    
+    int updateQuotation(String quotationRef, int contractId);
 }

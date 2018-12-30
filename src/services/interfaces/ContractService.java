@@ -11,6 +11,6 @@ import java.util.List;
 
 public interface ContractService {
     ReportContentDto getContractDetails( List<ContractDto> contractDtos );
-    String saveContract(ContractDto contractDto);
+    int saveContract(ContractDto contractDto);
     List<ContractDto> getContracts();
 }

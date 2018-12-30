@@ -52,13 +52,18 @@ public class ContractServiceImpl implements ContractService{
     }
 
     @Override
-    public String saveContract(ContractDto contractDto) {
-        String response = null;
+    public int saveContract(ContractDto contractDto) {
+        int contractId = updateContract(contractDto);
+        return contractId;
+    }
+    
+    private int updateContract(ContractDto contractDto) {
+        int contractId = 0;
         try {
             try (
                     CallableStatement statement = DBHelper.getDbConnection().prepareCall(
                             "{call  UpdateContractDetails ( ?,?,?,?,?,?,?,?)}");) {
-                statement.registerOutParameter(8, Types.VARCHAR);
+                statement.registerOutParameter(8, Types.INTEGER);
 
                 statement.setInt(1, contractDto.getId());
                 statement.setString(2, contractDto.getContractRefNo());
@@ -68,16 +73,16 @@ public class ContractServiceImpl implements ContractService{
                 statement.setString(6, contractDto.getLastCollectionDate());
                 statement.setString(7, contractDto.getAgrementReference());
                 
-                ResultSet resultSet = statement.executeQuery();//sql response
-                response = (String) statement.getObject(8, String.class);// out value
-                return response;
+                statement.executeQuery();//sql response
+                contractId = statement.getObject(8, Integer.class);// out value
             }
         } catch (SQLException ex) {
             Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
         }
+        
+        return contractId;
     }
-
+    
     @Override
     public List<ContractDto> getContracts() {
         List<ContractDto> contractDtos = new ArrayList<ContractDto>();
