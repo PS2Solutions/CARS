@@ -6,6 +6,7 @@
 package services.interfaces;
 
 import dataclasses.ContractLaborChargeDetails;
+import dataclasses.ContractLaborDto;
 import dataclasses.DailyWageDto;
 import dataclasses.LaborDto;
 import dataclasses.ReportContentDto;
@@ -27,4 +28,6 @@ public interface DailyWageService {
     String updateDailyWage(List<DailyWageDto> dailyWageDtos);
     
     Vector<String> getLabors(List<LaborDto> laborDtos);
+    
+    String UpdateContractLabor(ContractLaborDto contractLaborDto);
 }

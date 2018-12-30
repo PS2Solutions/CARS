@@ -6,9 +6,11 @@
 package views;
 
 import dataclasses.ContractLaborChargeDetails;
+import dataclasses.ContractLaborDto;
 import dataclasses.DailyWageDto;
 import dataclasses.LaborDto;
 import dataclasses.ReportContentDto;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -16,16 +18,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import navigationCofiguration.NavigationConstants;
 import navigationCofiguration.NavigationController;
 import org.jdatepicker.impl.JDatePickerImpl;
 import services.impl.DailyWageServiceImpl;
+import services.impl.LaborServiceImpl;
 import services.interfaces.DailyWageService;
+import utils.Constants;
 import utils.DialogHelper;
 import utils.Helper;
 
@@ -42,6 +51,7 @@ public class LaborWageScreen extends javax.swing.JFrame {
         initComponents();
         dailyWageDtos = new ArrayList<>();
         initCalender();
+        allLabors = new LaborServiceImpl().getLabor();
         cmbLabor.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -67,6 +77,7 @@ public class LaborWageScreen extends javax.swing.JFrame {
         btnHome = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
         btnUpload = new javax.swing.JButton();
+        btnAddNew = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         lblContractRef = new javax.swing.JLabel();
         cmbLabor = new javax.swing.JComboBox<>();
@@ -124,12 +135,23 @@ public class LaborWageScreen extends javax.swing.JFrame {
             }
         });
 
+        btnAddNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/add.png"))); // NOI18N
+        btnAddNew.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnAddNew.setFocusPainted(false);
+        btnAddNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddNewActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnAddNew, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -142,6 +164,7 @@ public class LaborWageScreen extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnAddNew, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -363,6 +386,15 @@ public class LaborWageScreen extends javax.swing.JFrame {
         addLaborWage();
     }//GEN-LAST:event_btnAddExtraActionPerformed
 
+    private void btnAddNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNewActionPerformed
+        if (selectedContractId > 0) {
+            clearFields();
+            addLaborToContract();
+        } else {
+            DialogHelper.showInfoMessage("Information", "Please select a contract.");
+        }
+    }//GEN-LAST:event_btnAddNewActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -400,6 +432,7 @@ public class LaborWageScreen extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddExtra;
+    private javax.swing.JButton btnAddNew;
     private javax.swing.JButton btnHome;
     private javax.swing.JButton btnSave;
     private javax.swing.JButton btnUpload;
@@ -431,6 +464,7 @@ public class LaborWageScreen extends javax.swing.JFrame {
     int selectedLaborIndex = 0;
     String selectedContract;
     List<LaborDto> labors;
+    List<LaborDto> allLabors;
     JDatePickerImpl datePicker;
     List<DailyWageDto> dailyWageDtos;
 
@@ -576,5 +610,50 @@ public class LaborWageScreen extends javax.swing.JFrame {
             isValid = false;
         }
         return isValid;
+    }
+
+    private void addLaborToContract() {
+        boolean isDuplicate = false;
+        if (allLabors != null && allLabors.size() > 0) {
+            DailyWageService dailyWageService = new DailyWageServiceImpl();
+            Vector<String> vecLabors = dailyWageService.getLabors(allLabors);
+            DefaultComboBoxModel model = new DefaultComboBoxModel(vecLabors);
+            JPanel jPanel = new JPanel(new GridLayout(2, 2));
+
+            jPanel.add(new JLabel("Labors"));
+            JComboBox comboLabor = new JComboBox(model);
+            jPanel.add(comboLabor);
+            int result = DialogHelper.showQuestionDialog(this, "Choose labors for contract " + selectedContract, jPanel, JOptionPane.OK_CANCEL_OPTION);
+
+            if (result == JOptionPane.OK_OPTION) {
+                int selectedLaborId = allLabors.get(comboLabor.getSelectedIndex()).getId();
+                ContractLaborDto contractLaborDto = new ContractLaborDto();
+                contractLaborDto.setContractId(selectedContractId);
+                contractLaborDto.setLaborId(selectedLaborId);
+                if (labors != null && labors.size() > 0) {
+                    for (LaborDto labor : labors) {
+                        if (labor.getId() == selectedLaborId) {
+                            isDuplicate = true;
+                            break;
+                        }
+                    }
+                }
+                if (!isDuplicate) {
+                    String response = dailyWageService.UpdateContractLabor(contractLaborDto);
+                    if (response != null && response.equalsIgnoreCase(Helper.getPropertyValue("Success"))) {
+                        DialogHelper.showInfoMessage(Helper.getPropertyValue("Success"),
+                                Helper.getPropertyValue("SuccessMessage"));
+                        labors = dailyWageService.getLabors(selectedContractId);
+                    } else {
+                        DialogHelper.showErrorMessage("Duplicate", "Labor already assigned to the selected contract.");
+                    }
+                } else {
+                    DialogHelper.showErrorMessage("Duplicate", "Labor already assigned to the selected contract.");
+                }
+            }
+        } else {
+            DialogHelper.showInfoMessage("Message", "Labor information not available");
+        }
+
     }
 }

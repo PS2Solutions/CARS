@@ -6,6 +6,7 @@
 package services.impl;
 
 import dataclasses.ContractLaborChargeDetails;
+import dataclasses.ContractLaborDto;
 import dataclasses.DailyWageDto;
 import dataclasses.LaborDto;
 import dataclasses.ReportContentDto;
@@ -158,6 +159,27 @@ public class DailyWageServiceImpl implements DailyWageService {
         } catch (Exception ex) {
 
         }
+    }
+
+    @Override
+    public String UpdateContractLabor(ContractLaborDto contractLaborDto) {
+        String response = null;
+        try {
+            try (
+                CallableStatement statement = DBHelper.getDbConnection().prepareCall(
+                            "{call UpdateContractLaborDetails( ?, ?, ?)}");) {
+                statement.registerOutParameter(3, Types.VARCHAR);
+                statement.setInt(1, contractLaborDto.getContractId());
+                statement.setInt(2, contractLaborDto.getLaborId());
+
+                ResultSet resultSet = statement.executeQuery();//sql response
+                response = (String) statement.getObject(3, String.class);// out value
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+        return (response == null ? "Duplicate" : response);
     }
 
 }
