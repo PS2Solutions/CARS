@@ -362,6 +362,7 @@ public class LaborWageScreen extends javax.swing.JFrame {
 
     private void updateDailyWage() {
         addLaborWage();
+        dailyWageDtos = prepareData();
         if (dailyWageDtos != null && dailyWageDtos.size() > 0) {
             DailyWageService dailyWageService = new DailyWageServiceImpl();
             String response = dailyWageService.updateDailyWage(dailyWageDtos);
@@ -374,7 +375,7 @@ public class LaborWageScreen extends javax.swing.JFrame {
                 DialogHelper.showErrorMessage("Error", Helper.getPropertyValue("Failed_To_Update"));
             }
         } else {
-            DialogHelper.showErrorMessage("Error", Helper.getPropertyValue("Failed_To_Update"));
+            DialogHelper.showErrorMessage("Error", Helper.getPropertyValue("NoDataToSave"));
         }
     }
 
@@ -557,56 +558,68 @@ public class LaborWageScreen extends javax.swing.JFrame {
     }
 
     private void addLaborWage() {
-        if (validateEntry()) {
-            DailyWageDto dailyWageDto = new DailyWageDto();
-            dailyWageDto.setContractId(selectedContractId);
-            dailyWageDto.setLaborId(labors.get(selectedLaborIndex).getId());
-            dailyWageDto.setDate(Helper.getMysqlFormattedDate(datePicker.getJFormattedTextField().getText()));
-            dailyWageDto.setRemark(txtRemark.getText().trim());
-            try {
-                dailyWageDto.setWage(Double.parseDouble(txtDailyWage.getText().trim()));
-            } catch (Exception ex) {
-                dailyWageDto.setWage(0);
-            }
-            try {
-                dailyWageDto.setFa(Double.parseDouble(txtFA.getText().trim()));
-            } catch (Exception ex) {
-                dailyWageDto.setFa(0);
-            }
-            try {
-                dailyWageDto.setTa(Double.parseDouble(txtTA.getText().trim()));
-            } catch (Exception ex) {
-                dailyWageDto.setTa(0);
-            }
-            try {
-                dailyWageDto.setOa(Double.parseDouble(txtOverTime.getText().trim()));
-            } catch (Exception ex) {
-                dailyWageDto.setOa(0);
-            }
-            DailyWageDto duplicateDto = null;
-            if (dailyWageDtos.size() > 0) {
-                for (DailyWageDto dto : dailyWageDtos) {
-                    if (dto.getContractId() == selectedContractId
-                            && dto.getLaborId() == dailyWageDto.getLaborId()
-                            && dto.getDate().equalsIgnoreCase(dailyWageDto.getDate())) {
-                        duplicateDto = dto;
-                        break;
+        try {
+            if (txtDailyWage.getText().trim().length() > 0) {
+                DailyWageDto dailyWageDto = new DailyWageDto();
+                dailyWageDto.setContractId(selectedContractId);
+                if (labors != null && labors.size() > 0) {
+                    dailyWageDto.setLaborId(labors.get(selectedLaborIndex).getId());
+                } else {
+                    dailyWageDto.setLaborId(0);
+                }
+                dailyWageDto.setDate(Helper.getMysqlFormattedDate(datePicker.getJFormattedTextField().getText()));
+                dailyWageDto.setRemark(txtRemark.getText().trim());
+                try {
+                    dailyWageDto.setWage(Double.parseDouble(txtDailyWage.getText().trim()));
+                } catch (Exception ex) {
+                    dailyWageDto.setWage(0);
+                }
+                try {
+                    dailyWageDto.setFa(Double.parseDouble(txtFA.getText().trim()));
+                } catch (Exception ex) {
+                    dailyWageDto.setFa(0);
+                }
+                try {
+                    dailyWageDto.setTa(Double.parseDouble(txtTA.getText().trim()));
+                } catch (Exception ex) {
+                    dailyWageDto.setTa(0);
+                }
+                try {
+                    dailyWageDto.setOa(Double.parseDouble(txtOverTime.getText().trim()));
+                } catch (Exception ex) {
+                    dailyWageDto.setOa(0);
+                }
+                DailyWageDto duplicateDto = null;
+                if (dailyWageDtos.size() > 0) {
+                    for (DailyWageDto dto : dailyWageDtos) {
+                        if (dto.getContractId() == selectedContractId
+                                && dto.getLaborId() == dailyWageDto.getLaborId()
+                                && dto.getDate().equalsIgnoreCase(dailyWageDto.getDate())) {
+                            duplicateDto = dto;
+                            break;
+                        }
+                    }
+                    if (duplicateDto != null) {
+                        dailyWageDto.setPurchaseDetailses(duplicateDto.getPurchaseDetailses());
+                        dailyWageDtos.remove(duplicateDto);
                     }
                 }
-                if (duplicateDto != null) {
-                    dailyWageDto.setPurchaseDetailses(duplicateDto.getPurchaseDetailses());
-                    dailyWageDtos.remove(duplicateDto);
-                }
+                dailyWageDtos.add(dailyWageDto);
             }
-            dailyWageDtos.add(dailyWageDto);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
-    private boolean validateEntry() {
+    private boolean validateEntry(DailyWageDto dailyWageDto) {
         boolean isValid = true;
-        if (txtDailyWage.getText().trim().length() == 0) {
+        if (dailyWageDto.getWage() <= 0) {
             isValid = false;
-        } else if (datePicker.getJFormattedTextField().getText().trim().length() == 0) {
+        } else if (dailyWageDto.getDate().trim().length() == 0) {
+            isValid = false;
+        } else if (dailyWageDto.getLaborId() <= 0) {
+            isValid = false;
+        } else if (dailyWageDto.getContractId() <= 0) {
             isValid = false;
         }
         return isValid;
@@ -655,5 +668,17 @@ public class LaborWageScreen extends javax.swing.JFrame {
             DialogHelper.showInfoMessage("Message", "Labor information not available");
         }
 
+    }
+
+    private List<DailyWageDto> prepareData() {
+        List<DailyWageDto> tmpList = new ArrayList<>();
+        if (dailyWageDtos != null && dailyWageDtos.size() > 0) {
+            for (DailyWageDto dailyWageDto : dailyWageDtos) {
+                if (validateEntry(dailyWageDto)) {
+                    tmpList.add(dailyWageDto);
+                }
+            }
+        }
+        return tmpList;
     }
 }
