@@ -8,6 +8,7 @@ package services.impl;
 import dataclasses.ContractLaborChargeDetails;
 import dataclasses.ContractLaborDto;
 import dataclasses.DailyWageDto;
+import dataclasses.ExtraPurchaseDetails;
 import dataclasses.LaborDto;
 import dataclasses.ReportContentDto;
 import java.sql.CallableStatement;
@@ -103,6 +104,27 @@ public class DailyWageServiceImpl implements DailyWageService {
                     statement.setString(8, dailyWageDto.getRemark());
                     ResultSet resultSet = statement.executeQuery();//sql response
                     response = (String) statement.getObject(9, String.class);// out value
+                    if (dailyWageDto.getPurchaseDetailses() != null && dailyWageDto.getPurchaseDetailses().size() > 0) {
+                        for (ExtraPurchaseDetails details : dailyWageDto.getPurchaseDetailses()) {
+                            try {
+                                try (
+                                        CallableStatement statement1 = DBHelper.getDbConnection().prepareCall(
+                                                "{call UpdateExtraPurchaseDetails( ?, ?, ?,?,?,?,?)}");) {
+                                    statement1.setInt(1, details.getContractId());
+                                    statement1.setInt(2, details.getLaborId());
+                                    statement1.setString(3, details.getBillNo());
+                                    statement1.setString(4, details.getBillDate());
+                                    statement1.setString(5, details.getMaterial());
+                                    statement1.setInt(6, details.getQuantity());
+                                    statement1.setDouble(7, details.getAmount());
+                                    ResultSet resultSet1 = statement1.executeQuery();//sql response
+                                }
+                            } catch (SQLException ex) {
+                                Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                                return null;
+                            }
+                        }
+                    }
                     if (response != null && !response.equalsIgnoreCase(Helper.getPropertyValue("Success"))) {
                         break;
                     }
@@ -166,7 +188,7 @@ public class DailyWageServiceImpl implements DailyWageService {
         String response = null;
         try {
             try (
-                CallableStatement statement = DBHelper.getDbConnection().prepareCall(
+                    CallableStatement statement = DBHelper.getDbConnection().prepareCall(
                             "{call UpdateContractLaborDetails( ?, ?, ?)}");) {
                 statement.registerOutParameter(3, Types.VARCHAR);
                 statement.setInt(1, contractLaborDto.getContractId());

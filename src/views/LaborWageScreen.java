@@ -8,17 +8,22 @@ package views;
 import dataclasses.ContractLaborChargeDetails;
 import dataclasses.ContractLaborDto;
 import dataclasses.DailyWageDto;
+import dataclasses.ExtraPurchaseDetails;
 import dataclasses.LaborDto;
 import dataclasses.ReportContentDto;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.text.Format;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -28,6 +33,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import javax.swing.text.JTextComponent;
 import navigationCofiguration.NavigationConstants;
 import navigationCofiguration.NavigationController;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -50,6 +56,7 @@ public class LaborWageScreen extends javax.swing.JFrame {
     public LaborWageScreen() {
         initComponents();
         dailyWageDtos = new ArrayList<>();
+        extraPurchaseDetailses = new ArrayList<>();
         initCalender();
         allLabors = new LaborServiceImpl().getLabor();
         cmbLabor.addActionListener(new ActionListener() {
@@ -385,6 +392,7 @@ public class LaborWageScreen extends javax.swing.JFrame {
 
     private void btnAddExtraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddExtraActionPerformed
         addLaborWage();
+        showAdditionalChargeDialog();
     }//GEN-LAST:event_btnAddExtraActionPerformed
 
     private void btnAddNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNewActionPerformed
@@ -467,7 +475,9 @@ public class LaborWageScreen extends javax.swing.JFrame {
     List<LaborDto> labors;
     List<LaborDto> allLabors;
     JDatePickerImpl datePicker;
+    JDatePickerImpl additionalDatePicker;
     List<DailyWageDto> dailyWageDtos;
+    List<ExtraPurchaseDetails> extraPurchaseDetailses;
 
     private void getContractDetails() {
         DailyWageService dailyWageService = new DailyWageServiceImpl();
@@ -557,6 +567,11 @@ public class LaborWageScreen extends javax.swing.JFrame {
         jPDate.setViewportView(datePicker);
     }
 
+    private void iniAdditionalChargeCalender() {
+        additionalDatePicker = Helper.getDatePicker();
+        additionalDatePicker.setVisible(true);
+    }
+
     private void addLaborWage() {
         try {
             if (txtDailyWage.getText().trim().length() > 0) {
@@ -590,6 +605,7 @@ public class LaborWageScreen extends javax.swing.JFrame {
                     dailyWageDto.setOa(0);
                 }
                 DailyWageDto duplicateDto = null;
+
                 if (dailyWageDtos.size() > 0) {
                     for (DailyWageDto dto : dailyWageDtos) {
                         if (dto.getContractId() == selectedContractId
@@ -600,11 +616,19 @@ public class LaborWageScreen extends javax.swing.JFrame {
                         }
                     }
                     if (duplicateDto != null) {
-                        dailyWageDto.setPurchaseDetailses(duplicateDto.getPurchaseDetailses());
+                        if (duplicateDto.getPurchaseDetailses() != null && duplicateDto.getPurchaseDetailses().size() > 0) {
+                            for (ExtraPurchaseDetails details : duplicateDto.getPurchaseDetailses()) {
+                                extraPurchaseDetailses.add(details);
+                            }
+                        }
                         dailyWageDtos.remove(duplicateDto);
                     }
                 }
+                if (extraPurchaseDetailses != null && extraPurchaseDetailses.size() > 0) {
+                    dailyWageDto.setPurchaseDetailses(extraPurchaseDetailses);
+                }
                 dailyWageDtos.add(dailyWageDto);
+                extraPurchaseDetailses = new ArrayList<>();
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -623,6 +647,46 @@ public class LaborWageScreen extends javax.swing.JFrame {
             isValid = false;
         }
         return isValid;
+    }
+
+    private void showAdditionalChargeDialog() {
+        JPanel jPanel = new JPanel(new GridLayout(10, 1));
+        jPanel.add(new JLabel("Material Name"));
+        JTextField matField = new JTextField();
+        jPanel.add(matField);
+        jPanel.add(new JLabel("Bill #"));
+        JTextField billField = new JTextField();
+        jPanel.add(billField);
+        jPanel.add(new JLabel("Date"));
+        iniAdditionalChargeCalender();
+        jPanel.add(additionalDatePicker);
+        jPanel.add(new JLabel("Quantity"));
+        Format general = NumberFormat.getInstance();
+        JFormattedTextField quantityField = new JFormattedTextField(general);
+        jPanel.add(quantityField);
+        jPanel.add(new JLabel("Amount"));
+        JFormattedTextField amtField = new JFormattedTextField(general);
+        jPanel.add(amtField);
+        int result = DialogHelper.showQuestionDialog(this, "Additional Purchase", jPanel, JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+            String materialName = matField.getText().trim();
+            String billNumber = billField.getText().trim();
+            String date = additionalDatePicker.getJFormattedTextField().getText().trim();
+            String quantity = quantityField.getText().trim();
+            String amount = amtField.getText().trim();
+            if (materialName.length() > 0 && date.length() > 0 && quantity.length() > 0 && amount.length() > 0 && labors != null && labors.size() > 0) {
+                ExtraPurchaseDetails details = new ExtraPurchaseDetails();
+                details.setContractId(selectedContractId);
+                details.setLaborId(labors.get(selectedLaborIndex).getId());
+                details.setMaterial(materialName);
+                details.setBillNo(billNumber);
+                details.setBillDate(Helper.getMysqlFormattedDate(additionalDatePicker.getJFormattedTextField().getText()));
+                details.setQuantity(Integer.parseInt(quantity.replaceAll(",", "")));
+                details.setAmount(Double.parseDouble(amount.replaceAll(",", "")));
+                extraPurchaseDetailses.add(details);
+                lblAdditionalPurchaseDetils.setText(billNumber+" Added.");
+            }
+        }
     }
 
     private void addLaborToContract() {
