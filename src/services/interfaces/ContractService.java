@@ -8,9 +8,11 @@ package services.interfaces;
 import dataclasses.ContractDto;
 import dataclasses.ReportContentDto;
 import java.util.List;
+import java.util.Vector;
 
 public interface ContractService {
     ReportContentDto getContractDetails( List<ContractDto> contractDtos );
     int saveContract(ContractDto contractDto);
     List<ContractDto> getContracts();
+    Vector<String> getContractsNames();
 }

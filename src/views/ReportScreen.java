@@ -18,7 +18,11 @@ import javax.swing.JTable;
 import navigationCofiguration.NavigationConstants;
 import navigationCofiguration.NavigationController;
 import org.jdatepicker.impl.JDatePickerImpl;
+import services.impl.ContractServiceImpl;
+import services.impl.QuotationServiceImpl;
 import services.impl.ReportServiceImpl;
+import services.interfaces.ContractService;
+import services.interfaces.QuotationService;
 import services.interfaces.ReportService;
 import utils.DialogHelper;
 import utils.FileHandler;
@@ -63,6 +67,10 @@ public class ReportScreen extends javax.swing.JFrame {
         jPStartDate = new javax.swing.JScrollPane();
         jPEndDate = new javax.swing.JScrollPane();
         btnGetReport = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        combContract = new javax.swing.JComboBox<>();
+        jLabel5 = new javax.swing.JLabel();
+        combQuote = new javax.swing.JComboBox<>();
         jSPReportPanel = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -145,23 +153,40 @@ public class ReportScreen extends javax.swing.JFrame {
             }
         });
 
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel4.setText("Contract");
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel5.setText("Quotation");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(64, 64, 64)
-                .addComponent(jLabel1)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel4)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(cmbReport, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel2)))
                 .addGap(18, 18, 18)
-                .addComponent(cmbReport, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPStartDate, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
+                    .addComponent(combContract, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
-                .addComponent(jPStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel3)
-                .addGap(18, 18, 18)
-                .addComponent(jPEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(combQuote, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addComponent(btnGetReport)
                 .addContainerGap())
@@ -171,20 +196,29 @@ public class ReportScreen extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(jLabel3))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(19, 19, 19)
+                                .addComponent(jLabel3))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel1)
+                                        .addComponent(cmbReport, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel2))
+                                    .addComponent(jPStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jPEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(21, 21, 21)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(combContract, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5)
+                            .addComponent(combQuote, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnGetReport)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel1)
-                                    .addComponent(cmbReport, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2))
-                                .addComponent(jPStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jPEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(19, Short.MAX_VALUE))
+                        .addGap(41, 41, 41)
+                        .addComponent(btnGetReport)))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         jSPReportPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Report", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
@@ -206,9 +240,9 @@ public class ReportScreen extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSPReportPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 520, Short.MAX_VALUE)
-                .addGap(7, 7, 7)
+                .addGap(18, 18, 18)
+                .addComponent(jSPReportPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -240,6 +274,20 @@ public class ReportScreen extends javax.swing.JFrame {
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
+            }
+            switch (reportsDto.getReportType()) {
+                case 1:
+                    reportsDto.setContractName(combContract.getSelectedItem().toString().trim());
+                    reportsDto.setQuotationName("");
+                    break;
+                case 2:
+                    reportsDto.setQuotationName(combQuote.getSelectedItem().toString().trim());
+                    reportsDto.setContractName("");
+                    break;
+                default:
+                    reportsDto.setQuotationName("");
+                    reportsDto.setContractName("");
+                    break;
             }
             ReportService reportService = new ReportServiceImpl();
             reportName = reportsDto.getReportName();
@@ -303,9 +351,13 @@ public class ReportScreen extends javax.swing.JFrame {
     private javax.swing.JButton btnHome;
     private javax.swing.JButton btnPrint;
     private javax.swing.JComboBox<String> cmbReport;
+    private javax.swing.JComboBox<String> combContract;
+    private javax.swing.JComboBox<String> combQuote;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jPEndDate;
     private javax.swing.JScrollPane jPStartDate;
     private javax.swing.JPanel jPanel1;
@@ -325,7 +377,7 @@ public class ReportScreen extends javax.swing.JFrame {
             Vector<String> reportNames = reportService.getReportNames(availableReports);
             DefaultComboBoxModel model = new DefaultComboBoxModel(reportNames);
             cmbReport.setModel(model);
-            ConfigureDateFields(availableReports.get(0).isIsDateFilterAvailable());
+            ConfigureDateFields(availableReports.get(0));
 
         } else {
             DialogHelper.showInfoMessage("Report", Helper.getPropertyValue("ReportNotAvailable"));
@@ -333,9 +385,27 @@ public class ReportScreen extends javax.swing.JFrame {
         }
     }
 
-    private void ConfigureDateFields(boolean isActive) {
+    private void ConfigureDateFields(ReportsDto reportsDto) {
+        boolean isActive = reportsDto.isIsDateFilterAvailable();
+        int type = reportsDto.getReportType();
         startPicker.getComponents()[1].setEnabled(isActive);
         endDatePicker.getComponents()[1].setEnabled(isActive);
+        switch (type) {
+            case 1:
+                combContract.setEnabled(true);
+                combQuote.setEnabled(false);
+                loadContracts();
+                break;
+            case 2:
+                combContract.setEnabled(false);
+                combQuote.setEnabled(true);
+                loadQuotes();
+                break;
+            default:
+                combContract.setEnabled(false);
+                combQuote.setEnabled(false);
+                break;
+        }
     }
 
     private void configureDatePicker() {
@@ -351,7 +421,7 @@ public class ReportScreen extends javax.swing.JFrame {
         startPicker.getJFormattedTextField().setText("");
         endDatePicker.getJFormattedTextField().setText("");
         jSPReportPanel.getViewport().removeAll();
-        ConfigureDateFields(availableReports.get(cmbReport.getSelectedIndex()).isIsDateFilterAvailable());
+        ConfigureDateFields(availableReports.get(cmbReport.getSelectedIndex()));
     }
 
     private void loadReport() {
@@ -363,5 +433,19 @@ public class ReportScreen extends javax.swing.JFrame {
         } else {
             DialogHelper.showInfoMessage("Report", "Report not available");
         }
+    }
+
+    private void loadContracts() {
+        ContractService contractService = new ContractServiceImpl();
+        Vector<String> contracts = contractService.getContractsNames();
+        DefaultComboBoxModel model = new DefaultComboBoxModel(contracts);
+        combContract.setModel(model);
+    }
+
+    private void loadQuotes() {
+        QuotationService quoteService = new QuotationServiceImpl();
+        Vector<String> contracts = quoteService.getQuotationNames();
+        DefaultComboBoxModel model = new DefaultComboBoxModel(contracts);
+        combQuote.setModel(model);
     }
 }

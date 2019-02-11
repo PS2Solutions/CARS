@@ -39,6 +39,8 @@ public class ReportServiceImpl implements ReportService {
                 String name = resultSet.getString("Name");
                 String spName = resultSet.getString("SPName");
                 boolean isDateFilterAvailable = resultSet.getBoolean("IsFilterAvailable");
+                int type = resultSet.getInt("ReportType");
+                reportsDto.setReportType(type);
                 reportsDto.setReportName(name);
                 reportsDto.setProcedureName(spName);
                 reportsDto.setIsDateFilterAvailable(isDateFilterAvailable);
@@ -63,11 +65,11 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public ReportContentDto getreport(ReportsDto reportsDto) {
         ReportContentDto contentDto;
-        if (reportsDto.isIsDateFilterAvailable()) {
-            contentDto = getDateFilterReport(reportsDto);
-        } else {
-            contentDto = getReport(reportsDto);
-        }
+//        if (reportsDto.isIsDateFilterAvailable()) {
+        contentDto = getDateFilterReport(reportsDto);
+//        } else {
+//            contentDto = getReport(reportsDto);
+//        }
         return contentDto;
     }
 
@@ -75,14 +77,16 @@ public class ReportServiceImpl implements ReportService {
         ReportContentDto contentDto = new ReportContentDto();
         try {
             CallableStatement statement = DBHelper.getDbConnection().prepareCall(
-                    "{call " + reportsDto.getProcedureName() + "(?,?)}");
+                    "{call " + reportsDto.getProcedureName() + "(?,?,?,?)}");
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date startDate = formatter.parse(reportsDto.getStartDate());
             Date endDate = formatter.parse(reportsDto.getEndDate());
             java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
             java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
-            statement.setDate("dateFrom", sqlStartDate);
-            statement.setDate("dateTo", sqlEndDate);
+            statement.setDate("DateFrom", sqlStartDate);
+            statement.setDate("DateTo", sqlEndDate);
+            statement.setString("ContractName", reportsDto.getContractName());
+            statement.setString("QuoteName", reportsDto.getQuotationName());
             ResultSet resultSet = statement.executeQuery();
             Vector<Vector> rowData = new Vector<Vector>();
             Vector<String> columnNames = new Vector<String>();

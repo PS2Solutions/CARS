@@ -36,4 +36,6 @@ public interface QuotationService {
     List<String> getQuotationRefs();
     
     int updateQuotation(String quotationRef, int contractId);
+    
+    Vector<String> getQuotationNames();
 }

@@ -18,6 +18,14 @@ public class ReportsDto {
     boolean isDateFilterAvailable;
     String startDate;
     String endDate;
+    String contractName;
+    String quotationName;
+    /**
+     * Normal report = 0
+     * Contract report = 1
+     * Quotation report = 2
+     */
+    int reportType;
 
     public String getReportName() {
         return reportName;
@@ -57,6 +65,30 @@ public class ReportsDto {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public int getReportType() {
+        return reportType;
+    }
+
+    public void setReportType(int reportType) {
+        this.reportType = reportType;
+    }
+
+    public String getContractName() {
+        return contractName;
+    }
+
+    public void setContractName(String contractName) {
+        this.contractName = contractName;
+    }
+
+    public String getQuotationName() {
+        return quotationName;
+    }
+
+    public void setQuotationName(String quotationName) {
+        this.quotationName = quotationName;
     }
 
 }

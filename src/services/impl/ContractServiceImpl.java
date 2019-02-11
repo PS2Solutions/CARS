@@ -111,5 +111,25 @@ public class ContractServiceImpl implements ContractService{
 
         return contractDtos;
     }
+
+    @Override
+    public Vector<String> getContractsNames() {
+        String query = "SELECT Title FROM `quotations` WHERE ContractID > 0" ;
+        Vector<String> contractDtos = new Vector<>();
+        
+        ResultSet resultSet = DBHelper.readDataFromDb(query);
+        if (resultSet != null) {
+            try {
+                while (resultSet.next()) {
+                    String title = resultSet.getString("Title");
+                    contractDtos.add(title);
+                 }
+                
+            } catch (Exception ex) {
+                Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return contractDtos;
+    }
     
 }

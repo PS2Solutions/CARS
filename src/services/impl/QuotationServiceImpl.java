@@ -280,4 +280,24 @@ public class QuotationServiceImpl implements QuotationService {
         int result = DBHelper.updateDataToDb("Update quotations set ContractID = " + contractId + " where ReferenceNo = '" + quotationRef + "'");
         return result;
     }
+
+    @Override
+    public Vector<String> getQuotationNames() {
+        String query = "SELECT Title FROM `quotations` WHERE ContractID = 0" ;
+        Vector<String> quotations = new Vector<>();
+        
+        ResultSet resultSet = DBHelper.readDataFromDb(query);
+        if (resultSet != null) {
+            try {
+                while (resultSet.next()) {
+                    String title = resultSet.getString("Title");
+                    quotations.add(title);
+                 }
+                
+            } catch (Exception ex) {
+                Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return quotations;
+    }
 }
