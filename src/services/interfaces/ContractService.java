@@ -5,6 +5,7 @@
  */
 package services.interfaces;
 
+import dataclasses.ComboContentDto;
 import dataclasses.ContractDto;
 import dataclasses.ReportContentDto;
 import java.util.List;
@@ -14,5 +15,6 @@ public interface ContractService {
     ReportContentDto getContractDetails( List<ContractDto> contractDtos );
     int saveContract(ContractDto contractDto);
     List<ContractDto> getContracts();
-    Vector<String> getContractsNames();
+    Vector<ComboContentDto> getContractNames();
+    Vector<String> getContractsNames(Vector<ComboContentDto> comboContentDtos);
 }

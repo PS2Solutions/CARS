@@ -5,6 +5,7 @@
  */
 package services.interfaces;
 
+import dataclasses.ComboContentDto;
 import dataclasses.CustomerDto;
 import dataclasses.MaterialDto;
 import dataclasses.QuotationMasterDto;
@@ -37,5 +38,7 @@ public interface QuotationService {
     
     int updateQuotation(String quotationRef, int contractId);
     
-    Vector<String> getQuotationNames();
+    Vector<ComboContentDto> getQuotationNames();
+    
+    Vector<String> getQuotationNames(Vector<ComboContentDto> comboContentDtos);
 }

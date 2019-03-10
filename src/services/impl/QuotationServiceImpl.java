@@ -5,6 +5,7 @@
  */
 package services.impl;
 
+import dataclasses.ComboContentDto;
 import dataclasses.ContractDto;
 import dataclasses.CustomerDto;
 import dataclasses.MaterialDto;
@@ -281,17 +282,20 @@ public class QuotationServiceImpl implements QuotationService {
         return result;
     }
 
-    @Override
-    public Vector<String> getQuotationNames() {
-        String query = "SELECT Title FROM `quotations` WHERE ContractID = 0" ;
-        Vector<String> quotations = new Vector<>();
+    public Vector<ComboContentDto> getQuotationNames() {
+        String query = "SELECT ID, Title FROM `quotations` WHERE ContractID = 0" ;
+        Vector<ComboContentDto> quotations = new Vector<>();
         
         ResultSet resultSet = DBHelper.readDataFromDb(query);
         if (resultSet != null) {
             try {
                 while (resultSet.next()) {
+                    ComboContentDto ccd = new ComboContentDto();
+                    int id = resultSet.getInt("ID");
                     String title = resultSet.getString("Title");
-                    quotations.add(title);
+                    ccd.setId(id);
+                    ccd.setName(title);
+                    quotations.add(ccd);
                  }
                 
             } catch (Exception ex) {
@@ -299,5 +303,14 @@ public class QuotationServiceImpl implements QuotationService {
             }
         }
         return quotations;
+    }
+
+    @Override
+    public Vector<String> getQuotationNames(Vector<ComboContentDto> comboContentDtos) {
+         Vector<String> quoteDtos = new Vector<>();
+        for(ComboContentDto ccd : comboContentDtos) {
+            quoteDtos.add(ccd.getName());
+        }
+        return quoteDtos;
     }
 }

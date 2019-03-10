@@ -5,6 +5,7 @@
  */
 package views;
 
+import dataclasses.ComboContentDto;
 import dataclasses.ReportContentDto;
 import dataclasses.ReportsDto;
 import java.io.IOException;
@@ -277,16 +278,18 @@ public class ReportScreen extends javax.swing.JFrame {
             }
             switch (reportsDto.getReportType()) {
                 case 1:
-                    reportsDto.setContractName(combContract.getSelectedItem().toString().trim());
-                    reportsDto.setQuotationName("");
+                    int contractId = contracts.get(combContract.getSelectedIndex()).getId();
+                    reportsDto.setContractName("" + contractId);
+                    reportsDto.setQuotationName("0");
                     break;
                 case 2:
-                    reportsDto.setQuotationName(combQuote.getSelectedItem().toString().trim());
-                    reportsDto.setContractName("");
+                    int quoteId = quotes.get(combQuote.getSelectedIndex()).getId();
+                    reportsDto.setQuotationName("" + quoteId);
+                    reportsDto.setContractName("0");
                     break;
                 default:
-                    reportsDto.setQuotationName("");
-                    reportsDto.setContractName("");
+                    reportsDto.setQuotationName("0");
+                    reportsDto.setContractName("0");
                     break;
             }
             ReportService reportService = new ReportServiceImpl();
@@ -369,6 +372,8 @@ public class ReportScreen extends javax.swing.JFrame {
     JDatePickerImpl endDatePicker;
     ReportContentDto reportContent;
     JTable tblReport;
+    Vector<ComboContentDto> contracts;
+    Vector<ComboContentDto> quotes;
 
     private void configureReports() {
         ReportService reportService = new ReportServiceImpl();
@@ -437,15 +442,21 @@ public class ReportScreen extends javax.swing.JFrame {
 
     private void loadContracts() {
         ContractService contractService = new ContractServiceImpl();
-        Vector<String> contracts = contractService.getContractsNames();
-        DefaultComboBoxModel model = new DefaultComboBoxModel(contracts);
-        combContract.setModel(model);
+        contracts = contractService.getContractNames();
+        if (contracts != null) {
+            Vector<String> contractNames = contractService.getContractsNames(contracts);
+            DefaultComboBoxModel model = new DefaultComboBoxModel(contractNames);
+            combContract.setModel(model);
+        }
     }
 
     private void loadQuotes() {
         QuotationService quoteService = new QuotationServiceImpl();
-        Vector<String> contracts = quoteService.getQuotationNames();
-        DefaultComboBoxModel model = new DefaultComboBoxModel(contracts);
-        combQuote.setModel(model);
+        quotes = quoteService.getQuotationNames();
+        if (quotes != null) {
+            Vector<String> quoteNames = quoteService.getQuotationNames(quotes);
+            DefaultComboBoxModel model = new DefaultComboBoxModel(quoteNames);
+            combQuote.setModel(model);
+        }
     }
 }

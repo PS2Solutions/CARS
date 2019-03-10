@@ -5,6 +5,7 @@
  */
 package services.impl;
 
+import dataclasses.ComboContentDto;
 import dataclasses.ContractDto;
 import dataclasses.ReportContentDto;
 import java.sql.CallableStatement;
@@ -113,16 +114,29 @@ public class ContractServiceImpl implements ContractService{
     }
 
     @Override
-    public Vector<String> getContractsNames() {
-        String query = "SELECT Title FROM `quotations` WHERE ContractID > 0" ;
+    public Vector<String> getContractsNames(Vector<ComboContentDto> comboContentDtos) {
         Vector<String> contractDtos = new Vector<>();
+        for(ComboContentDto ccd : comboContentDtos) {
+            contractDtos.add(ccd.getName());
+        }
+        return contractDtos;
+    }
+
+    @Override
+    public Vector<ComboContentDto> getContractNames() {
+        String query = "SELECT ID,Title FROM `quotations` WHERE ContractID > 0" ;
+        Vector<ComboContentDto> contractDtos = new Vector<>();
         
         ResultSet resultSet = DBHelper.readDataFromDb(query);
         if (resultSet != null) {
             try {
                 while (resultSet.next()) {
+                    ComboContentDto ccd = new ComboContentDto();
+                    int id = resultSet.getInt("Id");
                     String title = resultSet.getString("Title");
-                    contractDtos.add(title);
+                    ccd.setId(id);
+                    ccd.setName(title);
+                    contractDtos.add(ccd);
                  }
                 
             } catch (Exception ex) {

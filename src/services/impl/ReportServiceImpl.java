@@ -75,18 +75,27 @@ public class ReportServiceImpl implements ReportService {
 
     private ReportContentDto getDateFilterReport(ReportsDto reportsDto) {
         ReportContentDto contentDto = new ReportContentDto();
+        Date startDate = null;
+        Date endDate = null;
+        java.sql.Date sqlStartDate = null;
+        java.sql.Date sqlEndDate = null;
+
         try {
             CallableStatement statement = DBHelper.getDbConnection().prepareCall(
                     "{call " + reportsDto.getProcedureName() + "(?,?,?,?)}");
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date startDate = formatter.parse(reportsDto.getStartDate());
-            Date endDate = formatter.parse(reportsDto.getEndDate());
-            java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
-            java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
+            if (reportsDto.getStartDate() != null) {
+                startDate = formatter.parse(reportsDto.getStartDate());
+                sqlStartDate = new java.sql.Date(startDate.getTime());
+            }
+            if (reportsDto.getEndDate() != null) {
+                endDate = formatter.parse(reportsDto.getEndDate());
+                sqlEndDate = new java.sql.Date(endDate.getTime());
+            }
             statement.setDate("DateFrom", sqlStartDate);
             statement.setDate("DateTo", sqlEndDate);
-            statement.setString("ContractName", reportsDto.getContractName());
-            statement.setString("QuoteName", reportsDto.getQuotationName());
+            statement.setString("ContractID", reportsDto.getContractName());
+            statement.setString("QuoteID", reportsDto.getQuotationName());
             ResultSet resultSet = statement.executeQuery();
             Vector<Vector> rowData = new Vector<Vector>();
             Vector<String> columnNames = new Vector<String>();
