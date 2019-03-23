@@ -39,11 +39,9 @@ public interface QuotationService {
     
     int updateQuotation(String quotationRef, int contractId);
     
-<<<<<<< Updated upstream
     Vector<ComboContentDto> getQuotationNames();
     
     Vector<String> getQuotationNames(Vector<ComboContentDto> comboContentDtos);
-=======
     int getCustomerId(int contractId);
     
     int getQuotationId(int contractId);
@@ -53,5 +51,4 @@ public interface QuotationService {
     int getQuotationType(int quotationId);
     
     boolean updateMaterials(QuotationMasterDto masterDto);
->>>>>>> Stashed changes
 }

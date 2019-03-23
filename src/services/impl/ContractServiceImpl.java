@@ -116,7 +116,6 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-<<<<<<< Updated upstream
     public Vector<String> getContractsNames(Vector<ComboContentDto> comboContentDtos) {
         Vector<String> contractDtos = new Vector<>();
         for(ComboContentDto ccd : comboContentDtos) {
@@ -149,7 +148,6 @@ public class ContractServiceImpl implements ContractService {
         return contractDtos;
     }
     
-=======
     public boolean closeContract(int contractId, String endDate) {
         try {
             String query = "update contracts set EndDate = ? where ID = ?";
@@ -170,5 +168,4 @@ public class ContractServiceImpl implements ContractService {
         return true;
     }
 
->>>>>>> Stashed changes
 }

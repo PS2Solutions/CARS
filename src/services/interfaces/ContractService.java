@@ -15,10 +15,7 @@ public interface ContractService {
     ReportContentDto getContractDetails( List<ContractDto> contractDtos );
     int saveContract(ContractDto contractDto);
     List<ContractDto> getContracts();
-<<<<<<< Updated upstream
     Vector<ComboContentDto> getContractNames();
     Vector<String> getContractsNames(Vector<ComboContentDto> comboContentDtos);
-=======
     boolean closeContract(int contractId, String endDate);
->>>>>>> Stashed changes
 }

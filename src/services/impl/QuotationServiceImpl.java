@@ -5,11 +5,8 @@
  */
 package services.impl;
 
-<<<<<<< Updated upstream
 import dataclasses.ComboContentDto;
 import dataclasses.ContractDto;
-=======
->>>>>>> Stashed changes
 import dataclasses.CustomerDto;
 import dataclasses.MaterialDto;
 import dataclasses.QuotationDetailsDto;
@@ -285,7 +282,6 @@ public class QuotationServiceImpl implements QuotationService {
         return result;
     }
 
-<<<<<<< Updated upstream
     public Vector<ComboContentDto> getQuotationNames() {
         String query = "SELECT ID, Title FROM `quotations` WHERE ContractID = 0" ;
         Vector<ComboContentDto> quotations = new Vector<>();
@@ -316,7 +312,7 @@ public class QuotationServiceImpl implements QuotationService {
             quoteDtos.add(ccd.getName());
         }
         return quoteDtos;
-=======
+    }
     public int getCustomerId(int contractId) {
         ResultSet set = DBHelper.readDataFromDb("select CustomerID from quotations where ContractID=" + contractId);
 
@@ -392,6 +388,5 @@ public class QuotationServiceImpl implements QuotationService {
         }
         
         return 0;
->>>>>>> Stashed changes
     }
 }
