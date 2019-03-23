@@ -126,7 +126,7 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public Vector<ComboContentDto> getContractNames() {
-        String query = "SELECT ID,Title FROM `quotations` WHERE ContractID > 0" ;
+        String query = "SELECT ContractID,Title FROM `quotations` WHERE ContractID > 0" ;
         Vector<ComboContentDto> contractDtos = new Vector<>();
         
         ResultSet resultSet = DBHelper.readDataFromDb(query);
@@ -134,7 +134,7 @@ public class ContractServiceImpl implements ContractService {
             try {
                 while (resultSet.next()) {
                     ComboContentDto ccd = new ComboContentDto();
-                    int id = resultSet.getInt("Id");
+                    int id = resultSet.getInt("ContractID");
                     String title = resultSet.getString("Title");
                     ccd.setId(id);
                     ccd.setName(title);
