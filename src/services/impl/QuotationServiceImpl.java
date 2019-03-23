@@ -5,8 +5,11 @@
  */
 package services.impl;
 
+<<<<<<< Updated upstream
 import dataclasses.ComboContentDto;
 import dataclasses.ContractDto;
+=======
+>>>>>>> Stashed changes
 import dataclasses.CustomerDto;
 import dataclasses.MaterialDto;
 import dataclasses.QuotationDetailsDto;
@@ -34,8 +37,8 @@ import utils.Helper;
 public class QuotationServiceImpl implements QuotationService {
 
     @Override
-    public Map< String,MaterialDto> getMaterials(int quotationType) {
-        Map< String,MaterialDto> materials = new HashMap< String,MaterialDto>();
+    public Map< String, MaterialDto> getMaterials(int quotationType) {
+        Map< String, MaterialDto> materials = new HashMap< String, MaterialDto>();
         ResultSet materialSet = DBHelper.readDataFromDb("select ID, Name, Code from materials where QuotationTypeID=" + quotationType);
         if (materialSet != null) {
             try {
@@ -43,23 +46,23 @@ public class QuotationServiceImpl implements QuotationService {
                     MaterialDto dto = new MaterialDto();
                     dto.setId(materialSet.getInt("ID"));
                     dto.setMaterialName(materialSet.getString("Name"));
-                    
+
                     materials.put(materialSet.getString("Code"), dto);
                 }
             } catch (Exception ex) {
 
-            }
+           }
         }
-        
+
         return materials;
     }
 
     @Override
     public Vector<CustomerDto> getCustomers() {
         Vector<CustomerDto> cds = new Vector<>();
-        
+
         ResultSet customerSet = DBHelper.readDataFromDb("select ID, Name, CompanyName, Address1, Address2, ContactNo from customers");
-        
+
         if (customerSet != null) {
             try {
                 while (customerSet.next()) {
@@ -70,14 +73,14 @@ public class QuotationServiceImpl implements QuotationService {
                     cd.setAddress1(customerSet.getString("Address1"));
                     cd.setAddress2(customerSet.getString("Address2"));
                     cd.setPhoneNumber(customerSet.getString("ContactNo"));
-                    
+
                     cds.add(cd);
                 }
             } catch (Exception ex) {
 
             }
         }
-        
+
         return cds;
     }
 
@@ -122,10 +125,10 @@ public class QuotationServiceImpl implements QuotationService {
     @Override
     public boolean saveQuotation(QuotationMasterDto masterDto) {
         boolean response = false;
-        
+
         int quoteID = updateQuotationDetails(masterDto);
-        
-        if(quoteID > 0) {
+
+        if (quoteID > 0) {
             masterDto.setId(quoteID);
             response = updateMaterials(masterDto);
         }
@@ -154,47 +157,47 @@ public class QuotationServiceImpl implements QuotationService {
                 statement.setDouble(11, masterDto.getAmount());
                 statement.setDate(12, masterDto.getCreatedDate());
                 statement.executeQuery();//sql response
-                
+
                 quoteID = statement.getObject(13, Integer.class);// out value
             }
         } catch (SQLException ex) {
             Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return quoteID;
     }
-    
-    private boolean updateMaterials(QuotationMasterDto masterDto) {
+
+    public boolean updateMaterials(QuotationMasterDto masterDto) {
         String response = null;
-        
-        if(deleteMaterials(masterDto.getId())) {
+
+        if (deleteMaterials(masterDto.getId())) {
             try {
                 try (
                         CallableStatement statement = DBHelper.getDbConnection().prepareCall(
                                 "{call UpdateQuotMaterialDetails(?,?,?,?,?)}");) {
-                   // statement.registerOutParameter(6, Types.VARCHAR);
-                    
-                    for(QuotationDetailsDto detailsDtos : masterDto.getDetailsDtos()) {
+                    // statement.registerOutParameter(6, Types.VARCHAR);
+
+                    for (QuotationDetailsDto detailsDtos : masterDto.getDetailsDtos()) {
                         statement.setInt(1, masterDto.getId());
                         statement.setInt(2, detailsDtos.getMaterialId());
                         statement.setDouble(3, detailsDtos.getUnitRate());
                         statement.setInt(4, detailsDtos.getQuantity());
                         statement.setDouble(5, detailsDtos.getAmount());
-                        
+
                         statement.addBatch();
                     }
                     statement.executeBatch();
-                    
+
                     //response = (String) statement.getObject(6, String.class);// out value
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
         return true;//(response != null && response.equalsIgnoreCase(Helper.getPropertyValue("Success")));
     }
-    
+
     private boolean deleteMaterials(int quoteID) {
         String response = null;
         try {
@@ -205,13 +208,13 @@ public class QuotationServiceImpl implements QuotationService {
 
                 statement.setInt(1, quoteID);
                 statement.executeQuery();//sql response
-                
+
                 response = (String) statement.getObject(2, String.class);// out value
             }
         } catch (SQLException ex) {
             Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return (response != null && response.equalsIgnoreCase(Helper.getPropertyValue("Success")));
     }
 
@@ -219,32 +222,32 @@ public class QuotationServiceImpl implements QuotationService {
     public QuotationMasterDto getQuotation(String referenceNo) {
         try {
             ResultSet set = DBHelper.readDataFromDb("select ID, QuotationTypeID from quotations where ReferenceNo='" + referenceNo + "'");
-            if (set != null && set.next()) {    
- 
+            if (set != null && set.next()) {
+
                 int quotID = set.getInt("ID");
-                
+
                 QuotationMasterDto dto = new QuotationMasterDto();
                 dto.setTypeId(set.getInt("QuotationTypeID"));
                 List<QuotationDetailsDto> detailsDtos = new ArrayList<QuotationDetailsDto>();
-                
+
                 ResultSet resultSet = DBHelper.readDataFromDb("select * from quotationdetails where QuotationID=" + quotID);
                 if (resultSet != null) {
                     while (resultSet.next()) {
-                        QuotationDetailsDto detailsDto = new QuotationDetailsDto(); 
+                        QuotationDetailsDto detailsDto = new QuotationDetailsDto();
                         detailsDto.setMaterialId(resultSet.getInt("MaterialID"));
                         detailsDto.setUnitRate(resultSet.getInt("UnitRate"));
                         detailsDto.setQuantity(resultSet.getInt("Quantity"));
                         detailsDto.setAmount(resultSet.getDouble("Amount"));
-                        
+
                         detailsDtos.add(detailsDto);
                     }
                     resultSet.close();
-                    
-                    for(QuotationDetailsDto detailsDto : detailsDtos) {
+
+                    for (QuotationDetailsDto detailsDto : detailsDtos) {
                         ResultSet materialSet = DBHelper.readDataFromDb("select Name, Code from materials where ID=" + detailsDto.getMaterialId());
-                        if(materialSet != null && materialSet.next()) {
+                        if (materialSet != null && materialSet.next()) {
                             detailsDto.setMaterialCode(materialSet.getString("Code"));
-                            detailsDto.setMaterialName(materialSet.getString("Name")); 
+                            detailsDto.setMaterialName(materialSet.getString("Name"));
                         }
                     }
 
@@ -255,14 +258,14 @@ public class QuotationServiceImpl implements QuotationService {
         } catch (SQLException ex) {
             Logger.getLogger(QuotationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return null;
     }
 
     @Override
     public List<String> getQuotationRefs() {
         List<String> quotationRefs = new ArrayList<String>();
-        
+
         ResultSet set = DBHelper.readDataFromDb("select ReferenceNo from quotations where ContractID = 0");
         if (set != null) {
             try {
@@ -273,15 +276,16 @@ public class QuotationServiceImpl implements QuotationService {
 
             }
         }
-        
+
         return quotationRefs;
     }
-    
+
     public int updateQuotation(String quotationRef, int contractId) {
         int result = DBHelper.updateDataToDb("Update quotations set ContractID = " + contractId + " where ReferenceNo = '" + quotationRef + "'");
         return result;
     }
 
+<<<<<<< Updated upstream
     public Vector<ComboContentDto> getQuotationNames() {
         String query = "SELECT ID, Title FROM `quotations` WHERE ContractID = 0" ;
         Vector<ComboContentDto> quotations = new Vector<>();
@@ -312,5 +316,82 @@ public class QuotationServiceImpl implements QuotationService {
             quoteDtos.add(ccd.getName());
         }
         return quoteDtos;
+=======
+    public int getCustomerId(int contractId) {
+        ResultSet set = DBHelper.readDataFromDb("select CustomerID from quotations where ContractID=" + contractId);
+
+        try {
+            if (set != null && set.next()) {
+                return set.getInt("CustomerID");
+            }
+        } catch (Exception ex) {
+
+        }
+        return 0;
+    }
+
+    @Override
+    public int getQuotationId(int contractId) {
+        ResultSet set = DBHelper.readDataFromDb("select ID from quotations where ContractID=" + contractId);
+
+        try {
+            if (set != null && set.next()) {
+                return set.getInt("ID");
+            }
+        } catch (Exception ex) {
+
+        }
+        return 0;
+    }
+
+    @Override
+    public List<QuotationDetailsDto> getQuotationDetails(int quotationId) {
+        List<QuotationDetailsDto> detailsDtos = new ArrayList<QuotationDetailsDto>();
+
+        try {
+            ResultSet resultSet = DBHelper.readDataFromDb("select * from quotationdetails where QuotationID=" + quotationId);
+            if (resultSet != null) {
+                while (resultSet.next()) {
+                    QuotationDetailsDto detailsDto = new QuotationDetailsDto();
+                    detailsDto.setMaterialId(resultSet.getInt("MaterialID"));
+                    detailsDto.setUnitRate(resultSet.getInt("UnitRate"));
+                    detailsDto.setQuantity(resultSet.getInt("Quantity"));
+                    detailsDto.setAmount(resultSet.getDouble("Amount"));
+
+                    detailsDtos.add(detailsDto);
+                }
+
+                resultSet.close();
+
+                for (QuotationDetailsDto detailsDto : detailsDtos) {
+                    ResultSet materialSet = DBHelper.readDataFromDb("select Name, Code from materials where ID=" + detailsDto.getMaterialId());
+                    if (materialSet != null && materialSet.next()) {
+                        detailsDto.setMaterialCode(materialSet.getString("Code"));
+                        detailsDto.setMaterialName(materialSet.getString("Name"));
+                    }
+                }
+
+                return detailsDtos;
+            }
+        } catch (Exception ex) {
+
+        }
+        return null;
+    }
+
+    @Override
+    public int getQuotationType(int quotationId) {
+        try {
+            ResultSet set = DBHelper.readDataFromDb("select QuotationTypeID from quotations where ID=" + quotationId);
+            
+            if (set != null && set.next()) {
+                return set.getInt("QuotationTypeID");
+            }
+        } catch (Exception ex) {
+
+        }
+        
+        return 0;
+>>>>>>> Stashed changes
     }
 }

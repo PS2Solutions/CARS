@@ -5,6 +5,7 @@
  */
 package utils;
 
+import dataclasses.ContractDto;
 import dataclasses.CustomerDto;
 import dataclasses.QuotationDetailsDto;
 import dataclasses.QuotationMasterDto;
@@ -37,6 +38,10 @@ public class ReportGenerator {
     private static final String QUOT_TYPE           = "$#$QuotType$#$";
     private static final String QUOT_MATERIALS      = "$#$QuotMaterials$#$";
     
+    private static final String SITE_REFERENCE      = "$#$SiteReference$#$";
+    private static final String CLOSURE_START_DATE  = "$#ClosureStartDate#$";
+    private static final String CLOSURE_END_DATE    = "$#ClosureEndDate#$";
+    
     private static final String QUOT_MATERIALS_TEMPLATE = "<tr><td>%x</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>";
     
     
@@ -48,17 +53,9 @@ public class ReportGenerator {
             
             content = content.replace(QUOT_HEADER, quotDto.getTitle());
             
-            content = content.replace(COMPANY_NAME, regDto.getCompanyName());
-            content = content.replace(OWNER_NAME, regDto.getName());
-            content = content.replace(OWNER_PHONE, regDto.getPhoneNumber());
+            content = modifyCompanyDetails(content, regDto);
             
-            content = content.replace(COMPANY_LOGO_PATH, regDto.getCompanyLogo());
-            
-            content = content.replace(CUSTOMER_NAME, customerDto.getName());
-            content = content.replace(CUSTO_COMPANY_NAME, customerDto.getCompanyName());
-            content = content.replace(CUSTOMER_ADDRESS1, customerDto.getAddress1());
-            content = content.replace(CUSTOMER_ADDRESS2, customerDto.getAddress2());
-            content = content.replace(CUSTOMER_PHONE, customerDto.getPhoneNumber());
+            content = modifyCustomerDetails(content, customerDto);
             
             content = content.replace(QUOTATION_REFERENCE, quotDto.getReferenceNo());
             
@@ -85,6 +82,65 @@ public class ReportGenerator {
         }
         
         return null;
+    }
+    
+      public static String generateClosureReport(RegistrationDto regDto, ContractDto contractDto, CustomerDto customerDto) {
+        try {
+            String output = Constants.CLOSURE_REPORT_PATH + contractDto.getContractRefNo() + ".pdf";
+            
+            String content = new String(Files.readAllBytes(new File(Constants.PRINT_TEMPLATE_PATH + "ClosureTemplate.html").toPath()));
+            
+            content = modifyCompanyDetails(content, regDto);
+            
+            content = modifyCustomerDetails(content, customerDto);
+            
+            content = content.replace(SITE_REFERENCE, contractDto.getAgrementReference());
+            content = content.replace(CLOSURE_START_DATE, contractDto.getStartDate());
+            content = content.replace(CLOSURE_END_DATE, contractDto.getEndDate());
+            
+            /*SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+            content = content.replace(QUOT_DATE, sdf.format(quotDto.getCreatedDate()));
+
+            content = content.replace(QUOT_TYPE, quotType);
+            
+            StringBuffer buffer = new StringBuffer();
+            int index = 1;
+            for(QuotationDetailsDto detailsDto : quotDto.getDetailsDtos()) {
+                buffer.append(String.format(QUOT_MATERIALS_TEMPLATE, index++, detailsDto.getMaterialName(), detailsDto.getUnitRate(), detailsDto.getQuantity(), detailsDto.getAmount()));
+            }
+            
+            if(buffer.length() > 0) {
+                content = content.replace(QUOT_MATERIALS, buffer.toString());
+            }*/
+            
+            if(FileHandler.WriteToPdfFile(output, content)){
+                return output;
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(ReportGenerator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return null;
+    }
+    
+    private static String modifyCompanyDetails(String content, RegistrationDto regDto) {
+        content = content.replace(COMPANY_NAME, regDto.getCompanyName());
+        content = content.replace(OWNER_NAME, regDto.getName());
+        content = content.replace(OWNER_PHONE, regDto.getPhoneNumber());
+            
+        content = content.replace(COMPANY_LOGO_PATH, regDto.getCompanyLogo());
+            
+        return content;
+    }
+    
+    private static String modifyCustomerDetails(String content, CustomerDto customerDto) {
+        content = content.replace(CUSTOMER_NAME, customerDto.getName());
+        content = content.replace(CUSTO_COMPANY_NAME, customerDto.getCompanyName());
+        content = content.replace(CUSTOMER_ADDRESS1, customerDto.getAddress1());
+        content = content.replace(CUSTOMER_ADDRESS2, customerDto.getAddress2());
+        content = content.replace(CUSTOMER_PHONE, customerDto.getPhoneNumber());
+            
+        return content;
     }
 }
 

@@ -5,11 +5,11 @@
  */
 package services.impl;
 
-import dataclasses.CustomerDto;
 import dataclasses.LaborDto;
 import dataclasses.ReportContentDto;
 import dataclasses.UploadHelperDto;
 import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -180,6 +180,21 @@ public class LaborServiceImpl implements LaborService {
             response = false;
         }
         return response;
+    }
+
+    @Override
+    public int getLaborCount(int contractId) {
+        int numberRow = 0;
+        try {
+            ResultSet resultSet = DBHelper.readDataFromDb("select count(*) from contractlabordetails where ContractID=" + contractId);
+
+            if (resultSet != null && resultSet.next()) {
+                numberRow = resultSet.getInt(1);
+            }
+        } catch (Exception ex) {
+
+        }
+        return numberRow;
     }
 
 }

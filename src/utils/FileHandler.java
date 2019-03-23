@@ -168,6 +168,11 @@ public class FileHandler {
 
     public static boolean WriteToPdfFile(String file, String content) {
         try {
+            File directory = new File(file.substring(0, file.lastIndexOf('/')));
+            if (! directory.exists()){
+                directory.mkdir();
+            }
+            
             final Document document = new Document();
             DocWriter docWriter = PdfWriter.getInstance(document, new FileOutputStream(file));
             document.open();

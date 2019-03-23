@@ -3,18 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/sreenath/Git/CARS/src/utils/FileHandler.java</file>
-            <file>file:/home/sreenath/Git/CARS/src/dataclasses/QuotationDetailsDto.java</file>
             <file>file:/home/sreenath/Git/CARS/src/services/impl/QuotationServiceImpl.java</file>
-            <file>file:/home/sreenath/Git/CARS/src/utils/ReportGenerator.java</file>
-            <file>file:/home/sreenath/Git/CARS/src/views/CustomerScreen.java</file>
-            <file>file:/home/sreenath/Git/CARS/src/utils/Constants.java</file>
             <file>file:/home/sreenath/Git/CARS/src/views/QuotationScreen.java</file>
-            <file>file:/home/sreenath/Git/CARS/src/dataclasses/MaterialDto.java</file>
-            <file>file:/home/sreenath/Git/CARS/src/dataclasses/CustomersDto.java</file>
-            <file>file:/home/sreenath/Git/CARS/src/dataclasses/MaterialCategoryDto.java</file>
+            <file>file:/home/sreenath/Git/CARS/src/services/impl/ContractServiceImpl.java</file>
+            <file>file:/home/sreenath/Git/CARS/src/views/ClosureScreen.java</file>
             <file>file:/home/sreenath/Git/CARS/src/services/interfaces/QuotationService.java</file>
-            <file>file:/home/sreenath/Git/CARS/src/dataclasses/QuotationMasterDto.java</file>
         </group>
     </open-files>
 </project-private>

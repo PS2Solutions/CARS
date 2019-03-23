@@ -590,15 +590,16 @@ public class QuotationScreen extends javax.swing.JFrame {
                 try {
                     detailsDto.setQuantity(Integer.parseInt(txtMaterialQty.getText().toString().trim()));
                 } catch (Exception e) {
-                    detailsDto.setAmount(0);
+                    detailsDto.setQuantity(0);
                 }
                 try {
                     detailsDto.setUnitRate(Integer.parseInt(txtMaterialRate.getText().toString().trim()));
                 } catch (Exception e) {
-                    detailsDto.setAmount(0);
+                    detailsDto.setUnitRate(0);
                 }
                 quotationMaster.getDetailsDtos().add(detailsDto);
                 dtModel.addRow(new Object[]{detailsDto.getMaterialCode(), detailsDto.getUnitRate(), detailsDto.getQuantity(), detailsDto.getAmount()});
+                
                 clearMaterials();
             } else {
                 DialogHelper.showErrorMessage("Validation", Helper.getPropertyValue("Invalid_Material_Code"));

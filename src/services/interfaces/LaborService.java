@@ -20,4 +20,5 @@ public interface LaborService {
     String saveLabor(LaborDto laborDto);
     List<LaborDto> getLabor(String empolyeeId, String name);
     boolean uploadExcel(List<UploadHelperDto> helperDtos);
+    int getLaborCount(int contractId);
 }

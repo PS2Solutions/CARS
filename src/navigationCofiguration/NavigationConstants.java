@@ -21,4 +21,5 @@ public class NavigationConstants {
     public final static String CONTRACT = "CONTRACT";
     public final static String REPORT = "REPORT";
     public final static String DAILY_WAGE_SCREEN = "DAILY_WAGE_SCREEN";
+    public final static String CLOSURE_SCREEN = "CLOSURE_SCREEN";
 }

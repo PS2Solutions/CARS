@@ -141,7 +141,7 @@ public class CustomerServiceImpl implements CustomerService {
                     customerDto.setId(0);
                     customerDto.setName(excelContent.getColumnValues().get(0));
                     customerDto.setCompanyName(excelContent.getColumnValues().get(1));
-                     customerDto.setPhoneNumber(excelContent.getColumnValues().get(2));
+                    customerDto.setPhoneNumber(excelContent.getColumnValues().get(2));
                     customerDto.setAddress1(excelContent.getColumnValues().get(3));
                     customerDto.setAddress2(excelContent.getColumnValues().get(4));
                     customerDto.setEmail(excelContent.getColumnValues().get(5));
@@ -157,6 +157,40 @@ public class CustomerServiceImpl implements CustomerService {
             response = false;
         }
         return response;
+    }
+
+    @Override
+    public CustomerDto getCustomer(int customerId) {
+        ResultSet resultSet = DBHelper.readDataFromDb("Select * from customers where ID=" + customerId);
+
+        try {
+            if (resultSet != null && resultSet.next()) {
+                CustomerDto customerDto = new CustomerDto();
+                int id = resultSet.getInt("ID");
+                String name = resultSet.getString("Name");
+                String companyName = resultSet.getString("CompanyName");
+                String address1 = resultSet.getString("Address1");
+                String address2 = resultSet.getString("Address2");
+                String email = resultSet.getString("Email");
+                String contactNo = resultSet.getString("ContactNo");
+                String regNo = resultSet.getString("RegistrationNo");
+
+                customerDto.setId(id);
+                customerDto.setName(name);
+                customerDto.setCompanyName(companyName);
+                customerDto.setAddress1(address1);
+                customerDto.setAddress2(address2);
+                customerDto.setEmail(email);
+                customerDto.setPhoneNumber(contactNo);
+                customerDto.setCompanyRegNo(regNo);
+                
+                return customerDto;
+            }
+        } catch (Exception ex) {
+
+        }
+
+        return null;
     }
 
 }

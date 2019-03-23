@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -249,5 +250,23 @@ public class Helper {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         return sdf.format(date);
+    }
+    
+    public static String getDays(String startDate, String endDate) {
+        SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat2 = new SimpleDateFormat("dd-MM-yyyy");
+        
+        try {
+            Date date2 = dateFormat2.parse(endDate);
+            Date date1 = dateFormat1.parse(startDate);
+            
+            long diff = TimeUnit.DAYS.convert(date2.getTime() - date1.getTime(), TimeUnit.MILLISECONDS);
+            
+            return Long.toString(diff);
+        } catch (Exception e) {
+            String msg= e.getMessage();
+        }
+        
+        return "";
     }
 }

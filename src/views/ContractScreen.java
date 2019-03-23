@@ -23,6 +23,7 @@ import services.impl.ContractServiceImpl;
 import services.impl.QuotationServiceImpl;
 import services.interfaces.ContractService;
 import services.interfaces.QuotationService;
+import utils.Arguments;
 import utils.Constants;
 import utils.DialogHelper;
 import utils.Helper;
@@ -59,6 +60,7 @@ public class ContractScreen extends javax.swing.JFrame {
         btnAddNew = new javax.swing.JButton();
         btnHome = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
+        btnOk = new javax.swing.JButton();
         jPLaborDeails = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtTotalCost = new javax.swing.JTextField();
@@ -123,6 +125,13 @@ public class ContractScreen extends javax.swing.JFrame {
             }
         });
 
+        btnOk.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/closure.png"))); // NOI18N
+        btnOk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOkActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -133,6 +142,8 @@ public class ContractScreen extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnAddNew, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -141,6 +152,7 @@ public class ContractScreen extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAddNew, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -243,6 +255,15 @@ public class ContractScreen extends javax.swing.JFrame {
         NavigationController.navigateToScreen(NavigationConstants.DAILY_WAGE_SCREEN, this);
     }//GEN-LAST:event_btnAddDailyWageActionPerformed
 
+    private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
+        Arguments args = new Arguments();
+        
+        selectedDto.setEndDate(Helper.getCurrentDate());
+        args.put("contract", selectedDto);
+        
+        NavigationController.navigateToScreen(NavigationConstants.CLOSURE_SCREEN, this, args);
+    }//GEN-LAST:event_btnOkActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -285,6 +306,7 @@ public class ContractScreen extends javax.swing.JFrame {
     private javax.swing.JButton btnAddDailyWage;
     private javax.swing.JButton btnAddNew;
     private javax.swing.JButton btnHome;
+    private javax.swing.JButton btnOk;
     private javax.swing.JButton btnSave;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;

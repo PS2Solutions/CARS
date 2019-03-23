@@ -15,4 +15,5 @@ public interface CustomerService {
     String saveCustomer(CustomerDto customerDto);
     List<CustomerDto> getCustomers();
     boolean uploadExcel(List<UploadHelperDto> helperDtos);
+    CustomerDto getCustomer(int customerId);
 }

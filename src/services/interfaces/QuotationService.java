@@ -8,6 +8,7 @@ package services.interfaces;
 import dataclasses.ComboContentDto;
 import dataclasses.CustomerDto;
 import dataclasses.MaterialDto;
+import dataclasses.QuotationDetailsDto;
 import dataclasses.QuotationMasterDto;
 import dataclasses.QuotationTypeDto;
 import java.util.List;
@@ -38,7 +39,19 @@ public interface QuotationService {
     
     int updateQuotation(String quotationRef, int contractId);
     
+<<<<<<< Updated upstream
     Vector<ComboContentDto> getQuotationNames();
     
     Vector<String> getQuotationNames(Vector<ComboContentDto> comboContentDtos);
+=======
+    int getCustomerId(int contractId);
+    
+    int getQuotationId(int contractId);
+    
+    List<QuotationDetailsDto> getQuotationDetails(int quotationId);
+    
+    int getQuotationType(int quotationId);
+    
+    boolean updateMaterials(QuotationMasterDto masterDto);
+>>>>>>> Stashed changes
 }

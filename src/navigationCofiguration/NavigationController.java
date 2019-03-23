@@ -9,6 +9,7 @@ import java.util.Vector;
 import javax.swing.JFrame;
 import utils.Arguments;
 import utils.KeyValuePair;
+import views.ClosureScreen;
 import views.ContractScreen;
 import views.CustomerScreen;
 import views.DashboardScreen;
@@ -76,6 +77,10 @@ public class NavigationController {
                 laborWageScreen.setVisible(true);
                 baseScreen.setVisible(false);
                 break;
+            case NavigationConstants.CLOSURE_SCREEN:
+                ClosureScreen closureScreen = new ClosureScreen(arguments);
+                closureScreen.setVisible(true);
+                baseScreen.setVisible(false);    
         }
     }
 }

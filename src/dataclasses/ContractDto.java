@@ -17,7 +17,7 @@ public class ContractDto {
     String agrementReference;
     double totalAmount;
     String startDate;
-    Date endDate;
+    String endDate;
     String lastCollectionDate;
 
     public int getId() {
@@ -40,7 +40,7 @@ public class ContractDto {
         return startDate;
     }
 
-    public Date getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
@@ -68,7 +68,7 @@ public class ContractDto {
         this.startDate = startDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
