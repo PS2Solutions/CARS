@@ -54,8 +54,8 @@ public class ReportGenerator {
     private static final String CLOSURE_TOTAL_COST = "$#$ClosureTotalCost$#$";
 
     private static final String MATERIALS_TEMPLATE = "<tr><td>%x</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>";
-    private static final String DAILY_WAGE_TEMPLATE = "<tr><td>%x</td><td>%s</td><td>%f</td></tr>";
-    private static final String ADD_PURCHASES_TEMPLATE = "<tr><td>%x</td><td>%s</td><td>%s</td><td>%x</td><td>%f</td></tr>";
+    private static final String DAILY_WAGE_TEMPLATE = "<tr><td>%x</td><td>%s</td><td>%.2f</td></tr>";
+    private static final String ADD_PURCHASES_TEMPLATE = "<tr><td>%x</td><td>%s</td><td>%s</td><td>%x</td><td>%.2f</td></tr>";
 
     public static String generateQuotationReport(QuotationMasterDto quotDto, RegistrationDto regDto, CustomerDto customerDto, String quotType) {
         try {
