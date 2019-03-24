@@ -8,6 +8,7 @@ package services.interfaces;
 import dataclasses.ContractLaborChargeDetails;
 import dataclasses.ContractLaborDto;
 import dataclasses.DailyWageDto;
+import dataclasses.ExtraPurchaseDetails;
 import dataclasses.LaborDto;
 import dataclasses.ReportContentDto;
 import java.util.List;
@@ -30,4 +31,8 @@ public interface DailyWageService {
     Vector<String> getLabors(List<LaborDto> laborDtos);
     
     String UpdateContractLabor(ContractLaborDto contractLaborDto);
+    
+    List<DailyWageDto> getDailyWages(int contractID);
+    
+    List<ExtraPurchaseDetails> getExtraPurchaseDetails(int contractID);
 }

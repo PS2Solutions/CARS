@@ -18,4 +18,6 @@ public interface ContractService {
     Vector<ComboContentDto> getContractNames();
     Vector<String> getContractsNames(Vector<ComboContentDto> comboContentDtos);
     boolean closeContract(int contractId, String endDate);
+    
+    List<ContractDto> getClosedContracts();
 }

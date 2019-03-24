@@ -51,4 +51,6 @@ public interface QuotationService {
     int getQuotationType(int quotationId);
     
     boolean updateMaterials(QuotationMasterDto masterDto);
+    
+    String getQuotationTitle(int quotationId);
 }

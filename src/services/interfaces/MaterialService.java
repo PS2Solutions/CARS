@@ -15,4 +15,5 @@ public interface MaterialService {
     String saveMaterial(MaterialDto materialDto);
     List<MaterialDto> getMaterials();
     boolean uploadExcel(List<UploadHelperDto> helperDtos);
+    String getMaterialName(String materialCode);
 }

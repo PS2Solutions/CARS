@@ -204,4 +204,59 @@ public class DailyWageServiceImpl implements DailyWageService {
         return (response == null ? "Duplicate" : response);
     }
 
+    public List<DailyWageDto> getDailyWages(int contractID) {
+        List<DailyWageDto> dailyWages = new ArrayList<DailyWageDto>();
+        ResultSet resultSet = DBHelper.readDataFromDb("Select LaborID, Wage, TA, FA from contractlaborchargedetails where ContractID = " + contractID);
+        if (resultSet != null) {
+            try {
+                while (resultSet.next()) {
+                    DailyWageDto dailyWageDto = new DailyWageDto();
+                    int laborID = resultSet.getInt("LaborID");
+                    double wage = resultSet.getDouble("Wage");
+                    double ta = resultSet.getDouble("TA");
+                    double fa = resultSet.getDouble("FA");
+
+                    dailyWageDto.setLaborId(laborID);
+                    dailyWageDto.setWage(wage);
+                    dailyWageDto.setTa(ta);
+                    dailyWageDto.setFa(fa);
+
+                    dailyWages.add(dailyWageDto);
+                }
+            } catch (Exception ex) {
+
+            }
+        }
+        return dailyWages;
+    }
+
+    @Override
+    public List<ExtraPurchaseDetails> getExtraPurchaseDetails(int contractID) {
+        List<ExtraPurchaseDetails> extraPurchases = new ArrayList<ExtraPurchaseDetails>();
+        ResultSet resultSet = DBHelper.readDataFromDb("Select * from extrapurchasedetails where ContractID = " + contractID);
+        if (resultSet != null) {
+            try {
+                while (resultSet.next()) {
+                    ExtraPurchaseDetails extraPurchaseDetails = new ExtraPurchaseDetails();
+                    
+                    int laborId = resultSet.getInt("LaborID");
+                    double amount = resultSet.getDouble("Amount");
+                    String billNo = resultSet.getString("BillNo");
+                    String material = resultSet.getString("Material");
+                    int quantity = resultSet.getInt("Quantity");
+                    
+                    extraPurchaseDetails.setLaborId(laborId);
+                    extraPurchaseDetails.setAmount(amount);
+                    extraPurchaseDetails.setBillNo(billNo);
+                    extraPurchaseDetails.setMaterial(material);
+                    extraPurchaseDetails.setQuantity(quantity);
+  
+                    extraPurchases.add(extraPurchaseDetails);
+                }
+            } catch (Exception ex) {
+
+            }
+        }
+        return extraPurchases;
+    }
 }

@@ -90,7 +90,7 @@ public class ContractServiceImpl implements ContractService {
     public List<ContractDto> getContracts() {
         List<ContractDto> contractDtos = new ArrayList<ContractDto>();
 
-        ResultSet resultSet = DBHelper.readDataFromDb("Select * from contracts");
+        ResultSet resultSet = DBHelper.readDataFromDb("Select * from contracts where EndDate is NULL");
         if (resultSet != null) {
             try {
                 while (resultSet.next()) {
@@ -118,7 +118,7 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public Vector<String> getContractsNames(Vector<ComboContentDto> comboContentDtos) {
         Vector<String> contractDtos = new Vector<>();
-        for(ComboContentDto ccd : comboContentDtos) {
+        for (ComboContentDto ccd : comboContentDtos) {
             contractDtos.add(ccd.getName());
         }
         return contractDtos;
@@ -168,4 +168,25 @@ public class ContractServiceImpl implements ContractService {
         return true;
     }
 
+    public List<ContractDto> getClosedContracts() {
+        List<ContractDto> contractDtos = new ArrayList<ContractDto>();
+
+        ResultSet resultSet = DBHelper.readDataFromDb("Select * from contracts where EndDate is not NULL");
+        if (resultSet != null) {
+            try {
+                while (resultSet.next()) {
+                    ContractDto dto = new ContractDto();
+                    dto.setId(resultSet.getInt("ID"));
+                    dto.setContractRefNo(resultSet.getString("ReferenceNo"));
+
+                    contractDtos.add(dto);
+
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return contractDtos;
+    }
 }

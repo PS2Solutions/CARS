@@ -197,4 +197,17 @@ public class LaborServiceImpl implements LaborService {
         return numberRow;
     }
 
+    @Override
+    public String getLaborName(int laborId) {
+        ResultSet resultSet = DBHelper.readDataFromDb("Select Name from labors where LaborID = " + laborId);
+        try {
+            if (resultSet != null && resultSet.next()) {
+                return resultSet.getString("Name");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LaborServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return "";
+    }
 }

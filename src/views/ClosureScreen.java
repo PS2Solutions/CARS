@@ -7,6 +7,8 @@ package views;
 
 import dataclasses.ContractDto;
 import dataclasses.CustomerDto;
+import dataclasses.DailyWageDto;
+import dataclasses.ExtraPurchaseDetails;
 import dataclasses.MaterialDto;
 import dataclasses.QuotationDetailsDto;
 import dataclasses.QuotationMasterDto;
@@ -14,12 +16,15 @@ import dataclasses.RegistrationDto;
 import dataclasses.ReportContentDto;
 import java.awt.Desktop;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -31,12 +36,15 @@ import navigationCofiguration.NavigationConstants;
 import navigationCofiguration.NavigationController;
 import services.impl.ContractServiceImpl;
 import services.impl.CustomerServiceImpl;
+import services.impl.DailyWageServiceImpl;
 import services.impl.LaborServiceImpl;
 import services.impl.QuotationServiceImpl;
 import services.impl.RegistrationServiceImpl;
 import services.interfaces.CustomerService;
+import services.interfaces.DailyWageService;
 import services.interfaces.QuotationService;
 import utils.Arguments;
+import utils.Constants;
 import utils.DialogHelper;
 import utils.Helper;
 import utils.ReportGenerator;
@@ -62,9 +70,11 @@ public class ClosureScreen extends javax.swing.JFrame {
         }
 
         btnPrint.setEnabled(false);
-        
-        populateSelectedDetails(contractDto);
+
         setMaterials(contractDto);
+        populateSelectedDetails(contractDto);
+
+        setCosures();
     }
 
     /**
@@ -83,7 +93,7 @@ public class ClosureScreen extends javax.swing.JFrame {
         btnHome = new javax.swing.JButton();
         btnPrint = new javax.swing.JButton();
         jPLaborDeails = new javax.swing.JPanel();
-        txtName = new javax.swing.JTextField();
+        txtQuotationTitle = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -99,6 +109,10 @@ public class ClosureScreen extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         txtAddress2 = new javax.swing.JTextField();
         txtAddress1 = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        txtName = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        comboClosures = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         jPCustomerList = new javax.swing.JScrollPane();
         txtMaterialCode = new javax.swing.JTextField();
@@ -196,9 +210,9 @@ public class ClosureScreen extends javax.swing.JFrame {
 
         jPLaborDeails.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        txtName.setColumns(20);
-        txtName.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        txtName.setEnabled(false);
+        txtQuotationTitle.setColumns(20);
+        txtQuotationTitle.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txtQuotationTitle.setEnabled(false);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel3.setText("Reference No");
@@ -221,7 +235,8 @@ public class ClosureScreen extends javax.swing.JFrame {
         txtTotalDays.setEnabled(false);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel2.setText("Name");
+        jLabel2.setText("Customer Name");
+        jLabel2.setToolTipText("");
 
         txtReferenceNo.setEnabled(false);
 
@@ -244,49 +259,69 @@ public class ClosureScreen extends javax.swing.JFrame {
 
         txtAddress1.setEnabled(false);
 
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel4.setText("Quotation Title ");
+        jLabel4.setToolTipText("");
+
+        txtName.setColumns(20);
+        txtName.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txtName.setEnabled(false);
+
+        jLabel12.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel12.setText("Closures");
+
+        comboClosures.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout jPLaborDeailsLayout = new javax.swing.GroupLayout(jPLaborDeails);
         jPLaborDeails.setLayout(jPLaborDeailsLayout);
         jPLaborDeailsLayout.setHorizontalGroup(
             jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                .addGap(72, 72, 72)
+                .addGap(74, 74, 74)
                 .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                        .addComponent(jLabel11)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel10)
                     .addGroup(jPLaborDeailsLayout.createSequentialGroup()
                         .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel9)
-                            .addComponent(jLabel10)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel7))
+                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel8)
-                                    .addComponent(jLabel7))
                                 .addGap(47, 47, 47)
+                                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtNoEmployees)
+                                    .addComponent(txtAgrementReference)
+                                    .addComponent(txtReferenceNo, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
+                                    .addComponent(txtTotalDays, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
+                                    .addComponent(txtTotalAmount, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
+                                    .addComponent(txtAddress1)
+                                    .addComponent(txtAddress2, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
+                                    .addComponent(comboClosures, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPLaborDeailsLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(txtNoEmployees, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(txtAgrementReference, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(txtReferenceNo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(txtTotalDays, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtTotalAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(txtAddress1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
-                                        .addComponent(txtAddress2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)))))
-                        .addContainerGap(78, Short.MAX_VALUE))))
+                                    .addComponent(txtName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtQuotationTitle, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel11))
+                .addContainerGap(80, Short.MAX_VALUE))
         );
         jPLaborDeailsLayout.setVerticalGroup(
             jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                .addContainerGap(96, Short.MAX_VALUE)
+                .addGap(52, 52, 52)
                 .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addGap(18, 18, 18)
+                    .addComponent(jLabel2)
+                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(19, 19, 19)
+                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtQuotationTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
                 .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(txtReferenceNo, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -314,7 +349,11 @@ public class ClosureScreen extends javax.swing.JFrame {
                 .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtAddress2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11))
-                .addGap(107, 107, 107))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(comboClosures, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(21, 21, 21))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -468,8 +507,10 @@ public class ClosureScreen extends javax.swing.JFrame {
         if (result) {
             DialogHelper.showInfoMessage(Helper.getPropertyValue("Success"),
                     Helper.getPropertyValue("SuccessMessage"));
+            btnOk.setEnabled(false);
+            enableFields(false);
         }
-        
+
         btnPrint.setEnabled(result);
     }//GEN-LAST:event_btnOkActionPerformed
 
@@ -480,8 +521,8 @@ public class ClosureScreen extends javax.swing.JFrame {
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
         try {
             RegistrationDto regDto = new RegistrationServiceImpl().getRegistrationDetails();
-
-            String output = ReportGenerator.generateClosureReport(regDto, contractDto, customer);
+            
+            String output = ReportGenerator.generateClosureReport(regDto, contractDto, customer, contrctMaterials, dailyWages, extraPurchases, totalCost + getTotalMaterialsCost());
 
             if (output == null) {
                 DialogHelper.showErrorMessage(Helper.getPropertyValue("Error"), Helper.getPropertyValue("Error_Quotation_Print_Message"));
@@ -507,6 +548,8 @@ public class ClosureScreen extends javax.swing.JFrame {
             clearMaterials();
             dtModel.removeRow(selectedMaterial);
             contrctMaterials.remove(selectedMaterial);
+
+            setTotalAmount();
         }
     }//GEN-LAST:event_btnRemoveMaterialActionPerformed
 
@@ -531,6 +574,8 @@ public class ClosureScreen extends javax.swing.JFrame {
 
             dtModel.removeRow(selectedMaterial);
             dtModel.insertRow(selectedMaterial, new Object[]{detailsDto.getMaterialName(), detailsDto.getUnitRate(), detailsDto.getQuantity(), detailsDto.getAmount()});
+
+            setTotalAmount();
         } else {
             DialogHelper.showInfoMessage("Materials", Helper.getPropertyValue("EmptyFields"));
         }
@@ -588,6 +633,8 @@ public class ClosureScreen extends javax.swing.JFrame {
 
                     contrctMaterials.add(detailsDto);
                     dtModel.addRow(new Object[]{detailsDto.getMaterialName(), detailsDto.getUnitRate(), detailsDto.getQuantity(), detailsDto.getAmount()});
+
+                    setTotalAmount();
                 } else {
                     DialogHelper.showErrorMessage("Validation", Helper.getPropertyValue("Invalid_Material_Code"));
                 }
@@ -649,16 +696,19 @@ public class ClosureScreen extends javax.swing.JFrame {
     private javax.swing.JButton btnPrint;
     private javax.swing.JButton btnRemoveMaterial;
     private javax.swing.JButton btnSaveMaterial;
+    private javax.swing.JComboBox<String> comboClosures;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -676,6 +726,7 @@ public class ClosureScreen extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField txtMaterialRate;
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtNoEmployees;
+    private javax.swing.JTextField txtQuotationTitle;
     private javax.swing.JTextField txtReferenceNo;
     private javax.swing.JTextField txtTotalAmount;
     private javax.swing.JTextField txtTotalDays;
@@ -688,12 +739,16 @@ public class ClosureScreen extends javax.swing.JFrame {
     int selectedMaterial;
 
     List<QuotationDetailsDto> contrctMaterials;
-
+    List<ContractDto> closedContracts;
+    List<DailyWageDto> dailyWages;
+    List<ExtraPurchaseDetails> extraPurchases;
+    
     Map< String, MaterialDto> materials;
 
     QuotationService quotationService;
 
     int quotationId;
+    double totalCost;
 
     private void setMaterials(ContractDto dto) {
         quotationService = new QuotationServiceImpl();
@@ -724,7 +779,6 @@ public class ClosureScreen extends javax.swing.JFrame {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 selectedMaterial = tblMaterials.rowAtPoint(evt.getPoint());
-                // = contrctMaterials.get(row).getMaterialId();
                 showSelectedMaterial(contrctMaterials.get(selectedMaterial));
             }
         });
@@ -741,7 +795,6 @@ public class ClosureScreen extends javax.swing.JFrame {
     }
 
     private void populateSelectedDetails(ContractDto dto) {
-        QuotationService quotationService = new QuotationServiceImpl();
         int customerID = quotationService.getCustomerId(dto.getId());
 
         if (customerID > 0) {
@@ -755,15 +808,91 @@ public class ClosureScreen extends javax.swing.JFrame {
 
         setContractDetails(dto);
 
+        String title = quotationService.getQuotationTitle(quotationId);
+        txtQuotationTitle.setText(title);
+
         int laborCount = new LaborServiceImpl().getLaborCount(dto.getId());
         String laborCountStr = laborCount > 0 ? Integer.toString(laborCount) : "--";
         txtNoEmployees.setText(laborCountStr);
+
+        totalCost = getTotalWages(dto.getId());
+        setTotalAmount();
+    }
+
+    private void setCosures() {
+        closedContracts = new ContractServiceImpl().getClosedContracts();
+
+        Vector<String> referenceNos = new Vector<>();
+        referenceNos.add("--");
+        for (ContractDto dto : closedContracts) {
+            referenceNos.add(dto.getContractRefNo());
+        }
+
+        DefaultComboBoxModel model = new DefaultComboBoxModel(referenceNos);
+        comboClosures.setModel(model);
+        comboClosures.setEnabled(closedContracts.size() > 0);
+        comboClosures.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = comboClosures.getSelectedIndex();
+                if (selectedIndex > 0) {
+                    try {
+                        String output = Constants.CLOSURE_REPORT_PATH + closedContracts.get(selectedIndex - 1).getContractRefNo() + ".pdf";
+                        Desktop.getDesktop().open(new File(output));
+                    } catch (Exception ex) {
+                        DialogHelper.showErrorMessage(Helper.getPropertyValue("Error"), Helper.getPropertyValue("Error_Quotation_Print_Message"));
+                    }
+                }
+            }
+        });
+    }
+
+    private void enableFields(boolean enable) {
+        txtMaterialRate.setEnabled(enable);
+        txtMaterialQty.setEnabled(enable);
+        txtMaterialAmount.setEnabled(enable);
+        
+        btnSaveMaterial.setEnabled(enable);
+        btnAddMaterial.setEnabled(enable);
+        btnRemoveMaterial.setEnabled(enable);
+        btnPrint.setEnabled(enable);
+    }
+
+    private double getTotalWages(int contractID) {
+        DailyWageService dailyWageService = new DailyWageServiceImpl();
+
+        double totalAmount = 0;
+
+        dailyWages = dailyWageService.getDailyWages(contractID);
+        for (DailyWageDto dto : dailyWages) {
+            totalAmount += (dto.getWage() + dto.getTa() + dto.getFa());
+        }
+
+        extraPurchases = dailyWageService.getExtraPurchaseDetails(contractID);
+        for (ExtraPurchaseDetails details : extraPurchases) {
+            totalAmount += details.getAmount();
+        }
+
+        return totalAmount;
+    }
+
+    private double getTotalMaterialsCost() {
+        double totalMaterialsCost = 0;
+        for (QuotationDetailsDto dto : contrctMaterials) {
+            totalMaterialsCost += dto.getAmount();
+        }
+
+        return totalMaterialsCost;
+    }
+
+    private void setTotalAmount() {
+        double totalMaterialsCost = getTotalMaterialsCost();
+        txtTotalAmount.setText(Double.toString(totalCost + totalMaterialsCost));
     }
 
     private void setContractDetails(ContractDto dto) {
         txtReferenceNo.setText(dto.getContractRefNo());
         txtAgrementReference.setText(dto.getAgrementReference());
-        txtTotalAmount.setText(Double.toString(dto.getTotalAmount()));
         txtTotalDays.setText(Helper.getDays(dto.getStartDate(), dto.getEndDate()));
     }
 

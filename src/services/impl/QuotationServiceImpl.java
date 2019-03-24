@@ -6,7 +6,6 @@
 package services.impl;
 
 import dataclasses.ComboContentDto;
-import dataclasses.ContractDto;
 import dataclasses.CustomerDto;
 import dataclasses.MaterialDto;
 import dataclasses.QuotationDetailsDto;
@@ -313,6 +312,7 @@ public class QuotationServiceImpl implements QuotationService {
         }
         return quoteDtos;
     }
+    
     public int getCustomerId(int contractId) {
         ResultSet set = DBHelper.readDataFromDb("select CustomerID from quotations where ContractID=" + contractId);
 
@@ -388,5 +388,20 @@ public class QuotationServiceImpl implements QuotationService {
         }
         
         return 0;
+    }
+
+    @Override
+    public String getQuotationTitle(int quotationId) {
+        try {
+            ResultSet set = DBHelper.readDataFromDb("select Title from quotations where ID=" + quotationId);
+            
+            if (set != null && set.next()) {
+                return set.getString("Title");
+            }
+        } catch (Exception ex) {
+
+        }
+        
+        return "";
     }
 }

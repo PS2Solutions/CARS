@@ -428,6 +428,7 @@ public class ContractScreen extends javax.swing.JFrame {
 
         int contractId = contractService.saveContract(selectedDto);
         if (contractId > 0) {
+            selectedDto.setId(contractId);
             if (isAdd) {
                 updateQuotationRef(quotationRef, contractId);
                 addConractToTable();

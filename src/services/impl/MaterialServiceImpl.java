@@ -5,7 +5,6 @@
  */
 package services.impl;
 
-import dataclasses.LaborDto;
 import dataclasses.MaterialCategoryDto;
 import dataclasses.MaterialDto;
 import dataclasses.QuotationTypeDto;
@@ -15,14 +14,11 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.poi.ss.usermodel.DateUtil;
 import services.interfaces.MaterialService;
 import utils.DBHelper;
 import utils.Helper;
@@ -184,6 +180,20 @@ public class MaterialServiceImpl implements MaterialService {
          boolean response = true;
         
         return response;
+    }
+
+    @Override
+    public String getMaterialName(String materialCode) {
+        ResultSet resultSet = DBHelper.readDataFromDb("Select Name from materials where Code = '" + materialCode + "'");
+        try {
+            if (resultSet != null && resultSet.next()) {
+                return resultSet.getString("Name");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LaborServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return "";
     }
 
 }
