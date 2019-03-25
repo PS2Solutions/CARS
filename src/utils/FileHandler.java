@@ -168,7 +168,7 @@ public class FileHandler {
 
     public static boolean WriteToPdfFile(String file, String content) {
         try {
-            File directory = new File(file.substring(0, file.lastIndexOf(File.separator)));
+            File directory = new File(file.substring(0, file.lastIndexOf("/")));
             if (! directory.exists()){
                 directory.mkdir();
             }

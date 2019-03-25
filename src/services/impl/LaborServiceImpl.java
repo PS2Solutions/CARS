@@ -199,7 +199,7 @@ public class LaborServiceImpl implements LaborService {
 
     @Override
     public String getLaborName(int laborId) {
-        ResultSet resultSet = DBHelper.readDataFromDb("Select Name from labors where LaborID = " + laborId);
+        ResultSet resultSet = DBHelper.readDataFromDb("Select Name from labors where ID = " + laborId);
         try {
             if (resultSet != null && resultSet.next()) {
                 return resultSet.getString("Name");

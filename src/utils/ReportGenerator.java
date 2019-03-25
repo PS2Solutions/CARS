@@ -200,10 +200,10 @@ public class ReportGenerator {
             buffer.append(String.format(ADD_PURCHASES_TEMPLATE, index++, material, details.getBillNo(), details.getQuantity(), details.getAmount()));
         }
 
-        if (buffer.length() > 0) {
+//        if (buffer.length() > 0) {
             content = content.replace(CLOSURE_ADD_PURCHASES, buffer.toString());
             content = content.replace(CLOSURE_AP_TOTAL, Double.toString(totalCost));
-        }
+//        }
 
         return content;
     }
