@@ -7,6 +7,7 @@ package services.impl;
 
 import dataclasses.ComboContentDto;
 import dataclasses.ContractDto;
+import dataclasses.ContractPaymentDto;
 import dataclasses.ReportContentDto;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -22,6 +23,7 @@ import java.util.logging.Logger;
 import static org.apache.poi.hssf.usermodel.HeaderFooter.date;
 import services.interfaces.ContractService;
 import utils.DBHelper;
+import utils.Helper;
 
 /**
  *
@@ -35,11 +37,6 @@ public class ContractServiceImpl implements ContractService {
         Vector<Vector> rowData = new Vector<Vector>();
         for (ContractDto contractDto : contractDtos) {
             Vector<String> row = new Vector<>();
-
-            //row.add(contractDto.getCaption());
-            // row.add(contractDto.getStartDate());
-            // row.add(contractDto.getEndDate());
-            // row.add(contractDto.getStatus());
             rowData.add(row);
         }
 
@@ -72,7 +69,7 @@ public class ContractServiceImpl implements ContractService {
                 statement.setString(2, contractDto.getContractRefNo());
                 statement.setString(3, contractDto.getStartDate());
                 statement.setString(4, contractDto.getEndDate());
-                statement.setDouble(5, contractDto.getTotalAmount());
+                statement.setDouble(5, 0);
                 statement.setString(6, contractDto.getLastCollectionDate());
                 statement.setString(7, contractDto.getAgrementReference());
 
@@ -188,5 +185,24 @@ public class ContractServiceImpl implements ContractService {
         }
 
         return contractDtos;
+    }
+
+    @Override
+    public void saveContractPayments(ContractPaymentDto contractPaymentDto) {
+        try {
+            try (
+                    CallableStatement statement = DBHelper.getDbConnection().prepareCall(
+                            "{call  UpdateContractPayment ( ?,?,?,?)}");) {
+
+                statement.setInt(1, contractPaymentDto.getContractId());
+                statement.setString(2, contractPaymentDto.getRemark());
+                statement.setString(3, Helper.getCurrentMysqlFormattedDate());
+                statement.setDouble(4, contractPaymentDto.getAmount());
+
+                statement.executeQuery();//sql response
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

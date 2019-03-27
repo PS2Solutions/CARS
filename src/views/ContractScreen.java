@@ -6,6 +6,7 @@
 package views;
 
 import dataclasses.ContractDto;
+import dataclasses.ContractPaymentDto;
 import java.awt.GridLayout;
 import java.util.List;
 import javax.swing.JFrame;
@@ -39,10 +40,10 @@ public class ContractScreen extends javax.swing.JFrame {
      */
     public ContractScreen() {
         initComponents();
-
         initQuotationRefs();
         configureTable();
         setContractReport();
+        btnPaymentSave.setEnabled(false);
     }
 
     /**
@@ -59,12 +60,15 @@ public class ContractScreen extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         btnAddNew = new javax.swing.JButton();
         btnHome = new javax.swing.JButton();
-        btnSave = new javax.swing.JButton();
         btnOk = new javax.swing.JButton();
+        btnAddDailyWage = new javax.swing.JButton();
         jPLaborDeails = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtTotalCost = new javax.swing.JTextField();
-        btnAddDailyWage = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtRemark = new javax.swing.JTextArea();
+        btnPaymentSave = new javax.swing.JButton();
         jPCustomerList = new javax.swing.JScrollPane();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
@@ -116,55 +120,12 @@ public class ContractScreen extends javax.swing.JFrame {
             }
         });
 
-        btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/save.png"))); // NOI18N
-        btnSave.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        btnSave.setFocusPainted(false);
-        btnSave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSaveActionPerformed(evt);
-            }
-        });
-
         btnOk.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/closure.png"))); // NOI18N
         btnOk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOkActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(1073, Short.MAX_VALUE)
-                .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnAddNew, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAddNew, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jPLaborDeails.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel1.setText("Total cost so far*");
-
-        txtTotalCost.setToolTipText("");
 
         btnAddDailyWage.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btnAddDailyWage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/daily_wage.png"))); // NOI18N
@@ -177,27 +138,88 @@ public class ContractScreen extends javax.swing.JFrame {
             }
         });
 
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(382, Short.MAX_VALUE)
+                .addComponent(btnAddDailyWage, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnAddNew, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnAddDailyWage)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnAddNew, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPLaborDeails.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Payments", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel1.setText("Collected amount");
+
+        txtTotalCost.setToolTipText("");
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel2.setText("Remark");
+
+        txtRemark.setColumns(20);
+        txtRemark.setRows(5);
+        jScrollPane1.setViewportView(txtRemark);
+
+        btnPaymentSave.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnPaymentSave.setText("Save");
+        btnPaymentSave.setToolTipText("");
+        btnPaymentSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPaymentSaveActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPLaborDeailsLayout = new javax.swing.GroupLayout(jPLaborDeails);
         jPLaborDeails.setLayout(jPLaborDeailsLayout);
         jPLaborDeailsLayout.setHorizontalGroup(
             jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPLaborDeailsLayout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(jLabel1)
+                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtTotalCost, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAddDailyWage, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25))
+                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtTotalCost)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE))
+                .addGap(41, 41, 41)
+                .addComponent(btnPaymentSave)
+                .addContainerGap(42, Short.MAX_VALUE))
         );
         jPLaborDeailsLayout.setVerticalGroup(
             jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPLaborDeailsLayout.createSequentialGroup()
                 .addGap(12, 12, 12)
-                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtTotalCost, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
-                    .addComponent(btnAddDailyWage))
+                .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnPaymentSave)
+                    .addGroup(jPLaborDeailsLayout.createSequentialGroup()
+                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtTotalCost, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -210,20 +232,22 @@ public class ContractScreen extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPLaborDeails, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPCustomerList, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addComponent(jPCustomerList)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPLaborDeails, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPCustomerList, javax.swing.GroupLayout.DEFAULT_SIZE, 607, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jPLaborDeails, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPCustomerList, javax.swing.GroupLayout.DEFAULT_SIZE, 593, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPLaborDeails, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -239,18 +263,6 @@ public class ContractScreen extends javax.swing.JFrame {
         NavigationController.navigateToScreen(NavigationConstants.DASHBOARD, this);
     }//GEN-LAST:event_btnHomeActionPerformed
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        if (selectedRow < 0) {
-            DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("SelectContract"));
-        } else if (validateFields()) {
-            updateEnteredData();
-
-            saveContract(false);
-        } else {
-            DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("EmptyFields"));
-        }
-    }//GEN-LAST:event_btnSaveActionPerformed
-
     private void btnAddDailyWageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddDailyWageActionPerformed
         NavigationController.navigateToScreen(NavigationConstants.DAILY_WAGE_SCREEN, this);
     }//GEN-LAST:event_btnAddDailyWageActionPerformed
@@ -263,6 +275,27 @@ public class ContractScreen extends javax.swing.JFrame {
         
         NavigationController.navigateToScreen(NavigationConstants.CLOSURE_SCREEN, this, args);
     }//GEN-LAST:event_btnOkActionPerformed
+
+    private void btnPaymentSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaymentSaveActionPerformed
+        if (selectedRow < 0) {
+            DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("SelectContract"));
+        } else {
+            if(txtTotalCost.getText().toString().trim().length() > 0){
+                double payment = Double.parseDouble(txtTotalCost.getText().toString().trim());
+                String remark = txtRemark.getText().toString().trim();
+                ContractPaymentDto contractPaymentDto = new ContractPaymentDto();
+                contractPaymentDto.setContractId(selectedDto.getId());
+                contractPaymentDto.setAmount(payment);
+                contractPaymentDto.setRemark(remark);
+                ContractService contractService = new ContractServiceImpl();
+                contractService.saveContractPayments(contractPaymentDto);
+                txtRemark.setText("");
+                txtTotalCost.setText("");
+            } else {
+                DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("EmptyFields"));
+            }
+        }
+    }//GEN-LAST:event_btnPaymentSaveActionPerformed
 
     /**
      * @param args the command line arguments
@@ -307,13 +340,16 @@ public class ContractScreen extends javax.swing.JFrame {
     private javax.swing.JButton btnAddNew;
     private javax.swing.JButton btnHome;
     private javax.swing.JButton btnOk;
-    private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnPaymentSave;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jPCustomerList;
     private javax.swing.JPanel jPLaborDeails;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea txtRemark;
     private javax.swing.JTextField txtTotalCost;
     // End of variables declaration//GEN-END:variables
 
@@ -338,7 +374,7 @@ public class ContractScreen extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 selectedRow = tblContract.rowAtPoint(evt.getPoint());
                 selectedDto = contractDtos.get(selectedRow);
-                btnSave.setEnabled(true);
+                btnPaymentSave.setEnabled(true);
             }
         });
 
@@ -418,31 +454,28 @@ public class ContractScreen extends javax.swing.JFrame {
                 DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("InvalidQuotationFields"));
             } else {
                 setContract(refField.getText(), agrRefField.getText(), datePicker.getJFormattedTextField().getText());
-                saveContract(true);
+                saveContract();
             }
         }
     }
 
-    private void saveContract(boolean isAdd) {
+    private void saveContract() {
         ContractService contractService = new ContractServiceImpl();
 
         int contractId = contractService.saveContract(selectedDto);
         if (contractId > 0) {
             selectedDto.setId(contractId);
-            if (isAdd) {
-                updateQuotationRef(quotationRef, contractId);
-                addConractToTable();
-                
-                Helper.updateReferenceNo(Constants.CONTRACT);
-                Helper.updateReferenceNo(Constants.AGREMENT);
-            } else {
-                updateContractTable();
-            }
+            updateQuotationRef(quotationRef, contractId);
 
+            Helper.updateReferenceNo(Constants.CONTRACT);
+            Helper.updateReferenceNo(Constants.AGREMENT);
+            
             DialogHelper.showInfoMessage(Helper.getPropertyValue("Success"),
                     Helper.getPropertyValue("SuccessMessage"));
 
             clearFields();
+            configureTable();
+            setContractReport();
         } else {
             DialogHelper.showErrorMessage("Error", "Error");
         }

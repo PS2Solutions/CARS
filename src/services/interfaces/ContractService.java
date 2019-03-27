@@ -7,6 +7,7 @@ package services.interfaces;
 
 import dataclasses.ComboContentDto;
 import dataclasses.ContractDto;
+import dataclasses.ContractPaymentDto;
 import dataclasses.ReportContentDto;
 import java.util.List;
 import java.util.Vector;
@@ -20,4 +21,5 @@ public interface ContractService {
     boolean closeContract(int contractId, String endDate);
     
     List<ContractDto> getClosedContracts();
+    void saveContractPayments(ContractPaymentDto contractPaymentDto);
 }
