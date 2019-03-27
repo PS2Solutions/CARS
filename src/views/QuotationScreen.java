@@ -14,6 +14,8 @@ import dataclasses.RegistrationDto;
 import java.awt.Desktop;
 import java.awt.event.ItemEvent;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -45,19 +47,21 @@ public class QuotationScreen extends javax.swing.JFrame {
      */
     public QuotationScreen() {
         initComponents();
-        
+
         quotationService = new QuotationServiceImpl();
-        
+
         quotationMaster = new QuotationMasterDto();
-        
+
         configureMaterialAddition(false);
         configureTable();
         setCustomers();
         setQuoteType();
         setMaterials();
-        
+
         txtQuoteReference.setText(Helper.getReferenceNo(Constants.QUOTE));
         btnPrint.setEnabled(false);
+
+        usedMaterials = new ArrayList<String>();
     }
 
     /**
@@ -441,24 +445,7 @@ public class QuotationScreen extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
-        try {
-            RegistrationDto regDto = new RegistrationServiceImpl().getRegistrationDetails();
-            CustomerDto customerDto = customerDtos.get(cmbCustomer.getSelectedIndex());
-            String quotType = cmbType.getSelectedItem().toString().trim();
-            
-            String output = ReportGenerator.generateQuotationReport(quotationMaster, regDto, customerDto, quotType);
-            
-            if (output == null) {
-                DialogHelper.showErrorMessage(Helper.getPropertyValue("Error"), Helper.getPropertyValue("Error_Quotation_Print_Message"));
-            } else {
-                Desktop.getDesktop().open(new File(output));
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(QuotationScreen.class.getName()).log(Level.SEVERE, null, ex);
-            DialogHelper.showErrorMessage(Helper.getPropertyValue("Error"), Helper.getPropertyValue("Error_Quotation_Print_Message"));
-        }
-        
-
+        openReport();
     }//GEN-LAST:event_btnPrintActionPerformed
 
     private void btnHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeActionPerformed
@@ -471,9 +458,12 @@ public class QuotationScreen extends javax.swing.JFrame {
             boolean response = quotationService.saveQuotation(quotationMaster);
             if (response) {
                 Helper.updateReferenceNo(Constants.QUOTE);
+                
+                usedMaterials.clear();
+                
                 DialogHelper.showInfoMessage(Helper.getPropertyValue("Success"),
                         Helper.getPropertyValue("SuccessMessage"));
-                
+
                 ConfirmPrint();
             }
         } else {
@@ -481,21 +471,40 @@ public class QuotationScreen extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSaveActionPerformed
 
+    private void openReport() {
+        try {
+            RegistrationDto regDto = new RegistrationServiceImpl().getRegistrationDetails();
+            CustomerDto customerDto = customerDtos.get(cmbCustomer.getSelectedIndex());
+            String quotType = cmbType.getSelectedItem().toString().trim();
+
+            String output = ReportGenerator.generateQuotationReport(quotationMaster, regDto, customerDto, quotType);
+
+            if (output == null) {
+                DialogHelper.showErrorMessage(Helper.getPropertyValue("Error"), Helper.getPropertyValue("Error_Quotation_Print_Message"));
+            } else {
+                Desktop.getDesktop().open(new File(output));
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(QuotationScreen.class.getName()).log(Level.SEVERE, null, ex);
+            DialogHelper.showErrorMessage(Helper.getPropertyValue("Error"), Helper.getPropertyValue("Error_Quotation_Print_Message"));
+        }
+    }
+
     private void ConfirmPrint() {
         int result = DialogHelper.showQuestionDialog(this, Helper.getPropertyValue("Quotation_Print"), Helper.getPropertyValue("Quotation_Print_Message"), JOptionPane.OK_CANCEL_OPTION);
-        
-        if(result == JOptionPane.OK_OPTION) {
+
+        if (result == JOptionPane.OK_OPTION) {
             btnPrint.setEnabled(true);
             btnSave.setEnabled(false);
+            openReport();
         } else {
             btnPrint.setEnabled(false);
             btnSave.setEnabled(true);
             clearValues();
         }
-                
-                
+
     }
-    
+
     private void btnAddNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNewActionPerformed
         String response = DialogHelper.showInputDialog(this, Helper.getPropertyValue("Quotation_Dialogue_Caption"),
                 Helper.getPropertyValue("Quotation_Dialogue_Question"));
@@ -512,7 +521,7 @@ public class QuotationScreen extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnAddNewActionPerformed
-    
+
     private int getIndexForType(int typeId) {
         int index = 0;
         for (QuotationTypeDto quotationTypeDto : quotationTypeDtos) {
@@ -521,16 +530,16 @@ public class QuotationScreen extends javax.swing.JFrame {
             }
             ++index;
         }
-        
+
         return index;
     }
-    
+
     private void populateMaterialTable(List<QuotationDetailsDto> detailsDtos) {
         for (QuotationDetailsDto detailsDto : detailsDtos) {
             dtModel.addRow(new Object[]{detailsDto.getMaterialCode(), detailsDto.getUnitRate(), detailsDto.getQuantity(), detailsDto.getAmount()});
         }
     }
-    
+
     private void clearValues() {
         selectedId = 0;
         txtAddress1.setText("");
@@ -541,18 +550,18 @@ public class QuotationScreen extends javax.swing.JFrame {
         txtAmount.setText("");
         cmbCustomer.setSelectedIndex(0);
         cmbType.setSelectedIndex(0);
-        
+
         clearMaterials();
         clearMaterialTable();
     }
-    
+
     private void clearMaterials() {
         txtMaterialCode.setText("");
         txtMaterialRate.setText("");
         txtMaterialQty.setText("");
         txtMaterialAmount.setText("");
     }
-    
+
     private void clearMaterialTable() {
         dtModel.setRowCount(0);
     }
@@ -576,37 +585,47 @@ public class QuotationScreen extends javax.swing.JFrame {
     private void btnAddMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddMaterialActionPerformed
         QuotationDetailsDto detailsDto = new QuotationDetailsDto();
         String materialCode = txtMaterialCode.getText().trim();
-        if (materialCode.length() > 0 && txtMaterialRate.getText().trim().length() > 0) {
-            if (materials.containsKey(materialCode)) {
-                detailsDto.setMaterialCode(materialCode);
-                MaterialDto materialDto = materials.get(materialCode);
-                detailsDto.setMaterialId(materialDto.getId());
-                detailsDto.setMaterialName(materialDto.getMaterialName());
-                try {
-                    detailsDto.setAmount(Double.parseDouble(txtMaterialAmount.getText().toString().trim()));
-                } catch (Exception e) {
-                    detailsDto.setAmount(0);
-                }
-                try {
-                    detailsDto.setQuantity(Integer.parseInt(txtMaterialQty.getText().toString().trim()));
-                } catch (Exception e) {
-                    detailsDto.setQuantity(0);
-                }
-                try {
-                    detailsDto.setUnitRate(Integer.parseInt(txtMaterialRate.getText().toString().trim()));
-                } catch (Exception e) {
-                    detailsDto.setUnitRate(0);
-                }
-                quotationMaster.getDetailsDtos().add(detailsDto);
-                dtModel.addRow(new Object[]{detailsDto.getMaterialCode(), detailsDto.getUnitRate(), detailsDto.getQuantity(), detailsDto.getAmount()});
-                
-                clearMaterials();
-            } else {
-                DialogHelper.showErrorMessage("Validation", Helper.getPropertyValue("Invalid_Material_Code"));
-            }
+
+        if (usedMaterials.contains(materialCode)) {
+            DialogHelper.showInfoMessage("Materials", Helper.getPropertyValue("Material_Already_There"));
         } else {
-            DialogHelper.showInfoMessage("Materials", Helper.getPropertyValue("EmptyFields"));
+            usedMaterials.add(materialCode);
+            
+            int materialAmount = 0;
+            int materialQty = 0;
+            int materialRate = 0;
+
+            boolean validValues = true;
+            try {
+                materialAmount = Integer.parseInt(txtMaterialAmount.getText().toString().trim());
+                materialQty = Integer.parseInt(txtMaterialQty.getText().toString().trim());
+                materialRate = Integer.parseInt(txtMaterialRate.getText().toString().trim());
+            } catch (Exception e) {
+                validValues = false;
+            }
+
+            if (materialCode.length() > 0 && txtMaterialRate.getText().trim().length() > 0 && validValues) {
+                if (materials.containsKey(materialCode)) {
+                    detailsDto.setMaterialCode(materialCode);
+                    MaterialDto materialDto = materials.get(materialCode);
+                    detailsDto.setMaterialId(materialDto.getId());
+                    detailsDto.setMaterialName(materialDto.getMaterialName());
+                    detailsDto.setAmount(materialAmount);
+                    detailsDto.setQuantity(materialQty);
+                    detailsDto.setUnitRate(materialRate);
+
+                    quotationMaster.getDetailsDtos().add(detailsDto);
+                    dtModel.addRow(new Object[]{detailsDto.getMaterialCode(), detailsDto.getUnitRate(), detailsDto.getQuantity(), detailsDto.getAmount()});
+
+                    clearMaterials();
+                } else {
+                    DialogHelper.showErrorMessage("Validation", Helper.getPropertyValue("Invalid_Material_Code"));
+                }
+            } else {
+                DialogHelper.showInfoMessage("Materials", Helper.getPropertyValue("EmptyFields"));
+            }
         }
+
     }//GEN-LAST:event_btnAddMaterialActionPerformed
 
     private void cmbTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTypeActionPerformed
@@ -615,6 +634,10 @@ public class QuotationScreen extends javax.swing.JFrame {
 
     private void cmbTypeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbTypeItemStateChanged
         if (evt.getStateChange() == ItemEvent.SELECTED) {
+            clearMaterials();
+            clearMaterialTable();
+            quotationMaster.getDetailsDtos().clear();
+            usedMaterials.clear();
             setMaterials();
         }
     }//GEN-LAST:event_cmbTypeItemStateChanged
@@ -693,60 +716,69 @@ public class QuotationScreen extends javax.swing.JFrame {
     Map< String, MaterialDto> materials;
     Vector<CustomerDto> customerDtos;
     Vector<QuotationTypeDto> quotationTypeDtos;
+    List<String> usedMaterials;
+
     QuotationMasterDto quotationMaster;
     int selectedId;
     DefaultTableModel dtModel;
-    
+
     QuotationService quotationService;
-    
+
     private void configureTable() {
         dtModel = new DefaultTableModel();
         dtModel.addColumn("Material");
         dtModel.addColumn("Unit rate");
         dtModel.addColumn("Quantity");
         dtModel.addColumn("Amount");
-        
+
         JTable tblMaterial = new JTable(dtModel);
         jSpMaterialList.add(tblMaterial);
         jSpMaterialList.setViewportView(tblMaterial);
         jSpMaterialList.setVisible(true);
     }
-    
+
     private void setMaterials() {
         configureMaterialAddition(true);
-        
-        QuotationTypeDto quotationTypeDto = quotationTypeDtos.get(cmbType.getSelectedIndex());
-        materials = quotationService.getMaterials(quotationTypeDto.getTypeId());
+
+        try {
+            QuotationTypeDto quotationTypeDto = quotationTypeDtos.get(cmbType.getSelectedIndex());
+            materials = quotationService.getMaterials(quotationTypeDto.getTypeId());
+        } catch (Exception e) {
+            materials = new HashMap< String, MaterialDto>();
+        }
+
     }
-    
+
     private void configureMaterialAddition(boolean isEnabled) {
         txtMaterialCode.setEnabled(isEnabled);
         txtMaterialQty.setEnabled(isEnabled);
         txtMaterialRate.setEnabled(isEnabled);
         txtMaterialAmount.setEnabled(isEnabled);
     }
-    
+
     private void setCustomers() {
         customerDtos = quotationService.getCustomers();
         DefaultComboBoxModel model = new DefaultComboBoxModel(quotationService.getCustomers(customerDtos));
         cmbCustomer.setModel(model);
     }
-    
+
     private void setQuoteType() {
         quotationTypeDtos = quotationService.getQuotationType();
         DefaultComboBoxModel model = new DefaultComboBoxModel(quotationService.getQuotationType(quotationTypeDtos));
         cmbType.setModel(model);
     }
-    
+
     private boolean validateEntry() {
         boolean response = true;
         if (txtQuoteTitle.getText().trim().length() == 0 || txtQuoteReference.getText().trim().length() == 0
                 || txtQuoteTitle.getText().trim().length() == 0 || txtQuoteTitle.getText().trim().length() == 0) {
             response = false;
+        } else if (cmbCustomer.getSelectedIndex() < 0 || cmbType.getSelectedIndex() < 0) {
+            response = false;
         }
         return response;
     }
-    
+
     private void setEnteredValues() {
         quotationMaster.setId(selectedId);
         quotationMaster.setAddress1(txtAddress1.getText().trim());
@@ -756,7 +788,7 @@ public class QuotationScreen extends javax.swing.JFrame {
         } catch (Exception ex) {
             quotationMaster.setAmount(0);
         }
-        
+
         quotationMaster.setCustomerId(customerDtos.get(cmbCustomer.getSelectedIndex()).getId());
         quotationMaster.setCustomerName(cmbCustomer.getSelectedItem().toString().trim());
         try {

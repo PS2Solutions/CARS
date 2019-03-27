@@ -28,8 +28,7 @@ import services.impl.MaterialServiceImpl;
  * @author sreenath
  */
 public class ReportGenerator {
-
-    private static final String QUOT_HEADER = "$#$QuotHeader$#$";
+    
     private static final String COMPANY_NAME = "$#$CompanyName$#$";
     private static final String OWNER_NAME = "$#$OwnerName$#$";
     private static final String OWNER_PHONE = "$#$OwnerPhone$#$";
@@ -54,6 +53,8 @@ public class ReportGenerator {
     private static final String CLOSURE_TOTAL_COST = "$#$ClosureTotalCost$#$";
 
     private static final String MATERIALS_TEMPLATE = "<tr><td>%x</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>";
+    private static final String EMPTY_MATERIALS_TEMPLATE = "<tr><td></td><td>NIL</td><td></td><td></td><td></td></tr>";
+    
     private static final String DAILY_WAGE_TEMPLATE = "<tr><td>%x</td><td>%s</td><td>%.2f</td></tr>";
     private static final String ADD_PURCHASES_TEMPLATE = "<tr><td>%x</td><td>%s</td><td>%s</td><td>%x</td><td>%.2f</td></tr>";
 
@@ -63,13 +64,14 @@ public class ReportGenerator {
 
             String content = new String(Files.readAllBytes(new File(Constants.PRINT_TEMPLATE_PATH + "QuotationTemplate.html").toPath()));
 
-            content = content.replace(QUOT_HEADER, quotDto.getTitle());
-
             content = modifyCompanyDetails(content, regDto);
 
             content = modifyCustomerDetails(content, customerDto);
+            
+            content = content.replace(CUSTOMER_ADDRESS1, quotDto.getAddress1());
+            content = content.replace(CUSTOMER_ADDRESS2, quotDto.getAddress2());
 
-            content = content.replace(QUOTATION_REFERENCE, quotDto.getReferenceNo());
+            content = content.replace(QUOTATION_REFERENCE, quotDto.getTitle());
 
             SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
             content = content.replace(QUOT_DATE, sdf.format(quotDto.getCreatedDate()));
@@ -84,8 +86,10 @@ public class ReportGenerator {
 
             if (buffer.length() > 0) {
                 content = content.replace(QUOT_MATERIALS, buffer.toString());
+            } else {
+               content = content.replace(QUOT_MATERIALS, EMPTY_MATERIALS_TEMPLATE); 
             }
-
+                
             if (FileHandler.WriteToPdfFile(output, content)) {
                 return output;
             }
@@ -105,6 +109,9 @@ public class ReportGenerator {
             content = modifyCompanyDetails(content, regDto);
 
             content = modifyCustomerDetails(content, customerDto);
+            
+            content = content.replace(CUSTOMER_ADDRESS1, customerDto.getAddress1());
+            content = content.replace(CUSTOMER_ADDRESS2, customerDto.getAddress2());
             
             content = modifyDate(content, contractDto);
 
@@ -135,12 +142,11 @@ public class ReportGenerator {
 
         return content;
     }
+    
 
     private static String modifyCustomerDetails(String content, CustomerDto customerDto) {
         content = content.replace(CUSTOMER_NAME, customerDto.getName());
         content = content.replace(CUSTO_COMPANY_NAME, customerDto.getCompanyName());
-        content = content.replace(CUSTOMER_ADDRESS1, customerDto.getAddress1());
-        content = content.replace(CUSTOMER_ADDRESS2, customerDto.getAddress2());
         content = content.replace(CUSTOMER_PHONE, customerDto.getPhoneNumber());
 
         return content;
