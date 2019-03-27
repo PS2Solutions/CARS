@@ -5,6 +5,7 @@
  */
 package services.interfaces;
 
+import dataclasses.ContractPaymentDto;
 import dataclasses.LaborDto;
 import dataclasses.ReportContentDto;
 import dataclasses.UploadHelperDto;
@@ -22,4 +23,5 @@ public interface LaborService {
     boolean uploadExcel(List<UploadHelperDto> helperDtos);
     int getLaborCount(int contractId);
     String getLaborName(int laborId);
+    void addLaborPayment(ContractPaymentDto paymentDto);
 }

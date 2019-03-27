@@ -5,17 +5,29 @@
  */
 package views;
 
+import dataclasses.ContractPaymentDto;
 import dataclasses.DesignationDto;
+import dataclasses.ExtraPurchaseDetails;
 import dataclasses.LaborDto;
 import dataclasses.ReportContentDto;
 import dataclasses.UploadHelperDto;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.io.File;
+import java.text.Format;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import navigationCofiguration.NavigationConstants;
@@ -62,6 +74,7 @@ public class LaborScreen extends javax.swing.JFrame {
         btnHome = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
         btnUpload = new javax.swing.JButton();
+        btnAddPayment = new javax.swing.JButton();
         jPLaborDeails = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtEmployeeId = new javax.swing.JTextField();
@@ -119,7 +132,6 @@ public class LaborScreen extends javax.swing.JFrame {
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("appResources/Strings"); // NOI18N
         setTitle(bundle.getString("Labor_Screen")); // NOI18N
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setPreferredSize(new java.awt.Dimension(1280, 800));
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -160,6 +172,15 @@ public class LaborScreen extends javax.swing.JFrame {
             }
         });
 
+        btnAddPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/payment.png"))); // NOI18N
+        btnAddPayment.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnAddPayment.setFocusPainted(false);
+        btnAddPayment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddPaymentActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -167,6 +188,8 @@ public class LaborScreen extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(14, 14, 14)
+                .addComponent(btnAddPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnAddNew, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -180,6 +203,7 @@ public class LaborScreen extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnAddPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAddNew, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -496,6 +520,10 @@ public class LaborScreen extends javax.swing.JFrame {
         uploadExcel();
     }//GEN-LAST:event_btnUploadActionPerformed
 
+    private void btnAddPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPaymentActionPerformed
+        showLaborPaymentDialog();
+    }//GEN-LAST:event_btnAddPaymentActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -533,6 +561,7 @@ public class LaborScreen extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddNew;
+    private javax.swing.JButton btnAddPayment;
     private javax.swing.JButton btnHome;
     private javax.swing.JButton btnSave;
     private javax.swing.JButton btnSearch;
@@ -733,6 +762,31 @@ public class LaborScreen extends javax.swing.JFrame {
             }
         } else {
             DialogHelper.showErrorMessage("Upload Excel", Helper.getPropertyValue("Invalid_File"));
+        }
+    }
+     private void showLaborPaymentDialog() {
+        JPanel jPanel = new JPanel(new GridLayout(2, 1));
+        jPanel.add(new JLabel("Amount"));
+        Format general = NumberFormat.getInstance();
+        JFormattedTextField txtAmount = new JFormattedTextField(general);
+        jPanel.add(txtAmount);
+//        jPanel.add(new JLabel("Remark"));
+//         JTextArea txtRemark = new JTextArea();
+//         txtRemark.setRows(5);
+//        jPanel.add(txtRemark);
+        
+        int result = DialogHelper.showQuestionDialog(this, "Payment", jPanel, JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+            String amount = txtAmount.getText().trim();
+            String remark = "";//txtRemark.getText().trim();
+            if (amount.length() > 0 && selectedLaborId > 0) {
+                ContractPaymentDto paymentDto = new ContractPaymentDto();
+                paymentDto.setAmount(Double.parseDouble(amount.replace(",", "")));
+                paymentDto.setRemark(remark);
+                paymentDto.setContractId(selectedLaborId);
+                LaborService laborService = new LaborServiceImpl();
+                laborService.addLaborPayment(paymentDto);
+            }
         }
     }
 }

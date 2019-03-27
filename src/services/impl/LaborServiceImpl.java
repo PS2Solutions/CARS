@@ -5,6 +5,7 @@
  */
 package services.impl;
 
+import dataclasses.ContractPaymentDto;
 import dataclasses.LaborDto;
 import dataclasses.ReportContentDto;
 import dataclasses.UploadHelperDto;
@@ -209,5 +210,23 @@ public class LaborServiceImpl implements LaborService {
         }
 
         return "";
+    }
+
+    @Override
+    public void addLaborPayment(ContractPaymentDto paymentDto) {
+         try {
+            try (
+                    CallableStatement statement = DBHelper.getDbConnection().prepareCall(
+                            "{call  UpdateLaborPayment ( ?,?,?,?)}");) {
+                statement.setInt(1, paymentDto.getContractId());
+                statement.setString(2, paymentDto.getRemark());
+                statement.setString(3, Helper.getCurrentMysqlFormattedDate());
+                statement.setDouble(4, paymentDto.getAmount());
+
+                statement.executeQuery();//sql response
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
