@@ -506,10 +506,13 @@ public class ClosureScreen extends javax.swing.JFrame {
         }
 
         if (result) {
-            DialogHelper.showInfoMessage(Helper.getPropertyValue("Success"),
-                    Helper.getPropertyValue("SuccessMessage"));
             btnOk.setEnabled(false);
             enableFields(false);
+            
+            DialogHelper.showInfoMessage(Helper.getPropertyValue("Success"),
+                    Helper.getPropertyValue("SuccessMessage"));
+            
+            savePdf();
         }
 
         btnPrint.setEnabled(result);
@@ -520,20 +523,7 @@ public class ClosureScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_btnHomeActionPerformed
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
-        try {
-            RegistrationDto regDto = new RegistrationServiceImpl().getRegistrationDetails();
-            
-            String output = ReportGenerator.generateClosureReport(regDto, contractDto, customer, contrctMaterials, dailyWages, extraPurchases, totalCost + getTotalMaterialsCost());
-
-            if (output == null) {
-                DialogHelper.showErrorMessage(Helper.getPropertyValue("Error"), Helper.getPropertyValue("Error_Quotation_Print_Message"));
-            } else {
-                Desktop.getDesktop().open(new File(output));
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(QuotationScreen.class.getName()).log(Level.SEVERE, null, ex);
-            DialogHelper.showErrorMessage(Helper.getPropertyValue("Error"), Helper.getPropertyValue("Error_Quotation_Print_Message"));
-        }
+        openPdf(contractDto.getContractRefNo());
     }//GEN-LAST:event_btnPrintActionPerformed
 
     private void txtAddress2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAddress2ActionPerformed
@@ -582,6 +572,17 @@ public class ClosureScreen extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSaveMaterialActionPerformed
 
+    private void savePdf() {
+        try {
+            RegistrationDto regDto = new RegistrationServiceImpl().getRegistrationDetails();
+
+            String output = ReportGenerator.generateClosureReport(regDto, contractDto, customer, contrctMaterials, dailyWages, extraPurchases, totalCost + getTotalMaterialsCost(), quotationDto);
+        } catch (Exception ex) {
+            Logger.getLogger(QuotationScreen.class.getName()).log(Level.SEVERE, null, ex);
+            DialogHelper.showErrorMessage(Helper.getPropertyValue("Error"), Helper.getPropertyValue("Error_Quotation_Print_Message"));
+        }
+    }
+        
     private void addMaterial() {
         JPanel jPanel = new JPanel(new GridLayout(4, 2));
 
@@ -604,45 +605,59 @@ public class ClosureScreen extends javax.swing.JFrame {
         int result = DialogHelper.showQuestionDialog(this, "Add Material", jPanel, JOptionPane.OK_CANCEL_OPTION);
 
         if (result == JOptionPane.OK_OPTION) {
-
             String materialCode = materialField.getText().trim();
 
-            if (materialCode.length() > 0 && unitRateField.getText().trim().length() > 0 && quantityField.getText().trim().length() > 0 && amountField.getText().trim().length() > 0) {
-                if (materials.containsKey(materialCode)) {
-                    MaterialDto materialDto = materials.get(materialCode);
-
-                    QuotationDetailsDto detailsDto = new QuotationDetailsDto();
-                    detailsDto.setMaterialCode(materialCode);
-                    detailsDto.setMaterialId(materialDto.getId());
-                    detailsDto.setMaterialName(materialDto.getMaterialName());
-
-                    try {
-                        detailsDto.setAmount(Double.parseDouble(amountField.getText().toString().trim()));
-                    } catch (Exception e) {
-                        detailsDto.setAmount(0);
-                    }
-                    try {
-                        detailsDto.setQuantity(Integer.parseInt(quantityField.getText().toString().trim()));
-                    } catch (Exception e) {
-                        detailsDto.setQuantity(0);
-                    }
-                    try {
-                        detailsDto.setUnitRate(Integer.parseInt(unitRateField.getText().toString().trim()));
-                    } catch (Exception e) {
-                        detailsDto.setUnitRate(0);
-                    }
-
-                    contrctMaterials.add(detailsDto);
-                    dtModel.addRow(new Object[]{detailsDto.getMaterialName(), detailsDto.getUnitRate(), detailsDto.getQuantity(), detailsDto.getAmount()});
-
-                    setTotalAmount();
-                } else {
-                    DialogHelper.showErrorMessage("Validation", Helper.getPropertyValue("Invalid_Material_Code"));
-                }
+            if (isMaterialAlreadyThere(materialCode)) {
+                DialogHelper.showInfoMessage("Materials", Helper.getPropertyValue("Material_Already_There"));
             } else {
-                DialogHelper.showInfoMessage("Materials", Helper.getPropertyValue("EmptyFields"));
+
+                if (materialCode.length() > 0 && unitRateField.getText().trim().length() > 0 && quantityField.getText().trim().length() > 0 && amountField.getText().trim().length() > 0) {
+                    if (materials.containsKey(materialCode)) {
+                        MaterialDto materialDto = materials.get(materialCode);
+
+                        QuotationDetailsDto detailsDto = new QuotationDetailsDto();
+                        detailsDto.setMaterialCode(materialCode);
+                        detailsDto.setMaterialId(materialDto.getId());
+                        detailsDto.setMaterialName(materialDto.getMaterialName());
+
+                        try {
+                            detailsDto.setAmount(Double.parseDouble(amountField.getText().toString().trim()));
+                        } catch (Exception e) {
+                            detailsDto.setAmount(0);
+                        }
+                        try {
+                            detailsDto.setQuantity(Integer.parseInt(quantityField.getText().toString().trim()));
+                        } catch (Exception e) {
+                            detailsDto.setQuantity(0);
+                        }
+                        try {
+                            detailsDto.setUnitRate(Integer.parseInt(unitRateField.getText().toString().trim()));
+                        } catch (Exception e) {
+                            detailsDto.setUnitRate(0);
+                        }
+
+                        contrctMaterials.add(detailsDto);
+                        dtModel.addRow(new Object[]{detailsDto.getMaterialName(), detailsDto.getUnitRate(), detailsDto.getQuantity(), detailsDto.getAmount()});
+
+                        setTotalAmount();
+                    } else {
+                        DialogHelper.showErrorMessage("Validation", Helper.getPropertyValue("Invalid_Material_Code"));
+                    }
+                } else {
+                    DialogHelper.showInfoMessage("Materials", Helper.getPropertyValue("EmptyFields"));
+                }
             }
         }
+    }
+
+    private boolean isMaterialAlreadyThere(String materialCode) {
+        for (QuotationDetailsDto detailsDto : contrctMaterials) {
+            if (detailsDto.getMaterialCode().equals(materialCode)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void clearMaterials() {
@@ -743,7 +758,9 @@ public class ClosureScreen extends javax.swing.JFrame {
     List<ContractDto> closedContracts;
     List<DailyWageDto> dailyWages;
     List<ExtraPurchaseDetails> extraPurchases;
-    
+
+    QuotationMasterDto quotationDto;
+
     Map< String, MaterialDto> materials;
 
     QuotationService quotationService;
@@ -753,8 +770,10 @@ public class ClosureScreen extends javax.swing.JFrame {
 
     private void setMaterials(ContractDto dto) {
         quotationService = new QuotationServiceImpl();
-        quotationId = quotationService.getQuotationId(dto.getId());
-        int quotationType = quotationService.getQuotationType(quotationId);
+        quotationDto = quotationService.getQuotation(dto.getId());
+        quotationId = quotationDto.getId();
+        
+        int quotationType = quotationDto.getTypeId();
 
         materials = quotationService.getMaterials(quotationType);
 
@@ -796,7 +815,7 @@ public class ClosureScreen extends javax.swing.JFrame {
     }
 
     private void populateSelectedDetails(ContractDto dto) {
-        int customerID = quotationService.getCustomerId(dto.getId());
+        int customerID = quotationDto.getCustomerId();
 
         if (customerID > 0) {
             CustomerService customerService = new CustomerServiceImpl();
@@ -809,8 +828,7 @@ public class ClosureScreen extends javax.swing.JFrame {
 
         setContractDetails(dto);
 
-        String title = quotationService.getQuotationTitle(quotationId);
-        txtQuotationTitle.setText(title);
+        txtQuotationTitle.setText(quotationDto.getTitle());
 
         int laborCount = new LaborServiceImpl().getLaborCount(dto.getId());
         String laborCountStr = laborCount > 0 ? Integer.toString(laborCount) : "--";
@@ -837,22 +855,27 @@ public class ClosureScreen extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
                 int selectedIndex = comboClosures.getSelectedIndex();
                 if (selectedIndex > 0) {
-                    try {
-                        String output = Constants.CLOSURE_REPORT_PATH + closedContracts.get(selectedIndex - 1).getContractRefNo() + ".pdf";
-                        Desktop.getDesktop().open(new File(output));
-                    } catch (Exception ex) {
-                        DialogHelper.showErrorMessage(Helper.getPropertyValue("Error"), Helper.getPropertyValue("Error_Quotation_Print_Message"));
-                    }
+                    String contractRefNo = closedContracts.get(selectedIndex - 1).getContractRefNo();
+                    openPdf(contractRefNo);
                 }
             }
         });
+    }
+
+    private void openPdf(String contractRefNo) {
+        try {
+            String output = Constants.CLOSURE_REPORT_PATH + contractRefNo + ".pdf";
+            Desktop.getDesktop().open(new File(output));
+        } catch (Exception ex) {
+            DialogHelper.showErrorMessage(Helper.getPropertyValue("Error"), Helper.getPropertyValue("Error_Quotation_Print_Message"));
+        }
     }
 
     private void enableFields(boolean enable) {
         txtMaterialRate.setEnabled(enable);
         txtMaterialQty.setEnabled(enable);
         txtMaterialAmount.setEnabled(enable);
-        
+
         btnSaveMaterial.setEnabled(enable);
         btnAddMaterial.setEnabled(enable);
         btnRemoveMaterial.setEnabled(enable);
@@ -899,8 +922,8 @@ public class ClosureScreen extends javax.swing.JFrame {
 
     private void setCustomerDetails(CustomerDto dto) {
         txtName.setText(dto.getName());
-        txtAddress1.setText(dto.getAddress1());
-        txtAddress2.setText(dto.getAddress2());
+        txtAddress1.setText(quotationDto.getAddress1());
+        txtAddress2.setText(quotationDto.getAddress2());
     }
 
     private ReportContentDto getMaterialDetails(List<QuotationDetailsDto> materials) {

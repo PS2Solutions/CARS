@@ -44,7 +44,7 @@ public interface QuotationService {
     Vector<String> getQuotationNames(Vector<ComboContentDto> comboContentDtos);
     int getCustomerId(int contractId);
     
-    int getQuotationId(int contractId);
+    QuotationMasterDto getQuotation(int contractId);
     
     List<QuotationDetailsDto> getQuotationDetails(int quotationId);
     

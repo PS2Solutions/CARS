@@ -47,7 +47,7 @@ public class QuotationServiceImpl implements QuotationService {
                 }
             } catch (Exception ex) {
 
-           }
+            }
         }
 
         return materials;
@@ -282,9 +282,9 @@ public class QuotationServiceImpl implements QuotationService {
     }
 
     public Vector<ComboContentDto> getQuotationNames() {
-        String query = "SELECT ID, Title FROM `quotations` WHERE ContractID = 0" ;
+        String query = "SELECT ID, Title FROM `quotations` WHERE ContractID = 0";
         Vector<ComboContentDto> quotations = new Vector<>();
-        
+
         ResultSet resultSet = DBHelper.readDataFromDb(query);
         if (resultSet != null) {
             try {
@@ -295,8 +295,8 @@ public class QuotationServiceImpl implements QuotationService {
                     ccd.setId(id);
                     ccd.setName(title);
                     quotations.add(ccd);
-                 }
-                
+                }
+
             } catch (Exception ex) {
                 Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -306,13 +306,13 @@ public class QuotationServiceImpl implements QuotationService {
 
     @Override
     public Vector<String> getQuotationNames(Vector<ComboContentDto> comboContentDtos) {
-         Vector<String> quoteDtos = new Vector<>();
-        for(ComboContentDto ccd : comboContentDtos) {
+        Vector<String> quoteDtos = new Vector<>();
+        for (ComboContentDto ccd : comboContentDtos) {
             quoteDtos.add(ccd.getName());
         }
         return quoteDtos;
     }
-    
+
     public int getCustomerId(int contractId) {
         ResultSet set = DBHelper.readDataFromDb("select CustomerID from quotations where ContractID=" + contractId);
 
@@ -327,17 +327,33 @@ public class QuotationServiceImpl implements QuotationService {
     }
 
     @Override
-    public int getQuotationId(int contractId) {
-        ResultSet set = DBHelper.readDataFromDb("select ID from quotations where ContractID=" + contractId);
+    public QuotationMasterDto getQuotation(int contractId) {
+        ResultSet set = DBHelper.readDataFromDb("select ID, Address1, Address2, Title, CustomerID, QuotationTypeID from quotations where ContractID=" + contractId);
+
+        QuotationMasterDto dto = new QuotationMasterDto();
 
         try {
             if (set != null && set.next()) {
-                return set.getInt("ID");
+                dto.setId(set.getInt("ID"));
+                dto.setAddress1(set.getString("Address1"));
+                dto.setAddress2(set.getString("Address2"));
+                dto.setTitle(set.getString("Title"));
+                dto.setCustomerId(set.getInt("CustomerID"));
+                dto.setTypeId(set.getInt("QuotationTypeID"));
+
+                return dto;
             }
         } catch (Exception ex) {
 
         }
-        return 0;
+
+        dto.setId(0);
+        dto.setAddress1("");
+        dto.setAddress2("");
+        dto.setTitle("");
+        dto.setCustomerId(0);
+        dto.setTypeId(0);
+        return dto;
     }
 
     @Override
@@ -379,14 +395,14 @@ public class QuotationServiceImpl implements QuotationService {
     public int getQuotationType(int quotationId) {
         try {
             ResultSet set = DBHelper.readDataFromDb("select QuotationTypeID from quotations where ID=" + quotationId);
-            
+
             if (set != null && set.next()) {
                 return set.getInt("QuotationTypeID");
             }
         } catch (Exception ex) {
 
         }
-        
+
         return 0;
     }
 
@@ -394,14 +410,14 @@ public class QuotationServiceImpl implements QuotationService {
     public String getQuotationTitle(int quotationId) {
         try {
             ResultSet set = DBHelper.readDataFromDb("select Title from quotations where ID=" + quotationId);
-            
+
             if (set != null && set.next()) {
                 return set.getString("Title");
             }
         } catch (Exception ex) {
 
         }
-        
+
         return "";
     }
 }
