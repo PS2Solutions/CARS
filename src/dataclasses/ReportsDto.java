@@ -20,6 +20,7 @@ public class ReportsDto {
     String endDate;
     String contractName;
     String quotationName;
+    String laborId;
     /**
      * Normal report = 0
      * Contract report = 1
@@ -89,6 +90,14 @@ public class ReportsDto {
 
     public void setQuotationName(String quotationName) {
         this.quotationName = quotationName;
+    }
+
+    public String getLaborId() {
+        return laborId;
+    }
+
+    public void setLaborId(String laborId) {
+        this.laborId = laborId;
     }
 
 }

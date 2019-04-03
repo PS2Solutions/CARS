@@ -5,6 +5,7 @@
  */
 package services.impl;
 
+import dataclasses.ComboContentDto;
 import dataclasses.ContractPaymentDto;
 import dataclasses.LaborDto;
 import dataclasses.ReportContentDto;
@@ -228,5 +229,38 @@ public class LaborServiceImpl implements LaborService {
         } catch (SQLException ex) {
             Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    public Vector<ComboContentDto> getLabors() {
+       String query = "SELECT ID, Name FROM `labors";
+        Vector<ComboContentDto> labors = new Vector<>();
+
+        ResultSet resultSet = DBHelper.readDataFromDb(query);
+        if (resultSet != null) {
+            try {
+                while (resultSet.next()) {
+                    ComboContentDto ccd = new ComboContentDto();
+                    int id = resultSet.getInt("ID");
+                    String title = resultSet.getString("Name");
+                    ccd.setId(id);
+                    ccd.setName(title);
+                    labors.add(ccd);
+                }
+
+            } catch (Exception ex) {
+                Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return labors;
+    }
+
+    @Override
+    public Vector<String> getLaborNames(Vector<ComboContentDto> comboContentDtos) {
+        Vector<String> labors = new Vector<>();
+        for (ComboContentDto ccd : comboContentDtos) {
+            labors.add(ccd.getName());
+        }
+        return labors;
     }
 }

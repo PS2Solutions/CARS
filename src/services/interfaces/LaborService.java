@@ -5,11 +5,13 @@
  */
 package services.interfaces;
 
+import dataclasses.ComboContentDto;
 import dataclasses.ContractPaymentDto;
 import dataclasses.LaborDto;
 import dataclasses.ReportContentDto;
 import dataclasses.UploadHelperDto;
 import java.util.List;
+import java.util.Vector;
 
 /**
  *
@@ -24,4 +26,6 @@ public interface LaborService {
     int getLaborCount(int contractId);
     String getLaborName(int laborId);
     void addLaborPayment(ContractPaymentDto paymentDto);
+    Vector<ComboContentDto> getLabors();    
+    Vector<String> getLaborNames(Vector<ComboContentDto> comboContentDtos);
 }

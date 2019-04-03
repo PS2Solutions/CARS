@@ -65,11 +65,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public ReportContentDto getreport(ReportsDto reportsDto) {
         ReportContentDto contentDto;
-//        if (reportsDto.isIsDateFilterAvailable()) {
         contentDto = getDateFilterReport(reportsDto);
-//        } else {
-//            contentDto = getReport(reportsDto);
-//        }
         return contentDto;
     }
 
@@ -82,7 +78,7 @@ public class ReportServiceImpl implements ReportService {
 
         try {
             CallableStatement statement = DBHelper.getDbConnection().prepareCall(
-                    "{call " + reportsDto.getProcedureName() + "(?,?,?,?)}");
+                    "{call " + reportsDto.getProcedureName() + "(?,?,?,?,?)}");
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             if (reportsDto.getStartDate() != null) {
                 startDate = formatter.parse(reportsDto.getStartDate());
@@ -96,6 +92,7 @@ public class ReportServiceImpl implements ReportService {
             statement.setDate("DateTo", sqlEndDate);
             statement.setString("ContractID", reportsDto.getContractName());
             statement.setString("QuoteID", reportsDto.getQuotationName());
+            statement.setString("LaborID", reportsDto.getLaborId());
             ResultSet resultSet = statement.executeQuery();
             Vector<Vector> rowData = new Vector<Vector>();
             Vector<String> columnNames = new Vector<String>();
