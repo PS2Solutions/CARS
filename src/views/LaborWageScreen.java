@@ -15,6 +15,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -62,9 +63,13 @@ public class LaborWageScreen extends javax.swing.JFrame {
         cmbLabor.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 addLaborWage();
                 selectedLaborIndex = cmbLabor.getSelectedIndex();
                 clearEntryFields();
+                if (labors != null && labors.size() > cmbLabor.getSelectedIndex()) {
+                    txtDailyWage.setText(labors.get(cmbLabor.getSelectedIndex()).getWage() + "");
+                }
             }
         });
         getContractDetails();
@@ -105,6 +110,8 @@ public class LaborWageScreen extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jPDate = new javax.swing.JScrollPane();
         jLabel10 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        txtOverTimeHr = new javax.swing.JFormattedTextField();
         jPContractDetails = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -194,6 +201,11 @@ public class LaborWageScreen extends javax.swing.JFrame {
 
         txtDailyWage.setColumns(5);
         txtDailyWage.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        txtDailyWage.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtDailyWageKeyReleased(evt);
+            }
+        });
 
         txtFA.setColumns(5);
         txtFA.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
@@ -238,6 +250,17 @@ public class LaborWageScreen extends javax.swing.JFrame {
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel10.setText("Remark");
 
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel8.setText("Amount");
+
+        txtOverTimeHr.setColumns(5);
+        txtOverTimeHr.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        txtOverTimeHr.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtOverTimeHrKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -263,13 +286,18 @@ public class LaborWageScreen extends javax.swing.JFrame {
                                     .addComponent(jLabel7)
                                     .addComponent(jLabel10))
                                 .addGap(54, 54, 54)))
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(cmbLabor, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jPDate, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtDailyWage, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtFA, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtTA, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtOverTime, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(txtOverTimeHr, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(15, 15, 15)
+                                .addComponent(jLabel8)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtOverTime)))
                         .addGap(116, 116, 116))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel9)
@@ -311,7 +339,9 @@ public class LaborWageScreen extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtOverTime, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7))
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel8)
+                    .addComponent(txtOverTimeHr, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -405,6 +435,31 @@ public class LaborWageScreen extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAddNewActionPerformed
 
+    private void txtOverTimeHrKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtOverTimeHrKeyReleased
+        calculateOverTimeCost();
+    }//GEN-LAST:event_txtOverTimeHrKeyReleased
+
+    private void txtDailyWageKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDailyWageKeyReleased
+        calculateOverTimeCost();
+    }//GEN-LAST:event_txtDailyWageKeyReleased
+    /**
+     * For calculating overtime cost.
+     */
+    private void calculateOverTimeCost() {
+        if (txtOverTimeHr.getText().length() > 0) {
+            try {
+                NumberFormat format = new DecimalFormat("#.##");
+                int hrs = Integer.parseInt(txtOverTimeHr.getText());
+                double wage = Double.parseDouble(txtDailyWage.getText().trim());
+                double perHrWage = wage / 7;
+                double overTimeAmount = perHrWage * hrs;
+                txtOverTime.setText(format.format(overTimeAmount));
+            } catch (Exception ex) {
+                txtOverTime.setText("");
+            }
+        }
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -454,6 +509,7 @@ public class LaborWageScreen extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jPContractDetails;
     private javax.swing.JScrollPane jPDate;
@@ -465,6 +521,7 @@ public class LaborWageScreen extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField txtDailyWage;
     private javax.swing.JFormattedTextField txtFA;
     private javax.swing.JFormattedTextField txtOverTime;
+    private javax.swing.JFormattedTextField txtOverTimeHr;
     private javax.swing.JTextArea txtRemark;
     private javax.swing.JFormattedTextField txtTA;
     // End of variables declaration//GEN-END:variables
@@ -560,6 +617,7 @@ public class LaborWageScreen extends javax.swing.JFrame {
         txtOverTime.setText("");
         txtRemark.setText("");
         txtTA.setText("");
+        txtOverTimeHr.setText("");
     }
 
     private void initCalender() {
@@ -685,7 +743,7 @@ public class LaborWageScreen extends javax.swing.JFrame {
                 details.setQuantity(Integer.parseInt(quantity.replaceAll(",", "")));
                 details.setAmount(Double.parseDouble(amount.replaceAll(",", "")));
                 extraPurchaseDetailses.add(details);
-                lblAdditionalPurchaseDetils.setText(billNumber+" Added.");
+                lblAdditionalPurchaseDetils.setText(billNumber + " Added.");
             }
         }
     }

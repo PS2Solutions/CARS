@@ -210,13 +210,19 @@
                                   <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="cmbLabor" min="-2" pref="246" max="-2" attributes="0"/>
                               <Component id="jPDate" min="-2" pref="246" max="-2" attributes="0"/>
                               <Component id="txtDailyWage" min="-2" pref="246" max="-2" attributes="0"/>
                               <Component id="txtFA" alignment="0" min="-2" pref="246" max="-2" attributes="0"/>
                               <Component id="txtTA" alignment="0" min="-2" pref="246" max="-2" attributes="0"/>
-                              <Component id="txtOverTime" alignment="0" min="-2" pref="246" max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Component id="txtOverTimeHr" min="-2" pref="89" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                                  <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="txtOverTime" max="32767" attributes="0"/>
+                              </Group>
                           </Group>
                           <EmptySpace min="-2" pref="116" max="-2" attributes="0"/>
                       </Group>
@@ -273,6 +279,8 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="txtOverTime" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
                       <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtOverTimeHr" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -349,6 +357,9 @@
               <Format format="#0.00" subtype="-1" type="0"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtDailyWageKeyReleased"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="txtFA">
           <Properties>
@@ -466,6 +477,25 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Remark"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel8">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Amount"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="txtOverTimeHr">
+          <Properties>
+            <Property name="columns" type="int" value="5"/>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format format="#0.00" subtype="-1" type="0"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtOverTimeHrKeyReleased"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

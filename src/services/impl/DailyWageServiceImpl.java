@@ -173,9 +173,10 @@ public class DailyWageServiceImpl implements DailyWageService {
                 LaborDto dto = new LaborDto();
                 int id = resultSet.getInt("ID");
                 String name = resultSet.getString("Name");
+                int wage = resultSet.getInt("wage");
                 dto.setId(id);
                 dto.setName(name);
-
+                dto.setWage(wage);
                 laborDtos.add(dto);
             }
         } catch (Exception ex) {

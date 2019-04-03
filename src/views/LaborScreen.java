@@ -770,10 +770,6 @@ public class LaborScreen extends javax.swing.JFrame {
         Format general = NumberFormat.getInstance();
         JFormattedTextField txtAmount = new JFormattedTextField(general);
         jPanel.add(txtAmount);
-//        jPanel.add(new JLabel("Remark"));
-//         JTextArea txtRemark = new JTextArea();
-//         txtRemark.setRows(5);
-//        jPanel.add(txtRemark);
         
         int result = DialogHelper.showQuestionDialog(this, "Payment", jPanel, JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
