@@ -12,6 +12,8 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -241,32 +243,51 @@ public class Helper {
         }
         return formattedIndex;
     }
-    
+
     public static String getCurrentMysqlFormattedDate() {
         return getMysqlFormattedDate(getCurrentDate());
     }
-    
+
     public static String getCurrentDate() {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         return sdf.format(date);
     }
-    
+
+    public static String getCurrentDateAndTime() {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        return sdf.format(date);
+    }
+
     public static String getDays(String startDate, String endDate) {
         SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat dateFormat2 = new SimpleDateFormat("dd-MM-yyyy");
-        
+
         try {
             Date date2 = dateFormat2.parse(endDate);
             Date date1 = dateFormat1.parse(startDate);
-            
+
             long diff = TimeUnit.DAYS.convert(date2.getTime() - date1.getTime(), TimeUnit.MILLISECONDS);
-            
+
             return Long.toString(diff);
         } catch (Exception e) {
-            String msg= e.getMessage();
+            String msg = e.getMessage();
         }
-        
+
+        return "";
+    }
+
+    public static String convertDateToSimpleFormat(String date) {
+        try {
+            DateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            DateFormat targetFormat = new SimpleDateFormat("dd-MM-yyyy");
+            Date originalDate = originalFormat.parse(date);
+            return targetFormat.format(originalDate);
+        } catch (ParseException ex) {
+            Logger.getLogger(Helper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         return "";
     }
 }

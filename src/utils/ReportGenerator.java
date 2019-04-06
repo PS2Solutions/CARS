@@ -12,6 +12,8 @@ import dataclasses.ExtraPurchaseDetails;
 import dataclasses.QuotationDetailsDto;
 import dataclasses.QuotationMasterDto;
 import dataclasses.RegistrationDto;
+import dataclasses.ReportContentDto;
+import dataclasses.ReportsDto;
 import java.io.File;
 import java.nio.file.Files;
 import java.text.DateFormat;
@@ -52,12 +54,17 @@ public class ReportGenerator {
     private static final String CLOSURE_AP_TOTAL = "$#$ClosureAPTotal$#$";
     private static final String CLOSURE_TOTAL_COST = "$#$ClosureTotalCost$#$";
 
+    private static final String REPORT_NAME = "$#$ReportName$#$";
+    private static final String REPORT_DATE_DETAILS = "$#$DateDetails$#$";
+    private static final String REPORT_TYPE = "$#$ReportType$#$";
+    private static final String REPORT_TABLE = "$#$ReportTable$#$";
+
     private static final String MATERIALS_TEMPLATE = "<tr><td>%x</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>";
     private static final String EMPTY_MATERIALS_TEMPLATE = "<tr><td></td><td>NIL</td><td></td><td></td><td></td></tr>";
 
     private static final String DAILY_WAGE_TEMPLATE = "<tr><td>%x</td><td>%s</td><td>%.2f</td></tr>";
     private static final String EMPTY_DAILY_WAGE_TEMPLATE = "<tr><td></td><td>NIL</td><td></td></tr>";
-    
+
     private static final String ADD_PURCHASES_TEMPLATE = "<tr><td>%x</td><td>%s</td><td>%s</td><td>%x</td><td>%.2f</td></tr>";
     private static final String EMPTY_ADD_PURCHASES_TEMPLATE = "<tr><td></td><td>NIL</td><td></td><td></td><td></td></tr>";
 
@@ -80,7 +87,7 @@ public class ReportGenerator {
             content = content.replace(QUOT_DATE, sdf.format(quotDto.getCreatedDate()));
 
             content = content.replace(QUOT_TYPE, quotType);
-            
+
             content = addMaterialsToQuotation(content, quotDto);
 
             if (FileHandler.WriteToPdfFile(output, content)) {
@@ -126,13 +133,37 @@ public class ReportGenerator {
         return null;
     }
 
+    public static String generateReport(RegistrationDto regDto, String reportName, ReportContentDto reportContent, ReportsDto reportsDto) {
+        try {
+            String output = Constants.REPORT_PATH + reportName + " " + Helper.getCurrentDateAndTime() + ".pdf";
+
+            String content = new String(Files.readAllBytes(new File(Constants.PRINT_TEMPLATE_PATH + "ReportTemplate.html").toPath()));
+
+            content = content.replace(REPORT_NAME, reportName);
+
+            content = modifyCompanyDetails(content, regDto);
+
+            content = modifyReportDetails(content, reportsDto);
+            
+            content = addReportContent(content, reportContent);
+
+            if (FileHandler.WriteToPdfFile(output, content)) {
+                return output;
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(ReportGenerator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
+    }
+
     private static String modifyCompanyDetails(String content, RegistrationDto regDto) {
         try {
             String companyName = regDto.getCompanyName() == null ? "" : regDto.getCompanyName();
             String name = regDto.getName() == null ? "" : regDto.getName();
             String phoneNumber = regDto.getPhoneNumber() == null ? "" : regDto.getPhoneNumber();
             String companyLogo = regDto.getCompanyLogo() == null ? "" : regDto.getCompanyLogo();
-                            
+
             content = content.replace(COMPANY_NAME, companyName);
             content = content.replace(OWNER_NAME, name);
             content = content.replace(OWNER_PHONE, phoneNumber);
@@ -152,7 +183,7 @@ public class ReportGenerator {
             String name = customerDto.getName() == null ? "" : customerDto.getName();
             String companyName = customerDto.getCompanyName() == null ? "" : customerDto.getCompanyName();
             String phoneNumber = customerDto.getPhoneNumber() == null ? "" : customerDto.getPhoneNumber();
-            
+
             content = content.replace(CUSTOMER_NAME, name);
             content = content.replace(CUSTO_COMPANY_NAME, companyName);
             content = content.replace(CUSTOMER_PHONE, phoneNumber);
@@ -261,5 +292,75 @@ public class ReportGenerator {
     private static String getMaterialName(String materialCode) {
         String materialName = new MaterialServiceImpl().getMaterialName(materialCode);
         return materialName;
+    }
+
+    private static String modifyReportDetails(String content, ReportsDto reportsDto) {
+        try {
+            StringBuffer buffer = new StringBuffer();
+            
+            if (reportsDto.isIsDateFilterAvailable()) {
+                buffer.append("<tr><th><b>From Date</b></th>" + "<td>" + Helper.convertDateToSimpleFormat(reportsDto.getStartDate()) + "</td></tr>");
+                buffer.append("<tr><th><b>To Date</b></th>" + "<td>" + Helper.convertDateToSimpleFormat(reportsDto.getEndDate()) + "</td></tr>");                                                      
+            }
+            
+            buffer.append("<tr><th><b>Report Type</b></th>" + "<td>" + getReportType(reportsDto.getReportType()) + "</td></tr>");
+            
+            if(buffer.length() > 0) {
+                content = content.replace(REPORT_DATE_DETAILS, "<table><tr><td><table>" + buffer.toString() + "</table></td><td></td></tr></table>");
+            } else {
+                content = content.replace(REPORT_DATE_DETAILS, "");
+            }
+
+
+        } catch (Exception e) {
+            content = content.replace(REPORT_DATE_DETAILS, "");
+            content = content.replace(REPORT_TYPE, "");
+        }
+
+        return content;
+    }
+    
+    private static String addReportContent(String content, ReportContentDto reportContent) {
+        try {
+            StringBuffer buffer = new StringBuffer();
+            
+            for(String columnNames : reportContent.getColumnNames()) {
+                buffer.append("<th><b>" +  columnNames + "</b></th>");
+            }
+            
+            if(buffer.length()> 0) {
+                buffer.append("</tr>");
+                
+                for(java.util.Vector<java.util.Vector> vectors : reportContent.getRowData()) {
+                    buffer.append("<tr>");
+                    
+                    String[] values = vectors.toArray(new String[vectors.size()]);
+                    for(String value : values) {
+                        buffer.append("<td>" +  value + "</td>");
+                    }
+                    
+                    buffer.append("</tr>");
+                }
+                
+                content = content.replace(REPORT_TABLE, "<table border=\"1\"><tr>" + buffer.toString() + "</table>");
+            }
+        } catch (Exception e) {
+            content = content.replace(REPORT_TABLE, "");
+        }
+
+        return content;
+    }
+    
+    private static String getReportType(int type) {
+        switch (type) {
+            case 1:
+                return "Contract";
+            case 2:
+                return "Quotation";
+            case 3:
+                return "User";
+            default:
+                return "Normal";
+        }
     }
 }

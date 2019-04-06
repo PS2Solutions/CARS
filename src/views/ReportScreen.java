@@ -6,8 +6,11 @@
 package views;
 
 import dataclasses.ComboContentDto;
+import dataclasses.RegistrationDto;
 import dataclasses.ReportContentDto;
 import dataclasses.ReportsDto;
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
@@ -22,6 +25,7 @@ import org.jdatepicker.impl.JDatePickerImpl;
 import services.impl.ContractServiceImpl;
 import services.impl.LaborServiceImpl;
 import services.impl.QuotationServiceImpl;
+import services.impl.RegistrationServiceImpl;
 import services.impl.ReportServiceImpl;
 import services.interfaces.ContractService;
 import services.interfaces.LaborService;
@@ -30,6 +34,7 @@ import services.interfaces.ReportService;
 import utils.DialogHelper;
 import utils.FileHandler;
 import utils.Helper;
+import utils.ReportGenerator;
 
 /**
  *
@@ -39,6 +44,7 @@ public class ReportScreen extends javax.swing.JFrame {
 
     private int lastSelectedIndex = 0;
     private String reportName;
+    ReportsDto reportsDto;
 
     /**
      * Creates new form ReportScreen
@@ -47,6 +53,8 @@ public class ReportScreen extends javax.swing.JFrame {
         initComponents();
         configureDatePicker();
         configureReports();
+        
+        btnPrint.setEnabled(false);
     }
 
     /**
@@ -99,6 +107,11 @@ public class ReportScreen extends javax.swing.JFrame {
         btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/print.png"))); // NOI18N
         btnPrint.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         btnPrint.setFocusPainted(false);
+        btnPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrintActionPerformed(evt);
+            }
+        });
 
         btnExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/appResources/upload.png"))); // NOI18N
         btnExport.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -278,7 +291,7 @@ public class ReportScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_cmbReportActionPerformed
 
     private void btnGetReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGetReportActionPerformed
-        ReportsDto reportsDto = availableReports.get(lastSelectedIndex);
+        reportsDto = availableReports.get(lastSelectedIndex);
         if (reportsDto.isIsDateFilterAvailable() && (startPicker.getJFormattedTextField().getText().trim().length() == 0
                 || endDatePicker.getJFormattedTextField().getText().trim().length() == 0)) {
             DialogHelper.showInfoMessage("Warning", Helper.getPropertyValue("ReportValidation"));
@@ -336,6 +349,23 @@ public class ReportScreen extends javax.swing.JFrame {
             DialogHelper.showErrorMessage("Error", Helper.getPropertyValue("ReportExportError"));
         }
     }//GEN-LAST:event_btnExportActionPerformed
+
+    private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
+        try {
+            RegistrationDto regDto = new RegistrationServiceImpl().getRegistrationDetails();
+
+            String output = ReportGenerator.generateReport(regDto, reportName, reportContent, reportsDto);
+            
+            if (output == null) {
+                DialogHelper.showErrorMessage(Helper.getPropertyValue("Error"), Helper.getPropertyValue("Error_Quotation_Print_Message"));
+            } else {
+                Desktop.getDesktop().open(new File(output));
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(QuotationScreen.class.getName()).log(Level.SEVERE, null, ex);
+            DialogHelper.showErrorMessage(Helper.getPropertyValue("Error"), Helper.getPropertyValue("Error_Quotation_Print_Message"));
+        }
+    }//GEN-LAST:event_btnPrintActionPerformed
 
     /**
      * @param args the command line arguments
@@ -471,6 +501,8 @@ public class ReportScreen extends javax.swing.JFrame {
             jSPReportPanel.add(tblReport);
             jSPReportPanel.setViewportView(tblReport);
             jSPReportPanel.setVisible(true);
+            
+             btnPrint.setEnabled(true);
         } else {
             DialogHelper.showInfoMessage("Report", "Report not available");
         }

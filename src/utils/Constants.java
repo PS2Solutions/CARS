@@ -23,5 +23,6 @@ public class Constants {
     public static final String EXCEL_EXPORT_PATH = BASE_DIRECTORY + "Reports/";
     public static final String QUOTATION_REPORT_PATH = BASE_DIRECTORY + "pdf/quotation/";
     public static final String CLOSURE_REPORT_PATH = BASE_DIRECTORY + "pdf/closure/";
+    public static final String REPORT_PATH = BASE_DIRECTORY + "pdf/report/";
     public static final String PRINT_TEMPLATE_PATH = BASE_DIRECTORY + "/templates/";
 }
