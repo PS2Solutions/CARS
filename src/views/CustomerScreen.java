@@ -179,7 +179,7 @@ public class CustomerScreen extends javax.swing.JFrame {
         jLabel7.setText("Contact No*");
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel8.setText("Email*");
+        jLabel8.setText("Email");
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel9.setText("Address 2");
@@ -456,7 +456,7 @@ public class CustomerScreen extends javax.swing.JFrame {
         if (isFieldsEmpty()) {
             DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("EmptyFields"));
             fieldsAreValid = false;
-        } else if (!Helper.isValidEmail(txtEmail.getText())) {
+        } else if (!txtEmail.getText().trim().isEmpty() && !Helper.isValidEmail(txtEmail.getText())) {
             DialogHelper.showErrorMessage("Validation", Helper.getPropertyValue("InvalidEmail"));
             fieldsAreValid = false;
         }
@@ -466,7 +466,7 @@ public class CustomerScreen extends javax.swing.JFrame {
 
     private boolean isFieldsEmpty() {
         return (txtName.getText().trim().isEmpty() || txtCompanyName.getText().trim().isEmpty()
-                || txtContactNumber.getText().trim().isEmpty() || txtEmail.getText().trim().isEmpty());
+                || txtContactNumber.getText().trim().isEmpty() /*|| txtEmail.getText().trim().isEmpty()*/);
     }
 
     private CustomerDto getEnteredData() {
