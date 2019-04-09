@@ -7,8 +7,15 @@ package views;
 
 import dataclasses.ContractDto;
 import dataclasses.ContractPaymentDto;
-import java.awt.GridLayout;
+import dataclasses.ReportContentDto;
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -16,7 +23,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import navigationCofiguration.NavigationConstants;
 import navigationCofiguration.NavigationController;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -40,7 +52,6 @@ public class ContractScreen extends javax.swing.JFrame {
      */
     public ContractScreen() {
         initComponents();
-        initQuotationRefs();
         configureTable();
         setContractReport();
         btnPaymentSave.setEnabled(false);
@@ -269,10 +280,10 @@ public class ContractScreen extends javax.swing.JFrame {
 
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
         Arguments args = new Arguments();
-        
+
         selectedDto.setEndDate(Helper.getCurrentDate());
         args.put("contract", selectedDto);
-        
+
         NavigationController.navigateToScreen(NavigationConstants.CLOSURE_SCREEN, this, args);
     }//GEN-LAST:event_btnOkActionPerformed
 
@@ -280,7 +291,7 @@ public class ContractScreen extends javax.swing.JFrame {
         if (selectedRow < 0) {
             DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("SelectContract"));
         } else {
-            if(txtTotalCost.getText().toString().trim().length() > 0){
+            if (txtTotalCost.getText().toString().trim().length() > 0) {
                 double payment = Double.parseDouble(txtTotalCost.getText().toString().trim());
                 String remark = txtRemark.getText().toString().trim();
                 ContractPaymentDto contractPaymentDto = new ContractPaymentDto();
@@ -357,7 +368,8 @@ public class ContractScreen extends javax.swing.JFrame {
     List<ContractDto> contractDtos;
     ContractDto selectedDto;
     int selectedRow = -1;
-    String quotationRef = null;
+
+    JTextField quotRefField;
 
     private void configureTable() {
         dtModel = new DefaultTableModel();
@@ -418,48 +430,160 @@ public class ContractScreen extends javax.swing.JFrame {
     }
 
     private void addContract() {
-        JPanel jPanel = new JPanel(new GridLayout(4, 2));
+        int x = 0, y = 0;
 
-        jPanel.add(new JLabel("Reference No"));
+        JPanel jPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.LINE_START;
+        c.insets = new Insets(5, 5, 5, 5);
+        c.fill = GridBagConstraints.HORIZONTAL;
+
+        c.gridx = x;
+        c.gridy = y;
+        jPanel.add(new JLabel("Reference No"), c);
+
+        ++x;
+
+        c.gridx = x;
         JTextField refField = new JTextField();
         refField.setEnabled(false);
         refField.setText(Helper.getReferenceNo(Constants.CONTRACT));
-        jPanel.add(refField);
+        jPanel.add(refField, c);
 
-        jPanel.add(new JLabel("Agrement Reference"));
+        x = 0;
+        ++y;
+
+        c.gridx = x;
+        c.gridy = y;
+        jPanel.add(new JLabel("Agrement Reference"), c);
+
+        ++x;
+
+        c.gridx = x;
         JTextField agrRefField = new JTextField();
         agrRefField.setEnabled(false);
         agrRefField.setText(Helper.getReferenceNo(Constants.AGREMENT));
-        jPanel.add(agrRefField);
+        jPanel.add(agrRefField, c);
 
-        jPanel.add(new JLabel("Quotation Reference"));
-        JTextField quotRefField = new JTextField();
-        jPanel.add(quotRefField);
+        x = 0;
+        ++y;
+
+        c.gridx = x;
+        c.gridy = y;
+        jPanel.add(new JLabel("Quotation Reference"), c);
+
+        ++x;
+
+        c.gridx = x;
+        quotRefField = new JTextField();
+        quotRefField.setEnabled(false);
+        jPanel.add(quotRefField, c);
+
+        ++x;
+
+        c.gridx = x;
+        JButton quotButton = new JButton("...");
+        quotButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showQuotationRef();
+            }
+        });
+
+        jPanel.add(quotButton, c);
+
+        x = 0;
+        ++y;
+
+        c.gridx = x;
+        c.gridy = y;
+        jPanel.add(new JLabel("Start date"), c);
+
+        ++x;
 
         JDatePickerImpl datePicker = Helper.getDatePicker();
         JScrollPane jPJoinDate = jPJoinDate = new JScrollPane();
         jPJoinDate.setVisible(true);
         jPJoinDate.setViewportView(datePicker);
 
-        jPanel.add(new JLabel("Start date"));
-        jPanel.add(jPJoinDate);
+        c.gridx = x;
+        jPanel.add(jPJoinDate, c);
 
         int result = DialogHelper.showQuestionDialog(this, "Choose the Quotation", jPanel, JOptionPane.OK_CANCEL_OPTION);
 
         if (result == JOptionPane.OK_OPTION) {
-            quotationRef = quotRefField.getText().trim();
+            String quotationRef = quotRefField.getText().trim();
             if (quotationRef.isEmpty()) {
                 DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("EmptyQuotationFields"));
-            } else if (!quotationRefValid(quotationRef)) {
-                DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("InvalidQuotationFields"));
+            } else if(datePicker.getJFormattedTextField().getText().isEmpty()) {
+                DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("EmptyFields"));
             } else {
                 setContract(refField.getText(), agrRefField.getText(), datePicker.getJFormattedTextField().getText());
-                saveContract();
+                saveContract(quotationRef);
             }
         }
     }
 
-    private void saveContract() {
+    private void showQuotationRef() {
+        ReportContentDto contentDto = new QuotationServiceImpl().getQuotationRefs();
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(new JLabel("Title :"), BorderLayout.WEST);
+        JTextField jtfFilter = new JTextField();
+        panel.add(jtfFilter, BorderLayout.CENTER);
+
+        DefaultTableModel tableModel = new DefaultTableModel(contentDto.getRowData(), contentDto.getColumnNames());
+        JTable table = new JTable(tableModel);
+        TableRowSorter<TableModel> rowSorter = new TableRowSorter<>(table.getModel());
+        table.setRowSelectionAllowed(true);
+        table.setRowSorter(rowSorter);
+
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.add(panel, BorderLayout.SOUTH);
+        mainPanel.add(new JScrollPane(table), BorderLayout.CENTER);
+
+        jtfFilter.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                String text = jtfFilter.getText();
+
+                if (text.trim().length() == 0) {
+                    rowSorter.setRowFilter(null);
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                String text = jtfFilter.getText();
+
+                if (text.trim().length() == 0) {
+                    rowSorter.setRowFilter(null);
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+        });
+
+        int result = DialogHelper.showQuestionDialog(this, "Select Quotation", mainPanel, JOptionPane.OK_CANCEL_OPTION);
+
+        if (result == JOptionPane.OK_OPTION) {
+            int row = table.convertRowIndexToModel(table.getSelectedRow());
+            String quotRef = contentDto.getRowData().get(row).get(1).toString();
+            quotRefField.setText(quotRef);
+        }
+    }
+
+    private void saveContract(String quotationRef) {
         ContractService contractService = new ContractServiceImpl();
 
         int contractId = contractService.saveContract(selectedDto);
@@ -469,7 +593,7 @@ public class ContractScreen extends javax.swing.JFrame {
 
             Helper.updateReferenceNo(Constants.CONTRACT);
             Helper.updateReferenceNo(Constants.AGREMENT);
-            
+
             DialogHelper.showInfoMessage(Helper.getPropertyValue("Success"),
                     Helper.getPropertyValue("SuccessMessage"));
 
@@ -479,20 +603,6 @@ public class ContractScreen extends javax.swing.JFrame {
         } else {
             DialogHelper.showErrorMessage("Error", "Error");
         }
-
-        /*if (response.equalsIgnoreCase(Helper.getPropertyValue("Success"))) {
-            DialogHelper.showInfoMessage(Helper.getPropertyValue("Success"),
-                    Helper.getPropertyValue("SuccessMessage"));
-
-            if (isAdd) {
-                addConractToTable();
-            } else {
-                updateContractTable();
-            }
-            clearFields();
-        } else {
-            DialogHelper.showErrorMessage("Error", response);
-        }*/
     }
 
     private void setContract(String refNo, String agrRefNo, String startDate) {
@@ -502,19 +612,6 @@ public class ContractScreen extends javax.swing.JFrame {
         selectedDto.setStartDate(Helper.getMysqlFormattedDate(startDate));
         selectedDto.setLastCollectionDate(Helper.getCurrentMysqlFormattedDate());
         selectedDto.setTotalAmount(0);
-    }
-
-    private boolean quotationRefValid(String quotRef) {
-        QuotationService quotationService = new QuotationServiceImpl();
-        List<String> quotationRefs = quotationService.getQuotationRefs();
-        
-        return quotationRefs.contains(quotRef);
-    }
-
-    private void initQuotationRefs() {
-        
-
-        
     }
 
     private void addConractToTable() {

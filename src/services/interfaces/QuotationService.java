@@ -11,6 +11,7 @@ import dataclasses.MaterialDto;
 import dataclasses.QuotationDetailsDto;
 import dataclasses.QuotationMasterDto;
 import dataclasses.QuotationTypeDto;
+import dataclasses.ReportContentDto;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -35,7 +36,7 @@ public interface QuotationService {
     
     QuotationMasterDto getQuotation(String referenceNo);
     
-    List<String> getQuotationRefs();
+    ReportContentDto getQuotationRefs();
     
     int updateQuotation(String quotationRef, int contractId);
     

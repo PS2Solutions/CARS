@@ -11,6 +11,7 @@ import dataclasses.MaterialDto;
 import dataclasses.QuotationDetailsDto;
 import dataclasses.QuotationMasterDto;
 import dataclasses.QuotationTypeDto;
+import dataclasses.ReportContentDto;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -259,21 +260,32 @@ public class QuotationServiceImpl implements QuotationService {
     }
 
     @Override
-    public List<String> getQuotationRefs() {
-        List<String> quotationRefs = new ArrayList<String>();
-
-        ResultSet set = DBHelper.readDataFromDb("select ReferenceNo from quotations where ContractID = 0");
+    public ReportContentDto getQuotationRefs() {
+        ReportContentDto contentDto = new ReportContentDto();
+        Vector<Vector> rowData = new Vector<Vector>();
+        
+        ResultSet set = DBHelper.readDataFromDb("select ReferenceNo, Title from quotations where ContractID = 0");
         if (set != null) {
             try {
                 while (set.next()) {
-                    quotationRefs.add(set.getString("ReferenceNo"));
+                    Vector<String> row = new Vector<>();
+                    row.add(set.getString("Title"));
+                    row.add(set.getString("ReferenceNo"));
+                    rowData.add(row);
                 }
+                
+                Vector<String> columnNames = new Vector<String>();
+                columnNames.addElement("Title");
+                columnNames.addElement("Quotation Ref#");
+        
+                contentDto.setRowData(rowData);
+                contentDto.setColumnNames(columnNames);
             } catch (Exception ex) {
 
             }
         }
 
-        return quotationRefs;
+        return contentDto;
     }
 
     public int updateQuotation(String quotationRef, int contractId) {
