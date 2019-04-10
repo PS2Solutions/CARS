@@ -9,6 +9,7 @@ import dataclasses.ContractDto;
 import dataclasses.ContractPaymentDto;
 import dataclasses.ReportContentDto;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -447,6 +448,7 @@ public class ContractScreen extends javax.swing.JFrame {
         c.gridx = x;
         JTextField refField = new JTextField();
         refField.setEnabled(false);
+        refField.setPreferredSize(new Dimension(200, 28));
         refField.setText(Helper.getReferenceNo(Constants.CONTRACT));
         jPanel.add(refField, c);
 
@@ -462,6 +464,7 @@ public class ContractScreen extends javax.swing.JFrame {
         c.gridx = x;
         JTextField agrRefField = new JTextField();
         agrRefField.setEnabled(false);
+        agrRefField.setPreferredSize(new Dimension(200, 28));
         agrRefField.setText(Helper.getReferenceNo(Constants.AGREMENT));
         jPanel.add(agrRefField, c);
 
@@ -477,6 +480,7 @@ public class ContractScreen extends javax.swing.JFrame {
         c.gridx = x;
         quotRefField = new JTextField();
         quotRefField.setEnabled(false);
+        quotRefField.setPreferredSize(new Dimension(200, 28));
         jPanel.add(quotRefField, c);
 
         ++x;
@@ -515,7 +519,7 @@ public class ContractScreen extends javax.swing.JFrame {
             String quotationRef = quotRefField.getText().trim();
             if (quotationRef.isEmpty()) {
                 DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("EmptyQuotationFields"));
-            } else if(datePicker.getJFormattedTextField().getText().isEmpty()) {
+            } else if (datePicker.getJFormattedTextField().getText().isEmpty()) {
                 DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("EmptyFields"));
             } else {
                 setContract(refField.getText(), agrRefField.getText(), datePicker.getJFormattedTextField().getText());
@@ -527,10 +531,17 @@ public class ContractScreen extends javax.swing.JFrame {
     private void showQuotationRef() {
         ReportContentDto contentDto = new QuotationServiceImpl().getQuotationRefs();
 
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.add(new JLabel("Title :"), BorderLayout.WEST);
+        JPanel searchPanel = new JPanel(new GridBagLayout());
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(5, 5, 5, 5);
+        c.gridx = 1;
+        c.gridy = 0;
+        searchPanel.add(new JLabel("Search title"), c);
+        c.gridx = 2;
         JTextField jtfFilter = new JTextField();
-        panel.add(jtfFilter, BorderLayout.CENTER);
+        jtfFilter.setPreferredSize(new Dimension(200, 28));
+        searchPanel.add(jtfFilter, c);
 
         DefaultTableModel tableModel = new DefaultTableModel(contentDto.getRowData(), contentDto.getColumnNames());
         JTable table = new JTable(tableModel);
@@ -539,8 +550,8 @@ public class ContractScreen extends javax.swing.JFrame {
         table.setRowSorter(rowSorter);
 
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
-        mainPanel.add(panel, BorderLayout.SOUTH);
+        mainPanel.setLayout(new BorderLayout(10, 10));
+        mainPanel.add(searchPanel, BorderLayout.SOUTH);
         mainPanel.add(new JScrollPane(table), BorderLayout.CENTER);
 
         jtfFilter.getDocument().addDocumentListener(new DocumentListener() {
