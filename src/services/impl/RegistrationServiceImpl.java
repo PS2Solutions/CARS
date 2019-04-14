@@ -83,8 +83,6 @@ public class RegistrationServiceImpl implements RegistrationService {
                     String contactNo = resultSet.getString("MobileNo");
                     String companyTin = resultSet.getString("CompanyTin");
                     String logoPath = resultSet.getString("LogoPath");
-                    String userName = resultSet.getString("CompanyTin");
-                    String password = resultSet.getString("LogoPath");
 
                     dto.setUserId(id);
                     dto.setName(name);
@@ -95,6 +93,12 @@ public class RegistrationServiceImpl implements RegistrationService {
                     dto.setPhoneNumber(contactNo);
                     dto.setTin(companyTin);
                     dto.setCompanyLogo(logoPath);
+                }
+
+                ResultSet set = DBHelper.readDataFromDb("Select * from logindetails");
+                if (set != null && set.next()) {
+                    String userName = set.getString("UserName");
+                    String password = set.getString("Password");
                     dto.setUserName(userName);
                     dto.setPassword(password);
                 }

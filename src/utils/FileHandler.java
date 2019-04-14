@@ -69,7 +69,12 @@ public class FileHandler {
     public static File showFileChooser(String description, List<String> extensions) {
         JFileChooser chooser = new JFileChooser();
         File selectedFile = null;
-        chooser.addChoosableFileFilter(new FileNameExtensionFilter(description, extensions.get(0), extensions.get(1)));
+        
+        if(extensions.size() == 3) {
+            chooser.addChoosableFileFilter(new FileNameExtensionFilter(description, extensions.get(0), extensions.get(1), extensions.get(2)));
+        } else {
+            chooser.addChoosableFileFilter(new FileNameExtensionFilter(description, extensions.get(0), extensions.get(1)));
+        }
         chooser.setAcceptAllFileFilterUsed(false);
 
         int result = chooser.showSaveDialog(null);

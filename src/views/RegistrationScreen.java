@@ -351,8 +351,11 @@ public class RegistrationScreen extends javax.swing.JFrame {
         List<String> extensions = new ArrayList<>();
         extensions.add("jpg");
         extensions.add("png");
+        extensions.add("jpeg");
         File file = FileHandler.showFileChooser("Image Files", extensions);
-        logoPath = FileHandler.getCopiedFilePath(file);
+        if(file != null) {
+            logoPath = FileHandler.getCopiedFilePath(file);
+        }
     }//GEN-LAST:event_uploadLogoBtnActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
@@ -386,10 +389,10 @@ public class RegistrationScreen extends javax.swing.JFrame {
         } else if (!Helper.isValidEmail(txtEmail.getText())) {
             DialogHelper.showErrorMessage("Validation", Helper.getPropertyValue("InvalidEmail"));
             fieldsAreValid = false;
-        } /*else if (logoPath == null) {
+        } else if (logoPath == null) {
             DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("ChooseLogo"));
             fieldsAreValid = false;
-        } */
+        } 
 
         return fieldsAreValid;
     }
