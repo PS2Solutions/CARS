@@ -6,8 +6,10 @@
 package services.impl;
 
 import dataclasses.ComboContentDto;
+import dataclasses.ContractDashboardReportDto;
 import dataclasses.ContractDto;
 import dataclasses.ContractPaymentDto;
+import dataclasses.CustomerDto;
 import dataclasses.ReportContentDto;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -86,29 +88,25 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public List<ContractDto> getContracts() {
         List<ContractDto> contractDtos = new ArrayList<ContractDto>();
+        try {
+            CallableStatement statement = DBHelper.getDbConnection().prepareCall(
+                    "{call GetContractDetails()}");
+            ResultSet resultSet = statement.executeQuery();//sql response
+            while (resultSet.next()) {
+                ContractDto dto = new ContractDto();
+                dto.setId(resultSet.getInt("ID"));
+                dto.setContractRefNo(resultSet.getString("Reference Number"));
+                dto.setStartDate(resultSet.getString("Start Date"));
+                dto.setTotalAmount(resultSet.getDouble("Collected Amount"));
+                dto.setLastCollectionDate(resultSet.getString("Collected Date"));
+                dto.setAgrementReference(resultSet.getString("Agreement Reference"));
 
-        ResultSet resultSet = DBHelper.readDataFromDb("Select * from contracts where EndDate is NULL");
-        if (resultSet != null) {
-            try {
-                while (resultSet.next()) {
-                    String endDate = resultSet.getString("EndDate");
-                    if (endDate == null || endDate.isEmpty()) {
-                        ContractDto dto = new ContractDto();
-                        dto.setId(resultSet.getInt("ID"));
-                        dto.setContractRefNo(resultSet.getString("ReferenceNo"));
-                        dto.setStartDate(resultSet.getString("StartDate"));
-                        dto.setTotalAmount(resultSet.getDouble("CollectedAmount"));
-                        dto.setLastCollectionDate(resultSet.getString("LastCollectionDate"));
-                        dto.setAgrementReference(resultSet.getString("AgrementReference"));
-
-                        contractDtos.add(dto);
-                    }
-                }
-            } catch (Exception ex) {
-                Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                contractDtos.add(dto);
             }
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
-
         return contractDtos;
     }
 
@@ -123,9 +121,9 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public Vector<ComboContentDto> getContractNames() {
-        String query = "SELECT ContractID,Title FROM `quotations` WHERE ContractID > 0" ;
+        String query = "SELECT ContractID,Title FROM `quotations` WHERE ContractID > 0";
         Vector<ComboContentDto> contractDtos = new Vector<>();
-        
+
         ResultSet resultSet = DBHelper.readDataFromDb(query);
         if (resultSet != null) {
             try {
@@ -136,15 +134,15 @@ public class ContractServiceImpl implements ContractService {
                     ccd.setId(id);
                     ccd.setName(title);
                     contractDtos.add(ccd);
-                 }
-                
+                }
+
             } catch (Exception ex) {
                 Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return contractDtos;
     }
-    
+
     public boolean closeContract(int contractId, String endDate) {
         try {
             String query = "update contracts set EndDate = ? where ID = ?";

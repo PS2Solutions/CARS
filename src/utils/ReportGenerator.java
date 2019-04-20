@@ -135,7 +135,7 @@ public class ReportGenerator {
 
     public static String generateReport(RegistrationDto regDto, String reportName, ReportContentDto reportContent, ReportsDto reportsDto) {
         try {
-            String output = Constants.REPORT_PATH + reportName + " " + Helper.getCurrentDateAndTime() + ".pdf";
+            String output = Constants.REPORT_PATH + reportName + ".pdf";
 
             String content = new String(Files.readAllBytes(new File(Constants.PRINT_TEMPLATE_PATH + "ReportTemplate.html").toPath()));
 

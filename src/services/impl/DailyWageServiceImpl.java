@@ -35,7 +35,7 @@ public class DailyWageServiceImpl implements DailyWageService {
         List<ContractLaborChargeDetails> chargeDetailses = new ArrayList<ContractLaborChargeDetails>();
         try {
 
-            CallableStatement statement = DBHelper.getDbConnection().prepareCall("{call GetContractAmountDetails()}");
+            CallableStatement statement = DBHelper.getDbConnection().prepareCall("{call GetContractAmountDetailsLaborWage()}");
             ResultSet resultSet = statement.executeQuery();
             if (resultSet != null) {
                 prepareContractSummaryDetails(resultSet, chargeDetailses);

@@ -31,22 +31,21 @@ public class DashboardServiceImpl implements DashboardService {
             Vector<ContractDashboardReportDto> dashboardReportDtos = new Vector<ContractDashboardReportDto>();
             CallableStatement statement = DBHelper.getDbConnection().prepareCall(
                     "{call GetContractLastMonthReport()}");
-            Format formatter = new SimpleDateFormat("dd-MM-yyyy");
 
             ResultSet resultSet = statement.executeQuery();//sql response
             while (resultSet.next()) {
                 String referenceNo = resultSet.getString("Reference No");
                 String startDate = "";
-                if (resultSet.getDate("Start Date") != null) {
-                    startDate = formatter.format(resultSet.getDate("Start Date"));
+                if (resultSet.getString("Start Date") != null) {
+                    startDate = resultSet.getString("Start Date");
                 }
-                int amount = resultSet.getInt("Amount");
-                int collectedAmount = resultSet.getInt("Collected Amount");
+                float amount = resultSet.getFloat("Amount");
+                float collectedAmount = resultSet.getFloat("Collected Amount");
                 ContractDashboardReportDto dto = new ContractDashboardReportDto();
                 dto.setContractRefNo(referenceNo);
                 dto.setStartDate(startDate);
-                dto.setCollectedAmount(Integer.toString(collectedAmount));
-                dto.setTotalAmount(Integer.toString(amount));
+                dto.setCollectedAmount(Float.toString(collectedAmount));
+                dto.setTotalAmount(Float.toString(amount));
                 dashboardReportDtos.add(dto);
             }
 
@@ -57,8 +56,8 @@ public class DashboardServiceImpl implements DashboardService {
                 Vector<String> row = new Vector<>();
                 row.add(dashboardReportDtos.get(i).getContractRefNo());
                 row.add(dashboardReportDtos.get(i).getStartDate());
-                row.add(dashboardReportDtos.get(i).getCollectedAmount());
                 row.add(dashboardReportDtos.get(i).getTotalAmount());
+                row.add(dashboardReportDtos.get(i).getCollectedAmount());
                 rowData.add(row);
             }
             Vector<String> columnNames = new Vector<String>();

@@ -409,6 +409,7 @@ public class LaborWageScreen extends javax.swing.JFrame {
                         Helper.getPropertyValue("SuccessMessage"));
                 dailyWageDtos = new ArrayList<>();
                 clearEntryFields();
+                getContractDetails();
             } else {
                 DialogHelper.showErrorMessage("Error", Helper.getPropertyValue("Failed_To_Update"));
             }

@@ -5,6 +5,7 @@
  */
 package services.impl;
 
+import dataclasses.ContractDashboardReportDto;
 import dataclasses.CustomerDto;
 import dataclasses.ReportContentDto;
 import dataclasses.UploadHelperDto;
@@ -12,6 +13,8 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -42,12 +45,10 @@ public class CustomerServiceImpl implements CustomerService {
             row.add(customerDto.getName());
             row.add("" + customerDto.getPhoneNumber());
             row.add(customerDto.getEmail());
+            row.add(Integer.toString(customerDto.getTotalQuotations()));
             row.add(Integer.toString(customerDto.getTotalContract()));
             row.add(Integer.toString(customerDto.getActiveContract()));
-            row.add(customerDto.getQuotes());
-            row.add(customerDto.getCompanyName());
-            row.add(customerDto.getAddress1());
-            row.add(customerDto.getAddress2());
+            
 
             rowData.add(row);
         }
@@ -56,9 +57,10 @@ public class CustomerServiceImpl implements CustomerService {
         columnNames.addElement("Customer");
         columnNames.addElement("Phone");
         columnNames.addElement("Email");
-        columnNames.addElement("Total Contract");
-        columnNames.addElement("Active Contract");
-        columnNames.addElement("Quotes");
+        columnNames.addElement("Total Quotations");
+        columnNames.addElement("Total Contracts");
+        columnNames.addElement("Active Contracts");
+        
         contentDto.setRowData(rowData);
         contentDto.setColumnNames(columnNames);
         return contentDto;
@@ -72,35 +74,42 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<CustomerDto> getCustomers() {
-        ResultSet resultSet = DBHelper.readDataFromDb("Select * from customers");
         List<CustomerDto> customerDtos = new ArrayList<CustomerDto>();
-        if (resultSet != null) {
-            try {
-                while (resultSet.next()) {
-                    CustomerDto customerDto = new CustomerDto();
-                    int id = resultSet.getInt("ID");
-                    String name = resultSet.getString("Name");
-                    String companyName = resultSet.getString("CompanyName");
-                    String address1 = resultSet.getString("Address1");
-                    String address2 = resultSet.getString("Address2");
-                    String email = resultSet.getString("Email");
-                    String contactNo = resultSet.getString("ContactNo");
-                    String regNo = resultSet.getString("RegistrationNo");
-
-                    customerDto.setId(id);
-                    customerDto.setName(name);
-                    customerDto.setCompanyName(companyName);
-                    customerDto.setAddress1(address1);
-                    customerDto.setAddress2(address2);
-                    customerDto.setEmail(email);
-                    customerDto.setPhoneNumber(contactNo);
-                    customerDto.setCompanyRegNo(regNo);
-                    customerDtos.add(customerDto);
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                return null;
+        try {
+            Vector<ContractDashboardReportDto> dashboardReportDtos = new Vector<ContractDashboardReportDto>();
+            CallableStatement statement = DBHelper.getDbConnection().prepareCall(
+                    "{call GetCustomerDetails()}");
+            ResultSet resultSet = statement.executeQuery();//sql response
+            while (resultSet.next()) {
+                CustomerDto customerDto = new CustomerDto();
+                int id = resultSet.getInt("ID");
+                String name = resultSet.getString("Name");
+                String companyName = resultSet.getString("Company Name");
+                String address1 = resultSet.getString("Address1");
+                String address2 = resultSet.getString("Address2");
+                String email = resultSet.getString("Email");
+                String contactNo = resultSet.getString("Contact Number");
+                String regNo = resultSet.getString("Registration Number");
+                int totalContracts = resultSet.getInt("Contract Count");
+                int activeContracts = resultSet.getInt("Active Contract Count");
+                int totalQuotations = resultSet.getInt("Quotation Count");
+                customerDto.setId(id);
+                customerDto.setName(name);
+                customerDto.setCompanyName(companyName);
+                customerDto.setAddress1(address1);
+                customerDto.setAddress2(address2);
+                customerDto.setEmail(email);
+                customerDto.setPhoneNumber(contactNo);
+                customerDto.setCompanyRegNo(regNo);
+                customerDto.setTotalContract(totalContracts);
+                customerDto.setActiveContract(activeContracts);
+                customerDto.setTotalQuotations(totalQuotations);
+                
+                customerDtos.add(customerDto);
             }
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
         return customerDtos;
     }

@@ -20,7 +20,7 @@ public class CustomerDto {
     String companyRegNo;
     int totalContract;
     int activeContract;
-    String quotes;
+    int totalQuotations;
 
     public int getId() {
         return id;
@@ -58,9 +58,7 @@ public class CustomerDto {
         return activeContract;
     }
 
-    public String getQuotes() {
-        return quotes;
-    }
+    
 
     public void setId(int id) {
         this.id = id;
@@ -98,9 +96,14 @@ public class CustomerDto {
         this.activeContract = activeContract;
     }
 
-    public void setQuotes(String quotes) {
-        this.quotes = quotes;
+    public int getTotalQuotations() {
+        return totalQuotations;
     }
+
+    public void setTotalQuotations(int totalQuotations) {
+        this.totalQuotations = totalQuotations;
+    }
+
 
     public String getCompanyRegNo() {
         return companyRegNo;

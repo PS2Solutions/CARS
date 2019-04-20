@@ -53,9 +53,7 @@ public class ContractScreen extends javax.swing.JFrame {
      */
     public ContractScreen() {
         initComponents();
-        configureTable();
-        setContractReport();
-        btnPaymentSave.setEnabled(false);
+        refreshScreen();
     }
 
     /**
@@ -303,11 +301,18 @@ public class ContractScreen extends javax.swing.JFrame {
                 contractService.saveContractPayments(contractPaymentDto);
                 txtRemark.setText("");
                 txtTotalCost.setText("");
+                refreshScreen();
             } else {
                 DialogHelper.showInfoMessage("Validation", Helper.getPropertyValue("EmptyFields"));
             }
         }
     }//GEN-LAST:event_btnPaymentSaveActionPerformed
+
+    private void refreshScreen() {
+        configureTable();
+        setContractReport();
+        btnPaymentSave.setEnabled(false);
+    }
 
     /**
      * @param args the command line arguments
