@@ -281,7 +281,7 @@ public class Helper {
     public static String convertDateToSimpleFormat(String date) {
         try {
             DateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            DateFormat targetFormat = new SimpleDateFormat("dd-MM-yyyy");
+            DateFormat targetFormat = new SimpleDateFormat("dd-MMM-yyyy");
             Date originalDate = originalFormat.parse(date);
             return targetFormat.format(originalDate);
         } catch (ParseException ex) {

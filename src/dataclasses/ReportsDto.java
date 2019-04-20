@@ -27,6 +27,7 @@ public class ReportsDto {
      * Quotation report = 2
      */
     int reportType;
+    String reportTypeName;
 
     public String getReportName() {
         return reportName;
@@ -100,4 +101,11 @@ public class ReportsDto {
         this.laborId = laborId;
     }
 
+    public void setReportTypeName(String reportTypeName) {
+        this.reportTypeName = reportTypeName;
+    }
+
+    public String getReportTypeName() {
+        return reportTypeName;
+    }
 }
