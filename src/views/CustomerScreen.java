@@ -96,6 +96,7 @@ public class CustomerScreen extends javax.swing.JFrame {
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("appResources/Strings"); // NOI18N
         setTitle(bundle.getString("Customer_Screen")); // NOI18N
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setPreferredSize(new java.awt.Dimension(1266, 762));
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -184,6 +185,18 @@ public class CustomerScreen extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel9.setText("Address 2");
 
+        txtAddress1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAddress1ActionPerformed(evt);
+            }
+        });
+
+        txtAddress2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAddress2ActionPerformed(evt);
+            }
+        });
+
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel2.setText("Name*");
 
@@ -214,28 +227,21 @@ public class CustomerScreen extends javax.swing.JFrame {
                                     .addComponent(jLabel6))
                                 .addGap(47, 47, 47)))
                         .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtCompanyName, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtRegNo, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)))
+                            .addComponent(txtRegNo, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                            .addComponent(txtCompanyName)
+                            .addComponent(txtName)))
                     .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                                .addComponent(jLabel10)
-                                .addGap(88, 88, 88)
-                                .addComponent(txtAddress1))
-                            .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtAddress2, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPLaborDeailsLayout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtContactNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(1, 1, 1)))
+                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel7))
+                        .addGap(72, 72, 72)
+                        .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtAddress1)
+                            .addComponent(txtAddress2)
+                            .addComponent(txtEmail)
+                            .addComponent(txtContactNumber))))
                 .addGap(68, 68, 68))
         );
         jPLaborDeailsLayout.setVerticalGroup(
@@ -269,7 +275,7 @@ public class CustomerScreen extends javax.swing.JFrame {
                 .addGroup(jPLaborDeailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtContactNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
-                .addContainerGap(144, Short.MAX_VALUE))
+                .addContainerGap(203, Short.MAX_VALUE))
         );
 
         jPCustomerList.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -282,7 +288,7 @@ public class CustomerScreen extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPCustomerList, javax.swing.GroupLayout.DEFAULT_SIZE, 807, Short.MAX_VALUE)
+                        .addComponent(jPCustomerList, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPLaborDeails, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -292,12 +298,12 @@ public class CustomerScreen extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPCustomerList)
-                    .addComponent(jPLaborDeails, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPLaborDeails, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPCustomerList))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -330,6 +336,14 @@ public class CustomerScreen extends javax.swing.JFrame {
     private void btnUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadActionPerformed
         uploadExcel();
     }//GEN-LAST:event_btnUploadActionPerformed
+
+    private void txtAddress1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAddress1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtAddress1ActionPerformed
+
+    private void txtAddress2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAddress2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtAddress2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -488,7 +502,7 @@ public class CustomerScreen extends javax.swing.JFrame {
         extensions.add("xlsx");
         extensions.add("xls");
         File file = FileHandler.showFileChooser("Excel Upload", extensions);
-        if (file.getName().contains("Customer_Details")) {
+        if (file != null && file.getName().contains("Customer_Details")) {
             List<UploadHelperDto> uplodedData = FileHandler.getExcelData(file);
             CustomerService customerService = new CustomerServiceImpl();
             boolean response = customerService.uploadExcel(uplodedData);
