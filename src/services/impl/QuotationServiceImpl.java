@@ -104,7 +104,7 @@ public class QuotationServiceImpl implements QuotationService {
     public Vector<String> getCustomers(Vector<CustomerDto> customersDtos) {
         Vector<String> designations = new Vector<>();
         for (int i = 0; i < customersDtos.size(); i++) {
-            designations.add(customersDtos.get(i).getName());
+            designations.add(customersDtos.get(i).getName().trim() + " ( " + customersDtos.get(i).getCompanyName() + " )");
         }
         return designations;
     }
