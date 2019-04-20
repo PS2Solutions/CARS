@@ -135,7 +135,7 @@ public class ReportGenerator {
 
     public static String generateReport(RegistrationDto regDto, String reportName, ReportContentDto reportContent, ReportsDto reportsDto) {
         try {
-            String output = Constants.REPORT_PATH + reportName + ".pdf";
+            String output = getReportName(reportName);
 
             String content = new String(Files.readAllBytes(new File(Constants.PRINT_TEMPLATE_PATH + "ReportTemplate.html").toPath()));
 
@@ -303,7 +303,7 @@ public class ReportGenerator {
                 buffer.append("<tr><th><b>To Date</b></th>" + "<td>" + Helper.convertDateToSimpleFormat(reportsDto.getEndDate()) + "</td></tr>");                                                      
             }
             
-            buffer.append("<tr><th><b>Report Type</b></th>" + "<td>" + getReportType(reportsDto.getReportType()) + "</td></tr>");
+            buffer.append("<tr><th><b>Report Type</b></th>" + "<td>" + getReportType(reportsDto.getReportType()) + " - " + reportsDto.getReportTypeName() + "</td></tr>");
             
             if(buffer.length() > 0) {
                 content = content.replace(REPORT_DATE_DETAILS, "<table><tr><td><table>" + buffer.toString() + "</table></td><td></td></tr></table>");
@@ -362,5 +362,10 @@ public class ReportGenerator {
             default:
                 return "Normal";
         }
+    }
+    
+    private static String getReportName(String reportName) {
+        String currentTime = Helper.getCurrentDateAndTime().replace(":", "").replace("-", "");
+        return Constants.REPORT_PATH + reportName + "_" + currentTime + ".pdf";        
     }
 }

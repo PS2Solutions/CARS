@@ -491,8 +491,34 @@ public class MaterialScreen extends javax.swing.JFrame {
         checkWarratyEligible.setSelected(dto.isWarrentyEligibility());
         checkActive.setSelected(dto.getStatus());
         txtAreaRemarks.setText(dto.getRemark());
+        comboCategoryType.setSelectedIndex(getCategoryIndex(dto.getCategoryId()));
+        comboQuotationType.setSelectedIndex(getQuotationIndex(dto.getQuoteTypeId()));
+    }
+    
+    private int getCategoryIndex(int categoryId) {
+        int count = 0;
+        for(MaterialCategoryDto dto : categoryDtos) {
+            if(categoryId == dto.getId()) {
+                return count;
+            }
+            ++count;
+        }
+        
+        return -1;
     }
 
+    private int getQuotationIndex(int quotationId) {
+        int count = 0;
+        for(QuotationTypeDto dto : quotationTypeDtos) {
+            if(quotationId == dto.getTypeId()) {
+                return count;
+            }
+            ++count;
+        }
+        
+        return -1;
+    }
+        
     private void clearFields() {
         selectedMaterialId = 0;
         txtMaterialCode.setText("");

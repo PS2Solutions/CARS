@@ -355,6 +355,7 @@ public class ReportScreen extends javax.swing.JFrame {
         try {
             RegistrationDto regDto = new RegistrationServiceImpl().getRegistrationDetails();
 
+            reportsDto.setReportTypeName(getReportTypeName());
             String output = ReportGenerator.generateReport(regDto, reportName, reportContent, reportsDto);
             
             if (output == null) {
@@ -536,6 +537,19 @@ public class ReportScreen extends javax.swing.JFrame {
             Vector<String> laborNames = laborService.getLaborNames(labors);
             DefaultComboBoxModel model = new DefaultComboBoxModel(laborNames);
             combLabor.setModel(model);
+        }
+    }
+    
+    private String getReportTypeName() {
+        switch(reportsDto.getReportType()) {
+            case 1:
+                return contracts.get(combContract.getSelectedIndex()).getName();
+            case 2:
+                return quotes.get(combContract.getSelectedIndex()).getName();
+            case 3:
+                return labors.get(combContract.getSelectedIndex()).getName();
+            default:
+                return "";
         }
     }
 }
