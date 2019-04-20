@@ -7,11 +7,9 @@ package views;
 
 import dataclasses.ContractPaymentDto;
 import dataclasses.DesignationDto;
-import dataclasses.ExtraPurchaseDetails;
 import dataclasses.LaborDto;
 import dataclasses.ReportContentDto;
 import dataclasses.UploadHelperDto;
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.io.File;
 import java.text.Format;
@@ -19,6 +17,8 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
@@ -26,10 +26,13 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import javax.swing.text.Document;
 import navigationCofiguration.NavigationConstants;
 import navigationCofiguration.NavigationController;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -45,7 +48,7 @@ import utils.Helper;
  *
  * @author shinu.k
  */
-public class LaborScreen extends javax.swing.JFrame {
+public class LaborScreen extends javax.swing.JFrame implements DocumentListener {
 
     /**
      * Creates new form LaborScreen
@@ -390,7 +393,7 @@ public class LaborScreen extends javax.swing.JFrame {
         jLabel10.setText("Employee ID");
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel11.setText("Employee ID");
+        jLabel11.setText("Employee Name");
 
         btnSearch.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         btnSearch.setText("Search");
@@ -606,6 +609,7 @@ public class LaborScreen extends javax.swing.JFrame {
     List<LaborDto> laborDtos;
     int selectedLaborId;
     JTable tblContract;
+    TableRowSorter<TableModel> rowSorter;
 
     private void initCalender() {
         joinDatePicker = Helper.getDatePicker();
@@ -653,10 +657,16 @@ public class LaborScreen extends javax.swing.JFrame {
         jPLaborList.add(tblContract);
         jPLaborList.setViewportView(tblContract);
         jPLaborList.setVisible(true);
+
+        rowSorter = new TableRowSorter<>(tblContract.getModel());
+        tblContract.setRowSorter(rowSorter);
+
+        txtEmpNameSearch.getDocument().addDocumentListener(this);
+        txtEmpIdSearch.getDocument().addDocumentListener(this);
     }
 
     private void populateSelectedDetails(LaborDto laborDto) {
-        resignDatePicker.getComponents()[1].setEnabled(true);       
+        resignDatePicker.getComponents()[1].setEnabled(true);
         txtEmployeeId.setEditable(false);
         txtIdProofNumber.setText(laborDto.getIdentityNumber());
         txtName.setText(laborDto.getName());
@@ -747,7 +757,8 @@ public class LaborScreen extends javax.swing.JFrame {
         }
         return index;
     }
-     private void uploadExcel() {
+
+    private void uploadExcel() {
         List<String> extensions = new ArrayList<>();
         extensions.add("xlsx");
         extensions.add("xls");
@@ -756,22 +767,23 @@ public class LaborScreen extends javax.swing.JFrame {
             List<UploadHelperDto> uplodedData = FileHandler.getExcelData(file);
             LaborService laborService = new LaborServiceImpl();
             boolean response = laborService.uploadExcel(uplodedData);
-            if(response) {
-                  DialogHelper.showInfoMessage("Upload Excel", Helper.getPropertyValue("Data_Uploded"));
+            if (response) {
+                DialogHelper.showInfoMessage("Upload Excel", Helper.getPropertyValue("Data_Uploded"));
             } else {
-                  DialogHelper.showErrorMessage("Upload Excel", Helper.getPropertyValue("Failed_To_Upload"));
+                DialogHelper.showErrorMessage("Upload Excel", Helper.getPropertyValue("Failed_To_Upload"));
             }
         } else {
             DialogHelper.showErrorMessage("Upload Excel", Helper.getPropertyValue("Invalid_File"));
         }
     }
-     private void showLaborPaymentDialog() {
+
+    private void showLaborPaymentDialog() {
         JPanel jPanel = new JPanel(new GridLayout(2, 1));
         jPanel.add(new JLabel("Amount"));
         Format general = NumberFormat.getInstance();
         JFormattedTextField txtAmount = new JFormattedTextField(general);
         jPanel.add(txtAmount);
-        
+
         int result = DialogHelper.showQuestionDialog(this, "Payment", jPanel, JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
             String amount = txtAmount.getText().trim();
@@ -784,6 +796,37 @@ public class LaborScreen extends javax.swing.JFrame {
                 LaborService laborService = new LaborServiceImpl();
                 laborService.addLaborPayment(paymentDto);
             }
+        }
+    }
+
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        fileterTable(e);
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+       fileterTable(e);
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+       
+    }
+
+    private void fileterTable(DocumentEvent e) {
+        Document source = e.getDocument();
+        String text = "";
+        try {
+            text = source.getText(0, source.getLength());
+        } catch (Exception ex) {
+            Logger.getLogger(LaborScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        if (text.trim().length() == 0) {
+            rowSorter.setRowFilter(null);
+        } else {
+            rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
         }
     }
 }
