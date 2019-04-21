@@ -545,9 +545,9 @@ public class ReportScreen extends javax.swing.JFrame {
             case 1:
                 return contracts.get(combContract.getSelectedIndex()).getName();
             case 2:
-                return quotes.get(combContract.getSelectedIndex()).getName();
+                return quotes.get(combQuote.getSelectedIndex()).getName();
             case 3:
-                return labors.get(combContract.getSelectedIndex()).getName();
+                return labors.get(combLabor.getSelectedIndex()).getName();
             default:
                 return "";
         }

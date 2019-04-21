@@ -233,7 +233,7 @@ public class LaborServiceImpl implements LaborService {
 
     @Override
     public Vector<ComboContentDto> getLabors() {
-       String query = "SELECT ID, Name FROM `labors";
+       String query = "SELECT ID, Name FROM labors";
         Vector<ComboContentDto> labors = new Vector<>();
 
         ResultSet resultSet = DBHelper.readDataFromDb(query);

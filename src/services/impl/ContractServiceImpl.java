@@ -95,6 +95,7 @@ public class ContractServiceImpl implements ContractService {
             while (resultSet.next()) {
                 ContractDto dto = new ContractDto();
                 dto.setId(resultSet.getInt("ID"));
+                dto.setTitle(resultSet.getString("title"));
                 dto.setContractRefNo(resultSet.getString("Reference Number"));
                 dto.setStartDate(resultSet.getString("Start Date"));
                 dto.setTotalAmount(resultSet.getDouble("Collected Amount"));

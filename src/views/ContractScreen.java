@@ -379,6 +379,7 @@ public class ContractScreen extends javax.swing.JFrame {
 
     private void configureTable() {
         dtModel = new DefaultTableModel();
+        dtModel.addColumn("Title");
         dtModel.addColumn("Reference No");
         dtModel.addColumn("Start Date");
         dtModel.addColumn("Collected Amount");
@@ -412,7 +413,7 @@ public class ContractScreen extends javax.swing.JFrame {
 
     private void populateContractTable() {
         for (ContractDto contractDto : contractDtos) {
-            dtModel.addRow(new Object[]{contractDto.getContractRefNo(), contractDto.getStartDate(), contractDto.getTotalAmount(), contractDto.getLastCollectionDate(), contractDto.getAgrementReference()});
+            dtModel.addRow(new Object[]{contractDto.getTitle(), contractDto.getContractRefNo(), contractDto.getStartDate(), contractDto.getTotalAmount(), contractDto.getLastCollectionDate(), contractDto.getAgrementReference()});
         }
     }
 
